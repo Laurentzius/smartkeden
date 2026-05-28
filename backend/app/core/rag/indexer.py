@@ -254,14 +254,14 @@ class LegalRAGIndexer:
         return working_blocks
 
     @classmethod
-    def parse_and_index_document(cls, raw_text: str, doc_title: str) -> int:
+    def parse_and_index_document(cls, raw_text: str, doc_title: str, doc_type: str = "code") -> int:
         """
         Parses a raw legal document into structured blocks and indexes into Qdrant.
 
         Returns the number of new/updated points indexed.
         """
         # Step 1: Parse locally into structured blocks
-        blocks = cls.parse_legal_text_to_blocks(raw_text, doc_title)
+        blocks = cls.parse_legal_text_to_blocks(raw_text, doc_title, doc_type=doc_type)
         if not blocks:
             logger.warning("No blocks extracted from document: %s", doc_title)
             return 0
@@ -281,54 +281,13 @@ class LegalRAGIndexer:
         return cls.index_blocks(blocks)
 
     @classmethod
-    def parse_legal_text_to_blocks(cls, raw_text: str, doc_title: str) -> List[Dict[str, Any]]:
+    def parse_legal_text_to_blocks(cls, raw_text: str, doc_title: str, doc_type: str = "code") -> List[Dict[str, Any]]:
         """Parses raw legal text into structured blocks (articles and sections), preserving article boundaries.
         Splits text by structural markers (e.g., 'Статья X') or paragraphs,
         producing clean, semantically dense IdeaBlock structures.
         """
-        blocks = []
-        lines = raw_text.split("\n")
-        current_article = "Общие положения"
-        current_content = []
-        
-        for line in lines:
-            line = line.strip()
-            if not line:
-                continue
-                
-            # Naive parse matching 'Статья '
-            if line.startswith("Статья ") or "Статья " in line[:20]:
-                if current_content:
-                    quote = " ".join(current_content)
-                    blocks.append({
-                        "document_title": doc_title,
-                        "article_number": current_article,
-                        "content_quote": quote,
-                        "tags": ["AUTO_PARSED", "REGULATION"],
-                        "keywords": ", ".join(current_article.lower().split())
-                    })
-                    current_content = []
-                
-                parts = line.split(".", 1)
-                current_article = parts[0].strip()
-                if len(parts) > 1:
-                    current_content.append(parts[1].strip())
-            else:
-                current_content.append(line)
-                
-        # Append the last block if it exists
-        if current_content:
-            quote = " ".join(current_content)
-            blocks.append({
-                "document_title": doc_title,
-                "article_number": current_article,
-                "content_quote": quote,
-                "tags": ["AUTO_PARSED", "REGULATION"],
-                "keywords": ", ".join(current_article.lower().split())
-            })
-
-        return blocks
-
+        from app.core.rag.parsers import DocumentParserRegistry
+        return DocumentParserRegistry.parse(raw_text, doc_title, doc_type=doc_type)
     @classmethod
     def index_blocks(cls, blocks: List[Dict[str, Any]]) -> int:
         """
