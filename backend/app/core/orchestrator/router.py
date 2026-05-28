@@ -13,6 +13,7 @@ from app.core.orchestrator.models import (
     OrchestrateResponse,
     ChatMessage,
 )
+from app.core.orchestrator.profile_extractor import ProfileExtractor
 from app.core.vertex_client import GeminiVertexClient
 from app.core.rag.service import LegalRAGService
 from app.core.hs_classifier.classifier import HSCodeClassifier
@@ -194,66 +195,47 @@ class HSClassificationHandler(IntentHandler):
         )
 
 class CustomsCalculationHandler(IntentHandler):
-    """Concrete handler for calculation_request intent. Dynamically parses history for state context (chaining)."""
+    """Concrete handler for calculation_request intent. Uses stateful Pydantic parameter accumulation."""
     async def handle(self, text: str, history: Optional[List[ChatMessage]] = None) -> OrchestrateResponse:
-        price = 0.0
-        currency = "USD"
-        
-        # Regex to parse a price value and optional currency symbol or letters
-        price_match = re.search(r'(?:[\$\s]*)(\d+(?:\.\d+)?)(?:\s*)(USD|\$|EUR|€|RUB|руб|KZT|тг|тенге)?', text, re.IGNORECASE)
-        if price_match:
-            price = float(price_match.group(1))
-            curr_symbol = price_match.group(2)
-            if curr_symbol:
-                curr_symbol = curr_symbol.lower()
-                if curr_symbol in ("$", "usd"):
-                    currency = "USD"
-                elif curr_symbol in ("€", "eur"):
-                    currency = "EUR"
-                elif curr_symbol in ("руб", "rub"):
-                    currency = "RUB"
-                elif curr_symbol in ("тг", "тнг", "тенге", "kzt"):
-                    currency = "KZT"
-
-        duty_rate = 0.0
-        is_recycling = False
-        hs_code = ""
-        
-        if history:
-            for msg in reversed(history):
-                hs_match = re.search(r'\b(\d{10})\b', msg.content)
-                if hs_match:
-                    hs_code = hs_match.group(1)
+        try:
+            # Dynamic stateful parameter extraction across turns using LLM/structured outputs
+            extraction = ProfileExtractor.extract(history, text)
+            profile = extraction.accumulated_profile
+            
+            # If all required parameters (price, currency, duty_rate_percent) are available, run the math calculation
+            if (profile.invoice_price is not None and profile.invoice_price > 0.0 and
+                profile.currency is not None and profile.duty_rate_percent is not None):
                 
-                rate_match = re.search(r'пошлин[аы]\s*(\d+(?:\.\d+)?)%', msg.content, re.IGNORECASE)
-                if rate_match:
-                    duty_rate = float(rate_match.group(1))
-
-                if "утильсбор" in msg.content.lower() or "♻" in msg.content:
-                    is_recycling = True
-
-        if price > 0.0:
-            from app.core.calculation.engine import CustomsCalculator, CalculationRequest
-            try:
+                from app.core.calculation.engine import CustomsCalculator, CalculationRequest
+                
+                is_recycling = bool(profile.is_subject_to_recycling_fee)
                 calc_req = CalculationRequest(
-                    invoice_price=price,
-                    currency=currency,
-                    duty_rate_percent=duty_rate,
+                    invoice_price=profile.invoice_price,
+                    currency=profile.currency,
+                    duty_rate_percent=profile.duty_rate_percent,
+                    transport_to_border=profile.transport_to_border or 0.0,
                     is_subject_to_recycling_fee=is_recycling,
                     recycling_fee_base_mci=50.0 if is_recycling else 0.0,
                 )
                 res = CustomsCalculator.calculate(calc_req)
                 
                 msg = (
-                    f"📊 **Автоматический расчёт таможенных платежей (на основе контекста):**\n\n"
-                    f"• **Стоимость инвойса:** {price:,.2f} {currency}\n"
+                    f"📊 **Автоматический расчёт таможенных платежей (на основе накопленного контекста):**\n\n"
+                    f"• **Стоимость инвойса:** {profile.invoice_price:,.2f} {profile.currency}\n"
                 )
-                if hs_code:
-                    msg += f"• **Код ТН ВЭД (из истории):** {hs_code}\n"
+                if profile.hs_code:
+                    msg += f"• **Код ТН ВЭД:** {profile.hs_code}\n"
                 msg += (
-                    f"• **Ставка пошлины:** {duty_rate}%\n"
-                    f"• **Утильсбор:** {'Да' if is_recycling else 'Нет'}\n\n"
-                    f"**Результаты расчёта в KZT:**\n"
+                    f"• **Ставка пошлины:** {profile.duty_rate_percent}%\n"
+                    f"• **Утильсбор:** {'Да' if is_recycling else 'Нет'}\n"
+                )
+                if profile.weight_kg:
+                    msg += f"• **Вес товара:** {profile.weight_kg} кг\n"
+                if profile.transport_to_border:
+                    msg += f"• **Доставка до границы:** {profile.transport_to_border:,.2f} KZT\n"
+                
+                msg += (
+                    f"\n**Результаты расчёта в KZT:**\n"
                     f"- Таможенная стоимость: {res.customs_value_kzt:,.2f} KZT\n"
                     f"- Таможенный сбор (фиксированный): {res.customs_fee_kzt:,.2f} KZT\n"
                     f"- Импортная пошлина: {res.customs_duty_kzt:,.2f} KZT\n"
@@ -264,18 +246,23 @@ class CustomsCalculationHandler(IntentHandler):
                     msg += f"- Утильсбор: {res.recycling_fee_kzt:,.2f} KZT\n"
                 msg += f"\n🔥 **Итого к уплате:** {res.total_payments_kzt:,.2f} KZT\n"
                 
+                # Gather chained parameters to inform the user what was pulled from context
                 chained_fields = []
-                if hs_code:
-                    chained_fields.append(f"код ТН ВЭД {hs_code}")
-                if duty_rate > 0.0:
-                    chained_fields.append(f"пошлина {duty_rate}%")
+                if profile.hs_code:
+                    chained_fields.append(f"код ТН ВЭД {profile.hs_code}")
+                if profile.duty_rate_percent > 0.0:
+                    chained_fields.append(f"пошлина {profile.duty_rate_percent}%")
                 if is_recycling:
                     chained_fields.append("утильсбор")
+                if profile.weight_kg:
+                    chained_fields.append(f"вес {profile.weight_kg} кг")
+                if profile.transport_to_border:
+                    chained_fields.append(f"доставка до границы {profile.transport_to_border:,.2f} KZT")
                 
                 chain_warning_msg = None
                 if chained_fields:
-                    chain_warning_msg = "Связаны параметры из истории чата: " + ", ".join(chained_fields)
-
+                    chain_warning_msg = "Накопленные параметры: " + ", ".join(chained_fields)
+                
                 return OrchestrateResponse(
                     intent=IntentType.calculation_request,
                     message=msg,
@@ -285,20 +272,22 @@ class CustomsCalculationHandler(IntentHandler):
                     },
                     chain_warning=chain_warning_msg
                 )
-            except Exception as exc:
-                logger.error(f"Contextual calculation failed: {exc}")
-
-        return OrchestrateResponse(
-            intent=IntentType.calculation_request,
-            message=(
-                "Для расчёта таможенных платежей, пожалуйста, укажите:\n"
-                "1. Цена товара (инвойсная стоимость)\n"
-                "2. Валюта (USD, EUR, CNY)\n"
-                "3. Ставка пошлины (%)\n"
-                "4. Есть ли акциз или утильсбор?\n\n"
-                "Или просто напишите, например: **'Посчитай пошлину для $5000'**, и я постараюсь использовать ранее подобранный код ТН ВЭД."
-            ),
-        )
+            
+            # If parameters are still missing, continue the collection loop
+            return OrchestrateResponse(
+                intent=IntentType.calculation_request,
+                message=extraction.next_question,
+                pipeline_results={
+                    "accumulated_profile": profile.model_dump(),
+                    "missing_fields": extraction.missing_fields
+                }
+            )
+        except Exception as exc:
+            logger.error(f"Accumulator calculation handler failed: {exc}", exc_info=True)
+            return OrchestrateResponse(
+                intent=IntentType.calculation_request,
+                message="Извините, произошла ошибка при обработке параметров расчета. Попробуйте ввести данные заново.",
+            )
 
 class IntentHandlerRegistry:
     """Registry managing IntentType mappings to their corresponding handler seams."""

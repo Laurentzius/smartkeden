@@ -19,6 +19,87 @@ class LegalRAGResponse(BaseModel):
     supporting_laws: List[LegalChunk] = Field(default=[])
 
 
+class ChunkRelevance(BaseModel):
+    chunk_index: int = Field(..., description="0-based index of the chunk in the input list")
+    relevance_score: int = Field(..., description="Relevance score from 1 to 10 (1 = completely irrelevant, 10 = extremely relevant)")
+    reasoning: str = Field(..., description="1-sentence explanation of relevance/irrelevance relative to the query")
+
+class ChunkFilterResponse(BaseModel):
+    scores: List[ChunkRelevance] = Field(..., description="Relevance scores for each input chunk")
+
+class GeminiChunkFilter:
+    """
+    Reranks and filters retrieved legal chunks using Gemini Structured Outputs.
+    Computes a 1-10 relevance score and filters out chunks below a threshold.
+    """
+    
+    @classmethod
+    def filter_chunks(
+        cls, query: str, chunks: List[LegalChunk], threshold: int = 5
+    ) -> List[LegalChunk]:
+        """
+        Scores all retrieved chunks relative to the user query and filters out
+        chunks with a relevance score below the threshold.
+        """
+        if not chunks:
+            return []
+
+        # Prepare a text representation of chunks to score
+        chunks_text_list = []
+        for i, chunk in enumerate(chunks):
+            chunks_text_list.append(
+                f"--- Чанк #{i} ---\n"
+                f"Источник: {chunk.document_title}, {chunk.article_number}\n"
+                f"Текст: {chunk.content_quote}\n"
+            )
+        chunks_payload = "\n".join(chunks_text_list)
+
+        prompt = f"""
+Вы — эксперт по таможенному праву РК. Ваша задача — оценить степень релевантности предоставленных выдержек из законов (чанков) относительно запроса пользователя по шкале от 1 до 10.
+
+Запрос пользователя:
+"{query}"
+
+Список выдержек для оценки:
+{chunks_payload}
+
+Правила оценки (relevance_score от 1 до 10):
+- 10: Чанк содержит прямой, точный ответ на вопрос пользователя или непосредственно описывает запрошенную норму.
+- 7-9: Чанк очень близок к теме запроса, содержит важный контекст или смежные правила, необходимые для ответа.
+- 5-6: Чанк умеренно релевантен, касается общей темы, но не содержит специфических деталей запроса.
+- 1-4: Чанк практически или полностью не имеет отношения к запросу пользователя (например, говорит о другой процедуре или товаре).
+
+Пожалуйста, верните оценку для КАЖДОГО чанка строго по его 0-индексу (от 0 до {len(chunks)-1}).
+"""
+
+        try:
+            logger.info("Calling Gemini for chunk relevance filtering")
+            response = GeminiVertexClient.generate_structured_content(
+                prompt=prompt,
+                response_schema=ChunkFilterResponse
+            )
+            
+            # Create a lookup mapping from chunk_index to score/reasoning
+            score_map = {item.chunk_index: item for item in response.scores}
+            
+            filtered = []
+            for i, chunk in enumerate(chunks):
+                relevance_info = score_map.get(i)
+                if relevance_info:
+                    logger.info(f"Chunk #{i} ({chunk.article_number}): Gemini score = {relevance_info.relevance_score}/10, reasoning = {relevance_info.reasoning}")
+                    if relevance_info.relevance_score >= threshold:
+                        filtered.append(chunk)
+                else:
+                    # Fallback if un-scored
+                    filtered.append(chunk)
+                    
+            return filtered
+        except Exception as e:
+            logger.error(f"Failed to filter chunks using Gemini: {e}", exc_info=True)
+            # Safe crash-free fallback: return original chunks without filtering
+            return chunks
+
+
 SYSTEM_PROMPT = """Вы — Ведущий таможенный юрист Республики Казахстан (Кеден Заңгері) и признанный эксперт в области таможенного права Евразийского экономического союза (ЕАЭС). Ваша цель — предоставлять безупречные, юридически выверенные, профессиональные и практически применимые консультации по вопросам таможенного регулирования, декларирования, классификации товаров и исчисления таможенных платежей в Республике Казахстан.
 
 ### 1. ОБЛАСТЬ ЭКСПЕРТИЗЫ И ЗАКОНОДАТЕЛЬНАЯ БАЗА
@@ -82,7 +163,7 @@ class LegalRAGService:
             search_result = storage.query_points(
                 collection_name="legal_regulations_kz",
                 query_vector=query_vector,
-                limit=3
+                limit=6
             ).points
             
             for hit in search_result:
@@ -95,6 +176,25 @@ class LegalRAGService:
                         relevance_score=hit.score
                     )
                 )
+            
+            # Apply post-retrieval relevance filter
+            if retrieved_chunks:
+                original_chunks_count = len(retrieved_chunks)
+                retrieved_chunks = GeminiChunkFilter.filter_chunks(query, retrieved_chunks, threshold=5)
+                logger.info(f"Post-retrieval filter: kept {len(retrieved_chunks)} / {original_chunks_count} chunks")
+                
+                # Safeguard: if Gemini filtered out absolutely everything, keep at least the top-1 chunk
+                # so the generator has some legal reference and doesn't hallucinate.
+                if not retrieved_chunks and search_result:
+                    payload = search_result[0].payload or {}
+                    retrieved_chunks = [
+                        LegalChunk(
+                            document_title=payload.get("document_title", "Нормативный правовой акт"),
+                            article_number=payload.get("article_number", "Статья"),
+                            content_quote=payload.get("content_quote", ""),
+                            relevance_score=search_result[0].score
+                        )
+                    ]
         except Exception as e:
             logger.error(f"Vector search failed, falling back to basic mock: {e}")
             

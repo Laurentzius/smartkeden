@@ -111,6 +111,7 @@ flowchart LR
 * **Document Ingestion:** `backend/app/core/rag/indexer.py` $\rightarrow$ Flow Document: `flows/features/blockify_ingestion_flow.md` (Migrated to Local parsing & dedup)
 * **HS Code Directory & Classifier:** `backend/app/core/hs_classifier/` $\rightarrow$ Flow Document: `flows/features/hs_classification_flow.md`
 * **Customs Calculation:** `backend/app/core/calculation/` $\rightarrow$ Flow Document: `flows/features/customs_calculation_flow.md`
+* **Dynamic Profile Extraction (Stateful Accumulator):** `backend/app/core/orchestrator/profile_extractor.py` $\rightarrow$ Flow Document: `flows/features/customs_profile_flow.md`
 * **Document Generation:** `backend/app/core/documents/` $\rightarrow$ Flow Document: `flows/features/document_generation_flow.md`
 * **KGD Registry & Trademark (TROIS):** `backend/app/services/kgd_registry.py` $\rightarrow$ Flow Document: `flows/features/kgd_registry_flow.md`
 * **Vertex AI / Gemini Client:** `backend/app/core/vertex_client.py` $\rightarrow$ Flow Document: `flows/features/langfuse_monitoring_flow.md`

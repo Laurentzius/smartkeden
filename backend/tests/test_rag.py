@@ -174,3 +174,53 @@ def test_rag_custom_seams():
         # Restore original adapters
         LegalRAGIndexer._vector_storage = orig_storage
         LegalRAGIndexer._embedding_model = orig_embedder
+
+def test_gemini_chunk_filter_happy_path(monkeypatch):
+    """Verify that GeminiChunkFilter keeps chunks with score >= threshold and filters out lower ones."""
+    from app.core.rag.service import GeminiChunkFilter, LegalChunk, ChunkFilterResponse, ChunkRelevance
+    from app.core.vertex_client import GeminiVertexClient
+
+    chunks = [
+        LegalChunk(document_title="Law A", article_number="Art 1", content_quote="Relevance 10", relevance_score=0.9),
+        LegalChunk(document_title="Law B", article_number="Art 2", content_quote="Irrelevant", relevance_score=0.8),
+        LegalChunk(document_title="Law C", article_number="Art 3", content_quote="Relevance 6", relevance_score=0.7),
+    ]
+
+    mock_response = ChunkFilterResponse(
+        scores=[
+            ChunkRelevance(chunk_index=0, relevance_score=10, reasoning="Very high"),
+            ChunkRelevance(chunk_index=1, relevance_score=2, reasoning="Irrelevant"),
+            ChunkRelevance(chunk_index=2, relevance_score=6, reasoning="Moderate relevance"),
+        ]
+    )
+
+    monkeypatch.setattr(
+        GeminiVertexClient,
+        "generate_structured_content",
+        lambda prompt, response_schema: mock_response
+    )
+
+    filtered = GeminiChunkFilter.filter_chunks("Query", chunks, threshold=5)
+    assert len(filtered) == 2
+    assert filtered[0].article_number == "Art 1"
+    assert filtered[1].article_number == "Art 3"
+
+
+def test_gemini_chunk_filter_fallback_on_error(monkeypatch):
+    """Verify that GeminiChunkFilter returns all chunks if LLM raises an error."""
+    from app.core.rag.service import GeminiChunkFilter, LegalChunk
+    from app.core.vertex_client import GeminiVertexClient
+
+    chunks = [
+        LegalChunk(document_title="Law A", article_number="Art 1", content_quote="Relevance 10", relevance_score=0.9),
+        LegalChunk(document_title="Law B", article_number="Art 2", content_quote="Irrelevant", relevance_score=0.8),
+    ]
+
+    def mock_err(*args, **kwargs):
+        raise Exception("Vertex AI connection failed")
+
+    monkeypatch.setattr(GeminiVertexClient, "generate_structured_content", mock_err)
+
+    filtered = GeminiChunkFilter.filter_chunks("Query", chunks, threshold=5)
+    assert len(filtered) == 2  # Fallback to returning all chunks
+
