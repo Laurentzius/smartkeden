@@ -30,18 +30,6 @@ class IntentClassifier:
     document_upload, greeting, unclear.
     """
 
-    INTENT_EXAMPLES = [
-        ("Какая ставка НДС на импорт в Казахстан?", "question_about_law"),
-        ("Что говорит кодекс о таможенной стоимости?", "question_about_law"),
-        ("классифицируй детскую игрушку Lego", "product_description"),
-        ("определи код ТН ВЭД для ноутбука", "product_description"),
-        ("посчитай пошлину на товар 9503008900 из Китая", "calculation_request"),
-        ("сколько будет растаможка iPhone 15 Pro", "calculation_request"),
-        ("загрузи новый закон о торговле", "document_upload"),
-        ("привет!", "greeting"),
-        ("здравствуйте", "greeting"),
-    ]
-
     @classmethod
     @observe(name="IntentClassifier.classify")
     async def classify(cls, text: str) -> IntentClassification:
@@ -49,19 +37,17 @@ class IntentClassifier:
         Uses Gemini structured output to classify user message intent.
         In mock/dev mode, returns a simple keyword-based fallback.
         """
+        from app.core.orchestrator.config_loader import ConfigLoader
+        config = ConfigLoader().get_intent_config()
+        examples = config.get("examples", [])
+        system_prompt = config.get("system_prompt", "Classify the user's customs-related message into exactly one intent.")
+
         examples_str = "\n".join(
-            f'- "{q}" → {i}' for q, i in cls.INTENT_EXAMPLES
+            f'- "{q}" → {i}' for q, i in examples
         )
 
         prompt = (
-            f"Classify the user's customs-related message into exactly one intent.\n\n"
-            f"Supported intents:\n"
-            f"- question_about_law: Legal/RAG questions about customs codes, tax codes, regulations\n"
-            f"- product_description: HS code classification requests (product → code)\n"
-            f"- calculation_request: Customs payment calculation (duty, VAT, excise)\n"
-            f"- document_upload: Upload/ingest a new legal document\n"
-            f"- greeting: Hello, greeting messages\n"
-            f"- unclear: Anything that doesn't clearly match the above\n\n"
+            f"{system_prompt}\n\n"
             f"Examples:\n{examples_str}\n\n"
             f"User message: \"{text}\"\n\n"
             f"Respond with intent, confidence (0.0-1.0), and brief reasoning."
@@ -365,6 +351,21 @@ async def orchestrate(req: OrchestrateRequest):
 
     text = req.text.strip()
     sess_id = req.session_id or ""
+
+    # Check FAQ early fastpath
+    from app.core.orchestrator.config_loader import ConfigLoader
+    faq_answer = ConfigLoader().check_faq(text)
+    if faq_answer:
+        logger.info("FAQ fastpath match found. Bypassing LLM/Vector.")
+        return OrchestrateResponse(
+            intent=IntentType.question_about_law,
+            message=faq_answer,
+            pipeline_results={
+                "fastpath": True,
+                "source": "faq.yaml",
+                "reasoning": "Static keyword match"
+            }
+        )
 
     async def _run():
         # 1. Classify intent

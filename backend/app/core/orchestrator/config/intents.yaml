@@ -1,0 +1,23 @@
+# Intent Classification Configuration for CustomAI Kazakhstan (Кеден Көмекшісі)
+
+system_prompt: >-
+  Classify the user's customs-related message into exactly one intent.
+  
+  Supported intents:
+  - question_about_law: Legal/RAG questions about customs codes, tax codes, regulations
+  - product_description: HS code classification requests (product → code)
+  - calculation_request: Customs payment calculation (duty, VAT, excise)
+  - document_upload: Upload/ingest a new legal document
+  - greeting: Hello, greeting messages
+  - unclear: Anything that doesn't clearly match the above
+
+examples:
+  - ["Какая ставка НДС на импорт в Казахстан?", "question_about_law"]
+  - ["Что говорит кодекс о таможенной стоимости?", "question_about_law"]
+  - ["классифицируй детскую игрушку Lego", "product_description"]
+  - ["определи код ТН ВЭД для ноутбука", "product_description"]
+  - ["посчитай пошлину на товар 9503008900 из Китая", "calculation_request"]
+  - ["сколько будет растаможка iPhone 15 Pro", "calculation_request"]
+  - ["загрузи новый закон о торговле", "document_upload"]
+  - ["привет!", "greeting"]
+  - ["здравствуйте", "greeting"]
