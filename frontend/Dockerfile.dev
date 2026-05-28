@@ -1,0 +1,19 @@
+FROM node:20-alpine
+
+WORKDIR /app
+
+# Install dependencies first (to cache node_modules layer)
+COPY package.json package-lock.json* ./
+RUN npm install
+
+# Copy configuration files (tailwindcss, postcss, TS config, etc.)
+COPY postcss.config.mjs next.config.mjs tsconfig.json ./
+
+# We map local frontend source code via volumes for development hot-reloading.
+# But copy fallback code in case volume isn't mapped:
+COPY . ./
+
+EXPOSE 3000
+
+# Next.js dev server runs on port 3000
+CMD ["npm", "run", "dev"]

@@ -1,0 +1,1740 @@
+"""
+HS Code seed data for ТН ВЭД ЕАЭС (Товарная номенклатура внешнеэкономической деятельности ЕАЭС)
+and НК РК 2026 (Налоговый кодекс Республики Казахстан 2026 edition) articles.
+
+All duty rates based on Единый таможенный тариф ЕАЭС (ETT) as of 2025-2026.
+"""
+
+# ---------------------------------------------------------------------------
+# ТН ВЭД ЕАЭС Seed Entries — 120+ entries covering Sections I through XXI
+# ---------------------------------------------------------------------------
+HS_CODE_SEED_ENTRIES = [
+    # =====================================================================
+    # SECTION I — Live animals, animal products (Groups 01–05)
+    # =====================================================================
+    {
+        "hs_code": "0101210000",
+        "product_name_ru": "Лошади живые племенные чистопородные",
+        "product_name_en": "Live horses, pure-bred breeding",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "I",
+        "group": 1,
+        "reasoning_notes": "Живые животные; лошади племенные — пониженная ставка как племенной материал"
+    },
+    {
+        "hs_code": "0102291000",
+        "product_name_ru": "Крупный рогатый скот живой (весом более 300 кг)",
+        "product_name_en": "Live bovine animals, weight > 300 kg",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "I",
+        "group": 1,
+        "reasoning_notes": "Живые животные; КРС на убой — базовая ставка 5% для сельхозживотных"
+    },
+    {
+        "hs_code": "0105111100",
+        "product_name_ru": "Цыплята родительского стада (куры яичных пород)",
+        "product_name_en": "Parent stock chicks (egg-laying hens)",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "I",
+        "group": 1,
+        "reasoning_notes": "Живые животные; племенная птица — нулевая ставка для племенного материала"
+    },
+    {
+        "hs_code": "0201300000",
+        "product_name_ru": "Говядина свежая/охлажденная бескостная",
+        "product_name_en": "Fresh/chilled boneless beef",
+        "duty_rate_percent": 15.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "I",
+        "group": 2,
+        "reasoning_notes": "Мясо и субпродукты; говядина свежая — защитная пошлина для поддержки местных производителей"
+    },
+    {
+        "hs_code": "0202300000",
+        "product_name_ru": "Говядина замороженная бескостная",
+        "product_name_en": "Frozen boneless beef",
+        "duty_rate_percent": 15.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "I",
+        "group": 2,
+        "reasoning_notes": "Мясо и субпродукты; говядина замороженная — идентичная ставка свежей"
+    },
+    {
+        "hs_code": "0207129000",
+        "product_name_ru": "Мясо кур замороженное (неразделанное)",
+        "product_name_en": "Frozen whole chickens",
+        "duty_rate_percent": 25.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "I",
+        "group": 2,
+        "reasoning_notes": "Мясо и субпродукты; мясо птицы — высокая защитная пошлина для защиты птицеводства РК"
+    },
+    {
+        "hs_code": "0302120000",
+        "product_name_ru": "Лосось тихоокеанский свежий/охлажденный",
+        "product_name_en": "Fresh/chilled Pacific salmon",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "I",
+        "group": 3,
+        "reasoning_notes": "Рыба и ракообразные; лосось свежий — умеренная ставка для морепродуктов"
+    },
+    {
+        "hs_code": "0306141000",
+        "product_name_ru": "Камчатский краб мороженый",
+        "product_name_en": "Frozen king crab",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "I",
+        "group": 3,
+        "reasoning_notes": "Рыба и ракообразные; краб мороженый — ставка для деликатесной продукции"
+    },
+    {
+        "hs_code": "0402100000",
+        "product_name_ru": "Молоко сухое (жирность ≤1.5%)",
+        "product_name_en": "Milk powder, fat ≤ 1.5%",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "I",
+        "group": 4,
+        "reasoning_notes": "Молочная продукция; сухое молоко — умеренная ставка для социально значимых товаров"
+    },
+    # =====================================================================
+    # SECTION II — Vegetable products (Groups 06–14)
+    # =====================================================================
+    {
+        "hs_code": "0602100000",
+        "product_name_ru": "Черенки неукорененные и подвои",
+        "product_name_en": "Unrooted cuttings and grafts",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "II",
+        "group": 6,
+        "reasoning_notes": "Живые растения; посадочный материал — пониженная ставка"
+    },
+    {
+        "hs_code": "0701900000",
+        "product_name_ru": "Картофель свежий/охлажденный (продовольственный)",
+        "product_name_en": "Fresh/chilled potatoes",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "II",
+        "group": 7,
+        "reasoning_notes": "Овощи; картофель продовольственный — сезонная пошлина для защиты урожая РК"
+    },
+    {
+        "hs_code": "0702000000",
+        "product_name_ru": "Томаты свежие/охлажденные",
+        "product_name_en": "Fresh/chilled tomatoes",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "II",
+        "group": 7,
+        "reasoning_notes": "Овощи; томаты — сезонная ставка 10% вне сезона местного производства"
+    },
+    {
+        "hs_code": "0703100000",
+        "product_name_ru": "Лук репчатый свежий/охлажденный",
+        "product_name_en": "Fresh/chilled onions",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "II",
+        "group": 7,
+        "reasoning_notes": "Овощи; лук — низкая ставка как базовый продукт питания"
+    },
+    {
+        "hs_code": "0808101000",
+        "product_name_ru": "Яблоки свежие",
+        "product_name_en": "Fresh apples",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "II",
+        "group": 8,
+        "reasoning_notes": "Фрукты; яблоки — умеренная сезонная пошлина"
+    },
+    {
+        "hs_code": "0806101000",
+        "product_name_ru": "Виноград свежий столовый",
+        "product_name_en": "Fresh table grapes",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "II",
+        "group": 8,
+        "reasoning_notes": "Фрукты; виноград — низкая ставка для импортных сортов"
+    },
+    {
+        "hs_code": "0901110000",
+        "product_name_ru": "Кофе нежареный (зеленый) в зернах",
+        "product_name_en": "Green coffee beans, not roasted",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "II",
+        "group": 9,
+        "reasoning_notes": "Кофе, чай; зеленый кофе — нулевая/низкая ставка для необработанного сырья"
+    },
+    {
+        "hs_code": "0902300000",
+        "product_name_ru": "Чай черный ферментированный (готовые упаковки до 3 кг)",
+        "product_name_en": "Black fermented tea in packages ≤ 3 kg",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "II",
+        "group": 9,
+        "reasoning_notes": "Кофе, чай; чай фасованный — умеренная ставка для готовой продукции"
+    },
+    # =====================================================================
+    # SECTION IV — Prepared foodstuffs; beverages, spirits, vinegar; tobacco (Groups 16–24)
+    # =====================================================================
+    {
+        "hs_code": "1601000000",
+        "product_name_ru": "Колбасы и аналогичные изделия из мяса",
+        "product_name_en": "Sausages and similar meat products",
+        "duty_rate_percent": 15.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IV",
+        "group": 16,
+        "reasoning_notes": "Продукты из мяса; колбасы — повышенная ставка для готовых мясных изделий"
+    },
+    {
+        "hs_code": "1701991000",
+        "product_name_ru": "Сахар белый (сахароза)",
+        "product_name_en": "White sugar (sucrose)",
+        "duty_rate_percent": 12.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IV",
+        "group": 17,
+        "reasoning_notes": "Сахар; сахар белый — защитная пошлина для поддержки свекловодства РК"
+    },
+    {
+        "hs_code": "1806320000",
+        "product_name_ru": "Шоколад в плитках (с начинкой или без)",
+        "product_name_en": "Chocolate bars (filled or not)",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IV",
+        "group": 18,
+        "reasoning_notes": "Какао и продукты из него; шоколад — умеренная ставка для кондитерских изделий"
+    },
+    {
+        "hs_code": "1905310000",
+        "product_name_ru": "Печенье сладкое (сухое)",
+        "product_name_en": "Sweet biscuits",
+        "duty_rate_percent": 12.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IV",
+        "group": 19,
+        "reasoning_notes": "Мучные кондитерские изделия; печенье — ставка для готовых продуктов питания"
+    },
+    {
+        "hs_code": "2005202000",
+        "product_name_ru": "Чипсы картофельные (готовые)",
+        "product_name_en": "Potato chips, prepared",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IV",
+        "group": 20,
+        "reasoning_notes": "Продукты переработки овощей; чипсы — умеренная ставка"
+    },
+    {
+        "hs_code": "2106909809",
+        "product_name_ru": "Биологически активные добавки (БАД) прочие",
+        "product_name_en": "Food supplements, other",
+        "duty_rate_percent": 8.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IV",
+        "group": 21,
+        "reasoning_notes": "Пищевые продукты; БАДы — средняя ставка"
+    },
+    {
+        "hs_code": "2202100000",
+        "product_name_ru": "Воды сладкие и напитки безалкогольные",
+        "product_name_en": "Sweetened waters and non-alcoholic beverages",
+        "duty_rate_percent": 12.0,
+        "excise_rate_percent": 10.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IV",
+        "group": 22,
+        "reasoning_notes": "Напитки; сладкие воды — ставка 12% + акциз на сахаросодержащие напитки (НК РК 2026)"
+    },
+    {
+        "hs_code": "2203000000",
+        "product_name_ru": "Пиво солодовое",
+        "product_name_en": "Malt beer",
+        "duty_rate_percent": 6.0,
+        "excise_rate_percent": 20.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IV",
+        "group": 22,
+        "reasoning_notes": "Напитки; пиво — низкая ввозная пошлина, высокий акциз как подакцизный товар"
+    },
+    {
+        "hs_code": "2204210000",
+        "product_name_ru": "Вина виноградные (в сосудах до 2 л)",
+        "product_name_en": "Wine of fresh grapes (containers ≤ 2L)",
+        "duty_rate_percent": 15.0,
+        "excise_rate_percent": 25.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IV",
+        "group": 22,
+        "reasoning_notes": "Напитки; вино — высокая пошлина + акциз на алкогольную продукцию"
+    },
+    {
+        "hs_code": "2208600000",
+        "product_name_ru": "Водка",
+        "product_name_en": "Vodka",
+        "duty_rate_percent": 15.0,
+        "excise_rate_percent": 35.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IV",
+        "group": 22,
+        "reasoning_notes": "Крепкий алкоголь; водка — высокая пошлина + максимальный акциз"
+    },
+    {
+        "hs_code": "2402200000",
+        "product_name_ru": "Сигареты с табаком",
+        "product_name_en": "Cigarettes containing tobacco",
+        "duty_rate_percent": 20.0,
+        "excise_rate_percent": 50.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IV",
+        "group": 24,
+        "reasoning_notes": "Табак; сигареты — высокая пошлина + комбинированный акциз (специфический + адвалорный)"
+    },
+    # =====================================================================
+    # SECTION V — Mineral products (Groups 25–27)
+    # =====================================================================
+    {
+        "hs_code": "2501000000",
+        "product_name_ru": "Соль поваренная и хлорид натрия",
+        "product_name_en": "Salt and pure sodium chloride",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "V",
+        "group": 25,
+        "reasoning_notes": "Соль; соль пищевая — низкая ставка для социально значимого товара"
+    },
+    {
+        "hs_code": "2523100000",
+        "product_name_ru": "Клинкер цементный",
+        "product_name_en": "Cement clinkers",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "V",
+        "group": 25,
+        "reasoning_notes": "Цемент; клинкер — низкая ставка для строительного сырья"
+    },
+    {
+        "hs_code": "2709000000",
+        "product_name_ru": "Нефть сырая",
+        "product_name_en": "Crude petroleum oil",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "V",
+        "group": 27,
+        "reasoning_notes": "Нефть и нефтепродукты; сырая нефть — нулевая ставка (стратегический экспортный товар РК)"
+    },
+    {
+        "hs_code": "2710122500",
+        "product_name_ru": "Бензин автомобильный (легкие дистилляты)",
+        "product_name_en": "Motor gasoline (light distillates)",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 8.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "V",
+        "group": 27,
+        "reasoning_notes": "Нефтепродукты; бензин — нулевая ввозная пошлина в рамках ЕАЭС, акциз при импорте в РК"
+    },
+    {
+        "hs_code": "2710194200",
+        "product_name_ru": "Топливо дизельное",
+        "product_name_en": "Diesel fuel",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 6.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "V",
+        "group": 27,
+        "reasoning_notes": "Нефтепродукты; дизель — нулевая ввозная пошлина, акциз при импорте"
+    },
+    {
+        "hs_code": "2711210000",
+        "product_name_ru": "Газ природный в газообразном состоянии",
+        "product_name_en": "Natural gas in gaseous state",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "V",
+        "group": 27,
+        "reasoning_notes": "Газ природный — нулевая ставка (стратегический товар)"
+    },
+    # =====================================================================
+    # SECTION VI — Products of the chemical and allied industries (Groups 28–38)
+    # =====================================================================
+    {
+        "hs_code": "2835250000",
+        "product_name_ru": "Фосфат кальция (кормовой)",
+        "product_name_en": "Calcium phosphate (feed grade)",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VI",
+        "group": 28,
+        "reasoning_notes": "Продукты неорганической химии; кормовые фосфаты — низкая ставка для сельхозсырья"
+    },
+    {
+        "hs_code": "2847000000",
+        "product_name_ru": "Перекись водорода",
+        "product_name_en": "Hydrogen peroxide",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VI",
+        "group": 28,
+        "reasoning_notes": "Неорганические химикаты; перекись водорода — стандартная ставка"
+    },
+    {
+        "hs_code": "3002300000",
+        "product_name_ru": "Вакцины ветеринарные",
+        "product_name_en": "Veterinary vaccines",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VI",
+        "group": 30,
+        "reasoning_notes": "Фармацевтика; вакцины для животных — нулевая ставка для ветеринарных препаратов"
+    },
+    {
+        "hs_code": "3004900000",
+        "product_name_ru": "Лекарственные средства (расфасованные, прочие)",
+        "product_name_en": "Medicaments in measured doses, other",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VI",
+        "group": 30,
+        "reasoning_notes": "Фармацевтика; готовые лекарства — льготная ставка 5% для социально значимых медикаментов"
+    },
+    {
+        "hs_code": "3105200000",
+        "product_name_ru": "Удобрения минеральные (азотно-фосфорно-калийные)",
+        "product_name_en": "Mineral fertilizers (NPK)",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VI",
+        "group": 31,
+        "reasoning_notes": "Удобрения; NPK — низкая ставка для сельскохозяйственного сырья"
+    },
+    {
+        "hs_code": "3204160000",
+        "product_name_ru": "Красители реактивные (активные)",
+        "product_name_en": "Reactive dyes",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VI",
+        "group": 32,
+        "reasoning_notes": "Красители; реактивные красители — стандартная ставка для химической продукции"
+    },
+    {
+        "hs_code": "3303001000",
+        "product_name_ru": "Духи (парфюмерная вода)",
+        "product_name_en": "Perfumes (eau de parfum)",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VI",
+        "group": 33,
+        "reasoning_notes": "Парфюмерия; духи — умеренная ставка для готовой парфюмерной продукции"
+    },
+    {
+        "hs_code": "3304990000",
+        "product_name_ru": "Косметические средства (прочие)",
+        "product_name_en": "Cosmetic products, other",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VI",
+        "group": 33,
+        "reasoning_notes": "Косметика; средства ухода — умеренная ставка"
+    },
+    {
+        "hs_code": "3401110000",
+        "product_name_ru": "Мыло туалетное",
+        "product_name_en": "Toilet soap",
+        "duty_rate_percent": 8.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VI",
+        "group": 34,
+        "reasoning_notes": "Моющие средства; мыло туалетное — умеренная ставка"
+    },
+    {
+        "hs_code": "3808910000",
+        "product_name_ru": "Инсектициды (для сельского хозяйства)",
+        "product_name_en": "Insecticides for agricultural use",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VI",
+        "group": 38,
+        "reasoning_notes": "Средства защиты растений; инсектициды — низкая ставка для агрохимии"
+    },
+    # =====================================================================
+    # SECTION VII — Plastics and articles thereof; rubber and articles thereof (Groups 39–40)
+    # =====================================================================
+    {
+        "hs_code": "3901200000",
+        "product_name_ru": "Полиэтилен (плотность ≥0.94)",
+        "product_name_en": "Polyethylene (density ≥ 0.94)",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VII",
+        "group": 39,
+        "reasoning_notes": "Пластмассы; полиэтилен высокой плотности — сырьевая ставка"
+    },
+    {
+        "hs_code": "3916200000",
+        "product_name_ru": "Профили ПВХ (строительные)",
+        "product_name_en": "PVC profiles (construction)",
+        "duty_rate_percent": 6.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VII",
+        "group": 39,
+        "reasoning_notes": "Пластмассы; ПВХ-профили — средняя ставка для строительных материалов"
+    },
+    {
+        "hs_code": "3920100400",
+        "product_name_ru": "Пленка полиэтиленовая (толщина ≤0.125 мм)",
+        "product_name_en": "Polyethylene film (thickness ≤ 0.125 mm)",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VII",
+        "group": 39,
+        "reasoning_notes": "Пластмассы; полиэтиленовая пленка — низкая ставка для упаковочных материалов"
+    },
+    {
+        "hs_code": "3926900000",
+        "product_name_ru": "Изделия пластмассовые (прочие)",
+        "product_name_en": "Other plastic articles",
+        "duty_rate_percent": 6.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VII",
+        "group": 39,
+        "reasoning_notes": "Пластмассы; прочие изделия — универсальная ставка"
+    },
+    {
+        "hs_code": "4011201000",
+        "product_name_ru": "Шины для автобусов/грузовиков (пневматические)",
+        "product_name_en": "Pneumatic tires for buses/trucks",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": True,
+        "section": "VII",
+        "group": 40,
+        "reasoning_notes": "Резина; шины грузовые — пошлина 10% + утилизационный сбор"
+    },
+    {
+        "hs_code": "4016999000",
+        "product_name_ru": "Изделия из резины (технические, прочие)",
+        "product_name_en": "Other rubber articles (technical)",
+        "duty_rate_percent": 8.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VII",
+        "group": 40,
+        "reasoning_notes": "Резина; технические изделия — умеренная ставка"
+    },
+    # =====================================================================
+    # SECTION VIII — Raw hides, skins, leather, furskins (Groups 41–43)
+    # =====================================================================
+    {
+        "hs_code": "4104111100",
+        "product_name_ru": "Кожа из шкур КРС (целая, с волосяным покровом)",
+        "product_name_en": "Full grain leather from bovine",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VIII",
+        "group": 41,
+        "reasoning_notes": "Кожевенное сырье; кожа КРС — умеренная ставка"
+    },
+    {
+        "hs_code": "4202210000",
+        "product_name_ru": "Сумки дамские из натуральной кожи",
+        "product_name_en": "Leather handbags",
+        "duty_rate_percent": 12.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VIII",
+        "group": 42,
+        "reasoning_notes": "Изделия из кожи; сумки — повышенная ставка для готовых кожгалантерейных изделий"
+    },
+    {
+        "hs_code": "4203100000",
+        "product_name_ru": "Одежда из натуральной кожи",
+        "product_name_en": "Leather clothing",
+        "duty_rate_percent": 12.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VIII",
+        "group": 42,
+        "reasoning_notes": "Изделия из кожи; одежда — ставка 12%"
+    },
+    {
+        "hs_code": "4302199500",
+        "product_name_ru": "Мех выделанный (прочий, целые шкурки)",
+        "product_name_en": "Tanned or dressed furskins, whole",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "VIII",
+        "group": 43,
+        "reasoning_notes": "Мех; шкурки выделанные — умеренная ставка для мехового сырья"
+    },
+    # =====================================================================
+    # SECTION IX — Wood and articles of wood; wood charcoal; cork; straw (Groups 44–49)
+    # =====================================================================
+    {
+        "hs_code": "4407101500",
+        "product_name_ru": "Пиломатериалы хвойных пород (сосна/ель)",
+        "product_name_en": "Coniferous sawnwood (pine/spruce)",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IX",
+        "group": 44,
+        "reasoning_notes": "Древесина; пиломатериалы хвойные — низкая ставка для лесоматериалов"
+    },
+    {
+        "hs_code": "4407950000",
+        "product_name_ru": "Лесоматериалы из ясеня (распиленные)",
+        "product_name_en": "Ash wood sawn or chipped",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IX",
+        "group": 44,
+        "reasoning_notes": "Древесина; ясень — низкая ставка для ценных пород"
+    },
+    {
+        "hs_code": "4410113000",
+        "product_name_ru": "Плиты древесно-стружечные (ДСП)",
+        "product_name_en": "Particleboard (chipboard)",
+        "duty_rate_percent": 8.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IX",
+        "group": 44,
+        "reasoning_notes": "Древесные плиты; ДСП — средняя ставка"
+    },
+    {
+        "hs_code": "4412100000",
+        "product_name_ru": "Фанера (из древесины)",
+        "product_name_en": "Plywood (of wood)",
+        "duty_rate_percent": 8.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IX",
+        "group": 44,
+        "reasoning_notes": "Древесные плиты; фанера — умеренная ставка"
+    },
+    {
+        "hs_code": "4801000000",
+        "product_name_ru": "Бумага газетная (в рулонах/листах)",
+        "product_name_en": "Newsprint (in rolls or sheets)",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IX",
+        "group": 48,
+        "reasoning_notes": "Бумага; газетная — нулевая ставка для СМИ и полиграфии"
+    },
+    {
+        "hs_code": "4802551000",
+        "product_name_ru": "Бумага офисная (А4, масса 40-150 г/м²)",
+        "product_name_en": "Office copy paper A4, 40-150 g/m²",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IX",
+        "group": 48,
+        "reasoning_notes": "Бумага; офисная А4 — низкая ставка"
+    },
+    {
+        "hs_code": "4901990000",
+        "product_name_ru": "Книги, брошюры (печатные, прочие)",
+        "product_name_en": "Printed books and brochures, other",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "IX",
+        "group": 49,
+        "reasoning_notes": "Печатная продукция; книги — нулевая ставка для образовательной литературы"
+    },
+    # =====================================================================
+    # SECTION X — Textiles and textile articles (Groups 50–63)
+    # =====================================================================
+    {
+        "hs_code": "5201000000",
+        "product_name_ru": "Хлопок-сырец (нечесаный)",
+        "product_name_en": "Cotton, not carded or combed",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "X",
+        "group": 52,
+        "reasoning_notes": "Хлопок; сырец — нулевая ставка для текстильного сырья"
+    },
+    {
+        "hs_code": "5209420000",
+        "product_name_ru": "Ткань джинсовая (из хлопка, различные цвета нитей)",
+        "product_name_en": "Denim fabric (cotton, yarns of different colors)",
+        "duty_rate_percent": 12.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "X",
+        "group": 52,
+        "reasoning_notes": "Ткани хлопчатобумажные; деним — повышенная ставка для готовых текстильных материалов"
+    },
+    {
+        "hs_code": "5515110000",
+        "product_name_ru": "Ткани из полиэфирных/вискозных штапельных волокон",
+        "product_name_en": "Fabrics of polyester staple fibers mixed with viscose",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "X",
+        "group": 55,
+        "reasoning_notes": "Ткани из синтетических волокон — стандартная ставка"
+    },
+    {
+        "hs_code": "6109100000",
+        "product_name_ru": "Футболки трикотажные хлопчатобумажные",
+        "product_name_en": "Cotton T-shirts, knitted",
+        "duty_rate_percent": 12.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "X",
+        "group": 61,
+        "reasoning_notes": "Одежда трикотажная; футболки — ставка 12% для готовых швейных изделий"
+    },
+    {
+        "hs_code": "6109902000",
+        "product_name_ru": "Футболки трикотажные (из прочих текстильных материалов)",
+        "product_name_en": "T-shirts, knitted, of other textile materials",
+        "duty_rate_percent": 12.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "X",
+        "group": 61,
+        "reasoning_notes": "Одежда трикотажная; ставка 12%"
+    },
+    {
+        "hs_code": "6110209100",
+        "product_name_ru": "Свитера/джемперы хлопчатобумажные (мужские)",
+        "product_name_en": "Cotton sweaters/pullovers (men's)",
+        "duty_rate_percent": 12.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "X",
+        "group": 61,
+        "reasoning_notes": "Одежда трикотажная; свитера — 12%"
+    },
+    {
+        "hs_code": "6203423100",
+        "product_name_ru": "Брюки мужские из хлопчатобумажной ткани",
+        "product_name_en": "Men's cotton trousers (woven)",
+        "duty_rate_percent": 12.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "X",
+        "group": 62,
+        "reasoning_notes": "Одежда текстильная; брюки — 12%"
+    },
+    {
+        "hs_code": "6302100000",
+        "product_name_ru": "Постельное белье из хлопчатобумажной ткани",
+        "product_name_en": "Cotton bed linen",
+        "duty_rate_percent": 12.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "X",
+        "group": 63,
+        "reasoning_notes": "Текстильные изделия; постельное белье — ставка 12%"
+    },
+    # =====================================================================
+    # SECTION XI — Footwear, headgear, umbrellas (Groups 64–67)
+    # =====================================================================
+    {
+        "hs_code": "6402190000",
+        "product_name_ru": "Обувь спортивная (с подошвой из резины/пластмассы)",
+        "product_name_en": "Sports footwear (rubber/plastic sole)",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XI",
+        "group": 64,
+        "reasoning_notes": "Обувь; спортивная — ставка 10%"
+    },
+    {
+        "hs_code": "6403999100",
+        "product_name_ru": "Обувь на подошве из резины с верхом из кожи",
+        "product_name_en": "Footwear with rubber sole and leather upper",
+        "duty_rate_percent": 12.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XI",
+        "group": 64,
+        "reasoning_notes": "Обувь; кожаная — повышенная ставка 12%"
+    },
+    {
+        "hs_code": "6404190000",
+        "product_name_ru": "Обувь с верхом из текстиля (кеды/кроссовки)",
+        "product_name_en": "Footwear with textile upper (sneakers)",
+        "duty_rate_percent": 12.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XI",
+        "group": 64,
+        "reasoning_notes": "Обувь; текстильная — ставка 12%"
+    },
+    {
+        "hs_code": "6504000000",
+        "product_name_ru": "Шляпы и прочие головные уборы (плетеные)",
+        "product_name_en": "Hats and other headgear, plaited",
+        "duty_rate_percent": 12.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XI",
+        "group": 65,
+        "reasoning_notes": "Головные уборы; плетеные — ставка 12%"
+    },
+    # =====================================================================
+    # SECTION XIII — Articles of stone, plaster, cement, asbestos; ceramic products;
+    #               glass and glassware (Groups 68–70)
+    # =====================================================================
+    {
+        "hs_code": "6802210000",
+        "product_name_ru": "Мрамор и травертин (обработанные)",
+        "product_name_en": "Marble and travertine, worked",
+        "duty_rate_percent": 8.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XIII",
+        "group": 68,
+        "reasoning_notes": "Камень; мрамор — средняя ставка для строительного камня"
+    },
+    {
+        "hs_code": "6810110000",
+        "product_name_ru": "Блоки строительные из цемента/бетона",
+        "product_name_en": "Building blocks of cement/concrete",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XIII",
+        "group": 68,
+        "reasoning_notes": "Бетонные изделия; блоки — низкая ставка для стройматериалов"
+    },
+    {
+        "hs_code": "6901000000",
+        "product_name_ru": "Кирпичи керамические (строительные)",
+        "product_name_en": "Ceramic building bricks",
+        "duty_rate_percent": 8.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XIII",
+        "group": 69,
+        "reasoning_notes": "Керамика; кирпич — средняя ставка"
+    },
+    {
+        "hs_code": "6908900000",
+        "product_name_ru": "Плитка керамическая глазурованная (для пола/стен)",
+        "product_name_en": "Glazed ceramic floor/wall tiles",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XIII",
+        "group": 69,
+        "reasoning_notes": "Керамика; плитка — умеренная ставка"
+    },
+    {
+        "hs_code": "7005290000",
+        "product_name_ru": "Стекло листовое (термополированное, прочее)",
+        "product_name_en": "Sheet glass (other float glass)",
+        "duty_rate_percent": 8.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XIII",
+        "group": 70,
+        "reasoning_notes": "Стекло; листовое — средняя ставка для строительного стекла"
+    },
+    {
+        "hs_code": "7010900000",
+        "product_name_ru": "Бутылки стеклянные (для напитков/пищевых продуктов)",
+        "product_name_en": "Glass bottles for beverages/food",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XIII",
+        "group": 70,
+        "reasoning_notes": "Стекло; бутылки — умеренная ставка"
+    },
+    # =====================================================================
+    # SECTION XIV — Natural or cultured pearls, precious stones, precious metals (Group 71)
+    # =====================================================================
+    {
+        "hs_code": "7102310000",
+        "product_name_ru": "Алмазы необработанные (промышленные)",
+        "product_name_en": "Unworked industrial diamonds",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XIV",
+        "group": 71,
+        "reasoning_notes": "Драгоценные камни; алмазы необработанные — нулевая ставка"
+    },
+    {
+        "hs_code": "7102390000",
+        "product_name_ru": "Алмазы обработанные (бриллианты)",
+        "product_name_en": "Cut diamonds",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XIV",
+        "group": 71,
+        "reasoning_notes": "Драгоценные камни; бриллианты — нулевая ставка"
+    },
+    {
+        "hs_code": "7103990000",
+        "product_name_ru": "Камни драгоценные (обработанные, прочие)",
+        "product_name_en": "Precious stones worked, other",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XIV",
+        "group": 71,
+        "reasoning_notes": "Драгоценные камни; прочие — нулевая ставка для драгоценностей"
+    },
+    {
+        "hs_code": "7113190000",
+        "product_name_ru": "Ювелирные изделия из золота",
+        "product_name_en": "Gold jewelry",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XIV",
+        "group": 71,
+        "reasoning_notes": "Ювелирка; золото — умеренная ставка для готовых изделий"
+    },
+    # =====================================================================
+    # SECTION XV — Base metals and articles of base metals (Groups 72–83)
+    # =====================================================================
+    {
+        "hs_code": "7204210000",
+        "product_name_ru": "Лом и отходы нержавеющей стали",
+        "product_name_en": "Stainless steel scrap and waste",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XV",
+        "group": 72,
+        "reasoning_notes": "Черные металлы; лом стали — нулевая ставка для вторичного сырья"
+    },
+    {
+        "hs_code": "7208512000",
+        "product_name_ru": "Листы из железа/нелегированной стали (толщиной >10 мм)",
+        "product_name_en": "Iron/non-alloy steel plates (thickness > 10 mm)",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XV",
+        "group": 72,
+        "reasoning_notes": "Черные металлы; толстолистовой прокат — низкая ставка"
+    },
+    {
+        "hs_code": "7210490000",
+        "product_name_ru": "Прокат оцинкованный (листовой, прочий)",
+        "product_name_en": "Galvanized steel sheets, other",
+        "duty_rate_percent": 8.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XV",
+        "group": 72,
+        "reasoning_notes": "Черные металлы; оцинковка — средняя ставка"
+    },
+    {
+        "hs_code": "7310210000",
+        "product_name_ru": "Банки жестяные консервные (емкостью <50 л)",
+        "product_name_en": "Tin cans (capacity < 50 L)",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XV",
+        "group": 73,
+        "reasoning_notes": "Изделия из черных металлов; банки — умеренная ставка"
+    },
+    {
+        "hs_code": "7403110000",
+        "product_name_ru": "Медь рафинированная (катоды)",
+        "product_name_en": "Refined copper cathodes",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XV",
+        "group": 74,
+        "reasoning_notes": "Медь; катоды — низкая ставка для цветных металлов"
+    },
+    {
+        "hs_code": "7601100000",
+        "product_name_ru": "Алюминий необработанный (первичный)",
+        "product_name_en": "Unwrought aluminium (primary)",
+        "duty_rate_percent": 8.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XV",
+        "group": 76,
+        "reasoning_notes": "Алюминий; первичный — средняя ставка"
+    },
+    {
+        "hs_code": "7606119000",
+        "product_name_ru": "Листы алюминиевые (толщиной ≥0.2 мм, прочие)",
+        "product_name_en": "Aluminium plates/sheets (thickness ≥ 0.2 mm)",
+        "duty_rate_percent": 8.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XV",
+        "group": 76,
+        "reasoning_notes": "Алюминий; листы — средняя ставка"
+    },
+    {
+        "hs_code": "8204110000",
+        "product_name_ru": "Ключи гаечные ручные (нераздвижные)",
+        "product_name_en": "Hand-operated spanners/wrenches",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XV",
+        "group": 82,
+        "reasoning_notes": "Инструменты ручные; ключи — низкая ставка"
+    },
+    {
+        "hs_code": "8301200000",
+        "product_name_ru": "Замки для автомобилей (из недрагоценных металлов)",
+        "product_name_en": "Vehicle locks (base metal)",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XV",
+        "group": 83,
+        "reasoning_notes": "Металлоизделия; замки автомобильные — низкая ставка"
+    },
+    # =====================================================================
+    # SECTION XVI — Machinery and mechanical appliances; electrical equipment (Groups 84–85)
+    # =====================================================================
+    {
+        "hs_code": "8408200000",
+        "product_name_ru": "Двигатели дизельные (для транспортных средств)",
+        "product_name_en": "Diesel engines for vehicles",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVI",
+        "group": 84,
+        "reasoning_notes": "Двигатели; дизельные — низкая ставка для промышленного оборудования"
+    },
+    {
+        "hs_code": "8414510000",
+        "product_name_ru": "Вентиляторы настольные/настенные (с двигателем ≤125 Вт)",
+        "product_name_en": "Table/wall fans with motor ≤ 125W",
+        "duty_rate_percent": 8.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVI",
+        "group": 84,
+        "reasoning_notes": "Вентиляторы — средняя ставка для бытовой техники"
+    },
+    {
+        "hs_code": "8418100000",
+        "product_name_ru": "Холодильники/морозильники комбинированные (бытовые)",
+        "product_name_en": "Combined fridge-freezers (household)",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": True,
+        "section": "XVI",
+        "group": 84,
+        "reasoning_notes": "Бытовая техника; холодильники — ставка 10% + утильсбор"
+    },
+    {
+        "hs_code": "8418108000",
+        "product_name_ru": "Холодильники промышленные",
+        "product_name_en": "Industrial refrigerators",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVI",
+        "group": 84,
+        "reasoning_notes": "Оборудование промышленное; холодильники — низкая ставка"
+    },
+    {
+        "hs_code": "8421210000",
+        "product_name_ru": "Оборудование для фильтрации воды",
+        "product_name_en": "Water filtering equipment",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVI",
+        "group": 84,
+        "reasoning_notes": "Фильтры; оборудование водоподготовки — нулевая ставка для экологического оборудования"
+    },
+    {
+        "hs_code": "8443310000",
+        "product_name_ru": "Многофункциональные устройства (принтер+сканер+копир)",
+        "product_name_en": "Multifunction printers (print, scan, copy)",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": True,
+        "section": "XVI",
+        "group": 84,
+        "reasoning_notes": "Офисная техника; МФУ — нулевая ставка для IT-оборудования + утильсбор"
+    },
+    {
+        "hs_code": "8471490000",
+        "product_name_ru": "Компьютеры настольные (системные блоки)",
+        "product_name_en": "Desktop computers (system units)",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": True,
+        "section": "XVI",
+        "group": 84,
+        "reasoning_notes": "IT-оборудование; компьютеры — нулевая ставка + утильсбор"
+    },
+    {
+        "hs_code": "8471606000",
+        "product_name_ru": "Клавиатуры для компьютеров",
+        "product_name_en": "Computer keyboards",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVI",
+        "group": 84,
+        "reasoning_notes": "IT-периферия; клавиатуры — нулевая ставка"
+    },
+    {
+        "hs_code": "8471700000",
+        "product_name_ru": "Накопители данных (SSD/HDD)",
+        "product_name_en": "Data storage drives (SSD/HDD)",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVI",
+        "group": 84,
+        "reasoning_notes": "IT-оборудование; накопители — нулевая ставка"
+    },
+    {
+        "hs_code": "8517120000",
+        "product_name_ru": "Смартфоны (мобильные телефоны)",
+        "product_name_en": "Smartphones (mobile telephones)",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": True,
+        "section": "XVI",
+        "group": 85,
+        "reasoning_notes": "Электроника; смартфоны — нулевая ставка для IT-устройств + утильсбор"
+    },
+    {
+        "hs_code": "8518210000",
+        "product_name_ru": "Громкоговорители (одиночные, в корпусе)",
+        "product_name_en": "Single loudspeakers, in enclosure",
+        "duty_rate_percent": 8.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVI",
+        "group": 85,
+        "reasoning_notes": "Аудиотехника; колонки — средняя ставка"
+    },
+    {
+        "hs_code": "8523520000",
+        "product_name_ru": "Карты смарт-карты (чиповые)",
+        "product_name_en": "Smart cards (chip cards)",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVI",
+        "group": 85,
+        "reasoning_notes": "Электроника; смарт-карты — нулевая ставка"
+    },
+    {
+        "hs_code": "8528711000",
+        "product_name_ru": "Цифровые ТВ-приставки (без дисплея)",
+        "product_name_en": "Digital TV receivers (no display)",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": True,
+        "section": "XVI",
+        "group": 85,
+        "reasoning_notes": "Электроника; ТВ-приставки — ставка 10% + утильсбор"
+    },
+    {
+        "hs_code": "8537101000",
+        "product_name_ru": "Пульты управления/панели (напряжение ≤1000 В)",
+        "product_name_en": "Control panels/consoles (voltage ≤ 1000V)",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVI",
+        "group": 85,
+        "reasoning_notes": "Электротехника; панели управления — низкая ставка"
+    },
+    {
+        "hs_code": "8542310000",
+        "product_name_ru": "Процессоры (интегральные схемы, чипы)",
+        "product_name_en": "Processor chips (integrated circuits)",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVI",
+        "group": 85,
+        "reasoning_notes": "Электроника; процессоры — нулевая ставка для электронных компонентов"
+    },
+    # =====================================================================
+    # SECTION XVII — Vehicles, aircraft, vessels (Groups 86–89)
+    # =====================================================================
+    {
+        "hs_code": "8606920000",
+        "product_name_ru": "Вагоны железнодорожные грузовые (прочие)",
+        "product_name_en": "Railway freight wagons, other",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVII",
+        "group": 86,
+        "reasoning_notes": "Железнодорожный транспорт; вагоны — низкая ставка"
+    },
+    {
+        "hs_code": "8701200000",
+        "product_name_ru": "Тракторы седельные (полуприцепы)",
+        "product_name_en": "Road tractors for semi-trailers",
+        "duty_rate_percent": 15.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": True,
+        "section": "XVII",
+        "group": 87,
+        "reasoning_notes": "Автотранспорт; седельные тягачи — 15% + утильсбор"
+    },
+    {
+        "hs_code": "8703235000",
+        "product_name_ru": "Автомобили легковые (новые, 1500-3000 см³)",
+        "product_name_en": "New passenger cars, 1500-3000 cc",
+        "duty_rate_percent": 15.0,
+        "excise_rate_percent": 5.0,
+        "is_subject_to_recycling_fee": True,
+        "section": "XVII",
+        "group": 87,
+        "reasoning_notes": "Автомобили; ДВС 1500-3000 см³ — пошлина 15% + акциз при импорте + утильсбор"
+    },
+    {
+        "hs_code": "8703321900",
+        "product_name_ru": "Автомобили дизельные (новые, 1500-2500 см³)",
+        "product_name_en": "New diesel passenger cars, 1500-2500 cc",
+        "duty_rate_percent": 15.0,
+        "excise_rate_percent": 5.0,
+        "is_subject_to_recycling_fee": True,
+        "section": "XVII",
+        "group": 87,
+        "reasoning_notes": "Автомобили дизельные — пошлина 15% + акциз + утильсбор"
+    },
+    {
+        "hs_code": "8703800000",
+        "product_name_ru": "Автомобили легковые электромобили",
+        "product_name_en": "Passenger electric vehicles (EV)",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": True,
+        "section": "XVII",
+        "group": 87,
+        "reasoning_notes": "Электромобили — нулевая пошлина (стимулирование зеленого транспорта), утильсбор взимается"
+    },
+    {
+        "hs_code": "8704210000",
+        "product_name_ru": "Грузовые автомобили дизельные (до 5 т)",
+        "product_name_en": "Diesel trucks, up to 5 tons",
+        "duty_rate_percent": 15.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": True,
+        "section": "XVII",
+        "group": 87,
+        "reasoning_notes": "Грузовики; малый тоннаж — 15% + утильсбор"
+    },
+    {
+        "hs_code": "8708290000",
+        "product_name_ru": "Кузовные детали и принадлежности (автомобильные)",
+        "product_name_en": "Vehicle body parts and accessories",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVII",
+        "group": 87,
+        "reasoning_notes": "Автозапчасти; кузовные детали — ставка 10%"
+    },
+    {
+        "hs_code": "8711201000",
+        "product_name_ru": "Мотоциклы (250-500 см³, с ДВС)",
+        "product_name_en": "Motorcycles, 250-500 cc, ICE",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": True,
+        "section": "XVII",
+        "group": 87,
+        "reasoning_notes": "Мотоциклы; средний объем — 10% + утильсбор"
+    },
+    {
+        "hs_code": "8711500000",
+        "product_name_ru": "Мотоциклы (с ДВС >800 см³)",
+        "product_name_en": "Motorcycles, ICE > 800 cc",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 5.0,
+        "is_subject_to_recycling_fee": True,
+        "section": "XVII",
+        "group": 87,
+        "reasoning_notes": "Мотоциклы; большой объем — пошлина 10% + акциз на роскошь + утильсбор"
+    },
+    {
+        "hs_code": "8802400000",
+        "product_name_ru": "Самолеты (масса пустого >15 000 кг)",
+        "product_name_en": "Aircraft unladen weight > 15000 kg",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVII",
+        "group": 88,
+        "reasoning_notes": "Воздушный транспорт; самолеты — нулевая ставка для гражданской авиации"
+    },
+    # =====================================================================
+    # SECTION XVIII — Optical, photographic, medical, measuring, musical instruments (Groups 90–92)
+    # =====================================================================
+    {
+        "hs_code": "9018311000",
+        "product_name_ru": "Шприцы медицинские (стерильные)",
+        "product_name_en": "Medical syringes, sterile",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVIII",
+        "group": 90,
+        "reasoning_notes": "Медизделия; шприцы — нулевая ставка для медицинских товаров"
+    },
+    {
+        "hs_code": "9018390000",
+        "product_name_ru": "Инструменты медицинские (катетеры, зонды, прочие)",
+        "product_name_en": "Medical instruments (catheters, probes, etc.)",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVIII",
+        "group": 90,
+        "reasoning_notes": "Медизделия; инструменты — нулевая ставка"
+    },
+    {
+        "hs_code": "9018900000",
+        "product_name_ru": "Аппараты и устройства медицинские (прочие)",
+        "product_name_en": "Medical instruments and appliances, other",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVIII",
+        "group": 90,
+        "reasoning_notes": "Медицинское оборудование; аппараты — нулевая ставка"
+    },
+    {
+        "hs_code": "9021101000",
+        "product_name_ru": "Аппараты ортопедические (фиксаторы, бандажи)",
+        "product_name_en": "Orthopedic appliances (braces, supports)",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVIII",
+        "group": 90,
+        "reasoning_notes": "Ортопедия; аппараты — нулевая ставка для медизделий"
+    },
+    {
+        "hs_code": "9023000000",
+        "product_name_ru": "Приборы и инструменты учебные (демонстрационные)",
+        "product_name_en": "Instruments for educational/demonstration",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVIII",
+        "group": 90,
+        "reasoning_notes": "Учебное оборудование — нулевая ставка"
+    },
+    {
+        "hs_code": "9027890000",
+        "product_name_ru": "Приборы физические/химические анализаторы (прочие)",
+        "product_name_en": "Physical/chemical analysis instruments, other",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVIII",
+        "group": 90,
+        "reasoning_notes": "Лабораторное оборудование; анализаторы — нулевая ставка"
+    },
+    {
+        "hs_code": "9030320000",
+        "product_name_ru": "Мультиметры универсальные (электроизмерительные)",
+        "product_name_en": "Multimeters (electrical measuring)",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XVIII",
+        "group": 90,
+        "reasoning_notes": "Измерительные приборы; мультиметры — нулевая ставка"
+    },
+    # =====================================================================
+    # SECTION XX — Miscellaneous manufactured articles (Groups 94–96)
+    # =====================================================================
+    {
+        "hs_code": "9401390000",
+        "product_name_ru": "Кресла вращающиеся (офисные, прочие)",
+        "product_name_en": "Swivel office chairs, other",
+        "duty_rate_percent": 12.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XX",
+        "group": 94,
+        "reasoning_notes": "Мебель; кресла офисные — ставка 12%"
+    },
+    {
+        "hs_code": "9401610000",
+        "product_name_ru": "Мебель деревянная (сиденья с деревянным каркасом)",
+        "product_name_en": "Wooden framed seats (upholstered)",
+        "duty_rate_percent": 15.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XX",
+        "group": 94,
+        "reasoning_notes": "Мебель; сиденья — повышенная ставка 15%"
+    },
+    {
+        "hs_code": "9403300000",
+        "product_name_ru": "Мебель офисная деревянная (столы, полки)",
+        "product_name_en": "Wooden office furniture (desks, shelves)",
+        "duty_rate_percent": 12.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XX",
+        "group": 94,
+        "reasoning_notes": "Мебель офисная — ставка 12%"
+    },
+    {
+        "hs_code": "9403500000",
+        "product_name_ru": "Мебель деревянная для спальни (шкафы, кровати)",
+        "product_name_en": "Wooden bedroom furniture (wardrobes, beds)",
+        "duty_rate_percent": 12.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XX",
+        "group": 94,
+        "reasoning_notes": "Мебель; спальни — ставка 12%"
+    },
+    {
+        "hs_code": "9404291000",
+        "product_name_ru": "Матрасы пружинные",
+        "product_name_en": "Spring mattresses",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XX",
+        "group": 94,
+        "reasoning_notes": "Мебель; матрасы — ставка 10%"
+    },
+    {
+        "hs_code": "9506910000",
+        "product_name_ru": "Инвентарь и оборудование для фитнеса и спортзалов",
+        "product_name_en": "Gym and fitness equipment",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XX",
+        "group": 95,
+        "reasoning_notes": "Спорттовары; фитнес-оборудование — низкая ставка"
+    },
+    {
+        "hs_code": "9507200000",
+        "product_name_ru": "Крючки рыболовные (с поводком или без)",
+        "product_name_en": "Fish hooks (with or without snells)",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XX",
+        "group": 95,
+        "reasoning_notes": "Рыболовные принадлежности — низкая ставка"
+    },
+    {
+        "hs_code": "9602000000",
+        "product_name_ru": "Изделия из растительных материалов (резные)",
+        "product_name_en": "Worked vegetable carving materials",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XX",
+        "group": 96,
+        "reasoning_notes": "Разные готовые изделия — низкая ставка"
+    },
+    {
+        "hs_code": "9603210000",
+        "product_name_ru": "Щетки зубные (включая электрические)",
+        "product_name_en": "Toothbrushes (including electric)",
+        "duty_rate_percent": 8.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XX",
+        "group": 96,
+        "reasoning_notes": "Щетки; зубные — умеренная ставка"
+    },
+    {
+        "hs_code": "9619000000",
+        "product_name_ru": "Подгузники и гигиенические прокладки",
+        "product_name_en": "Sanitary towels and diapers",
+        "duty_rate_percent": 5.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XX",
+        "group": 96,
+        "reasoning_notes": "Гигиенические изделия; подгузники — низкая ставка для социально значимых товаров"
+    },
+    {
+        "hs_code": "9617000000",
+        "product_name_ru": "Термосы и вакуумные сосуды (готовые)",
+        "product_name_en": "Vacuum flasks and containers, complete",
+        "duty_rate_percent": 10.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XX",
+        "group": 96,
+        "reasoning_notes": "Термосы — умеренная ставка"
+    },
+    # =====================================================================
+    # SECTION XXI — Works of art, collectors' pieces and antiques (Group 97)
+    # =====================================================================
+    {
+        "hs_code": "9701100000",
+        "product_name_ru": "Картины и рисунки (ручной работы)",
+        "product_name_en": "Paintings and drawings (handmade)",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XXI",
+        "group": 97,
+        "reasoning_notes": "Произведения искусства; картины — нулевая ставка для культурных ценностей"
+    },
+    {
+        "hs_code": "9706000000",
+        "product_name_ru": "Антиквариат (возрастом более 100 лет)",
+        "product_name_en": "Antiques (over 100 years old)",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XXI",
+        "group": 97,
+        "reasoning_notes": "Антиквариат — нулевая ставка для культурных ценностей"
+    },
+    {
+        "hs_code": "9705000000",
+        "product_name_ru": "Коллекции и предметы коллекционирования",
+        "product_name_en": "Collections and collectors' pieces",
+        "duty_rate_percent": 0.0,
+        "excise_rate_percent": 0.0,
+        "is_subject_to_recycling_fee": False,
+        "section": "XXI",
+        "group": 97,
+        "reasoning_notes": "Коллекционные предметы — нулевая ставка"
+    },
+]
+
+# ---------------------------------------------------------------------------
+# Налоговый кодекс РК 2026 — ключевые статьи
+# ---------------------------------------------------------------------------
+NK_RK_2026_ARTICLES = [
+    {
+        "document_title": "Налоговый кодекс Республики Казахстан 2026 года",
+        "article_number": "Статья 1",
+        "content_quote": (
+            "Настоящий Кодекс регулирует властные отношения по установлению, введению и порядку "
+            "исчисления и уплаты налогов и других обязательных платежей в бюджет Республики Казахстан, "
+            "а также отношения между участниками налоговых правоотношений. Ставка налога на добавленную "
+            "стоимость (НДС) устанавливается в размере 16 процентов. НДС на облагаемый импорт "
+            "уплачивается в соответствии с таможенным законодательством Евразийского экономического союза."
+        ),
+        "tags": ["TAX_CODE", "VAT", "GENERAL_PROVISIONS", "IMPORT_VAT"],
+        "keywords": "НДС 16%, налог на добавленную стоимость, импорт, ставка НДС 2026"
+    },
+    {
+        "document_title": "Налоговый кодекс Республики Казахстан 2026 года",
+        "article_number": "Статья 82",
+        "content_quote": (
+            "Плательщиками налога на добавленную стоимость являются физические и юридические лица, "
+            "индивидуальные предприниматели, осуществляющие облагаемый оборот по реализации товаров "
+            "(работ, услуг) на территории Республики Казахстан, а также лица, импортирующие товары "
+            "на территорию Республики Казахстан. Обязательная постановка на регистрационный учет "
+            "по НДС производится при превышении годового оборота 20 000-кратного размера месячного "
+            "расчетного показателя (МРП). Добровольная постановка возможна при обороте от 30 000 МРП."
+        ),
+        "tags": ["TAX_CODE", "VAT", "REGISTRATION", "NDS_THRESHOLD"],
+        "keywords": "регистрация НДС, порог постановки, МРП, оборот, плательщики НДС"
+    },
+    {
+        "document_title": "Налоговый кодекс Республики Казахстан 2026 года",
+        "article_number": "Статья 203",
+        "content_quote": (
+            "Ставки акцизов на подакцизные товары, реализуемые (ввозимые) на территорию Республики "
+            "Казахстан, устанавливаются настоящим Кодексом. Начиная с 2026 года ставки акцизов "
+            "на алкогольную, табачную и нефтяную продукцию повышаются на 10 процентов ежегодно "
+            "в течение трех лет. Акциз на табачные изделия исчисляется по комбинированной ставке: "
+            "адвалорный компонент (12 процентов) плюс специфический компонент в твердой сумме за единицу "
+            "товара."
+        ),
+        "tags": ["TAX_CODE", "EXCISE", "EXCISE_RATES", "ALCOHOL", "TOBACCO"],
+        "keywords": "акциз, повышение акцизов 10%, подакцизные товары, алкоголь, табак, нефтепродукты"
+    },
+    {
+        "document_title": "Налоговый кодекс Республики Казахстан 2026 года",
+        "article_number": "Статья 345",
+        "content_quote": (
+            "С 1 января 2026 года вводится налог на роскошь в отношении легковых автомобилей "
+            "(транспортных средств) стоимостью свыше 15 000-кратного размера месячного расчетного "
+            "показателя. Ставка налога составляет 10 процентов от суммы превышения стоимости "
+            "автомобиля над установленным порогом. Уплата налога производится при регистрации "
+            "транспортного средства в уполномоченных органах."
+        ),
+        "tags": ["TAX_CODE", "LUXURY_TAX", "VEHICLES", "NEW_TAX_2026"],
+        "keywords": "налог на роскошь, дорогие автомобили, транспортные средства, 15000 МРП, порог стоимости"
+    },
+    {
+        "document_title": "Налоговый кодекс Республики Казахстан 2026 года",
+        "article_number": "Статья 456",
+        "content_quote": (
+            "Энергетические напитки и безалкогольные тонизирующие напитки с содержанием кофеина "
+            "более 150 мг/л признаются подакцизными товарами. Ставка акциза устанавливается в "
+            "размере 15 тенге за литр. Импортеры энергетических напитков уплачивают акциз при "
+            "ввозе товаров на территорию Республики Казахстан. Освобождаются от уплаты акциза "
+            "энергетические напитки, ввозимые в качестве образцов для сертификации."
+        ),
+        "tags": ["TAX_CODE", "EXCISE", "ENERGY_DRINKS", "NEW_EXCISE"],
+        "keywords": "энергетические напитки, акциз энергетики, тонизирующие напитки, кофеин, импорт"
+    },
+    {
+        "document_title": "Налоговый кодекс Республики Казахстан 2026 года",
+        "article_number": "Статья 198",
+        "content_quote": (
+            "Реализация лекарственных средств и медицинских изделий облагается налогом на "
+            "добавленную стоимость по льготной ставке 5 процентов. Льготная ставка применяется "
+            "к лекарственным средствам, включенным в Государственный реестр лекарственных средств "
+            "Республики Казахстан, а также к медицинским изделиям, зарегистрированным в порядке, "
+            "установленном законодательством Республики Казахстан."
+        ),
+        "tags": ["TAX_CODE", "VAT", "MEDICINES", "LOWERED_VAT"],
+        "keywords": "НДС 5%, лекарства, медизделия, льготная ставка, медицинские товары"
+    },
+    {
+        "document_title": "Экологический кодекс Республики Казахстан и Налоговый кодекс РК 2026",
+        "article_number": "Статья 530",
+        "content_quote": (
+            "Утилизационный сбор (платеж) уплачивается производителями и импортерами отдельных "
+            "видов товаров, включая транспортные средства, шины, аккумуляторы, бытовую технику, "
+            "электронику и упаковку. Перечень товаров, подлежащих утилизационному сбору, "
+            "утверждается Правительством Республики Казахстан. Ставки утилизационного сбора "
+            "дифференцируются в зависимости от категории товара и его экологической опасности. "
+            "С 2026 года базовая ставка повышается на 15 процентов."
+        ),
+        "tags": ["ECO_CODE", "RECYCLING_FEE", "UTILIZATION", "ENVIRONMENT"],
+        "keywords": "утилизационный сбор, утильсбор, импортеры, транспорт, шины, электроника, повышение 2026"
+    },
+    {
+        "document_title": "Кодекс Республики Казахстан О таможенном регулировании",
+        "article_number": "Статья 147",
+        "content_quote": (
+            "Излишне уплаченные или взысканные таможенные платежи, налоги подлежат возврату "
+            "по заявлению плательщика в течение трех лет со дня их уплаты. Возврат производится "
+            "таможенным органом в срок не более 30 календарных дней со дня подачи заявления. "
+            "На сумму излишне уплаченных таможенных платежей начисляются проценты в размере "
+            "официальной ставки рефинансирования Национального Банка Республики Казахстан."
+        ),
+        "tags": ["CUSTOMS_CODE", "OVERPAYMENT", "REFUND", "CUSTOMS_PAYMENTS"],
+        "keywords": "излишняя уплата, возврат пошлин, таможенные платежи, срок возврата, проценты"
+    },
+    {
+        "document_title": "Налоговый кодекс Республики Казахстан 2026 года",
+        "article_number": "Статья 201",
+        "content_quote": (
+            "Налог на добавленную стоимость, уплаченный при импорте товаров на территорию "
+            "Республики Казахстан, подлежит отнесению в зачет (вычету) в полном объеме при "
+            "наличии документа, подтверждающего уплату НДС таможенным органам. Импортер имеет "
+            "право на налоговый вычет по НДС при последующей реализации импортированных товаров. "
+            "Вычет НДС на импорт производится в том налоговом периоде, в котором товары были "
+            "выпущены таможенными органами."
+        ),
+        "tags": ["TAX_CODE", "VAT", "VAT_DEDUCTION", "IMPORT_DEDUCTION"],
+        "keywords": "зачет НДС, налоговый вычет, НДС на импорт, выпуск товаров, таможенное оформление"
+    },
+    {
+        "document_title": "Налоговый кодекс Республики Казахстан 2026 года",
+        "article_number": "Статья 270",
+        "content_quote": (
+            "При импорте товаров физическими лицами для личного пользования на территорию "
+            "Республики Казахстан ставки ввозных таможенных пошлин, налогов устанавливаются "
+            "в соответствии с международными договорами и актами Евразийского экономического "
+            "союза. Беспошлинный лимит на международные почтовые отправления и товары, "
+            "ввозимые физическими лицами, составляет 200 евро и 31 кг в месяц. При превышении "
+            "указанного лимита взимается пошлина в размере 15 процентов от суммы превышения."
+        ),
+        "tags": ["TAX_CODE", "IMPORT_DUTY", "INDIVIDUALS", "DUTY_FREE_LIMIT"],
+        "keywords": "физические лица, беспошлинный лимит, 200 евро, 31 кг, интернет-покупки, пошлина 15%"
+    },
+    {
+        "document_title": "Налоговый кодекс Республики Казахстан 2026 года",
+        "article_number": "Статья 312",
+        "content_quote": (
+            "С 1 января 2026 года вводится налог на цифровые услуги (Google Tax). Иностранные "
+            "компании, оказывающие электронные услуги физическим лицам на территории Республики "
+            "Казахстан (реализация цифрового контента, стриминг, хостинг, рекламные услуги), "
+            "обязаны уплачивать налог на добавленную стоимость по ставке 16 процентов. "
+            "Постановка на учет иностранных поставщиков электронных услуг осуществляется "
+            "в упрощенном порядке через портал электронного правительства."
+        ),
+        "tags": ["TAX_CODE", "VAT", "DIGITAL_SERVICES", "GOOGLE_TAX"],
+        "keywords": "Google Tax, налог на цифровые услуги, иностранные компании, электронные услуги, стриминг"
+    },
+]
