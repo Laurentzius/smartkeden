@@ -1,6 +1,6 @@
 import logging
 from abc import ABC, abstractmethod
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any, Optional, Tuple
 from qdrant_client import QdrantClient
 from qdrant_client.models import Distance, VectorParams, PointStruct
 from app.core.config import settings
@@ -53,7 +53,20 @@ class VectorStorage(ABC):
     @abstractmethod
     def delete_collection(self, collection_name: str) -> bool:
         pass
-
+    @abstractmethod
+    def scroll_points(
+        self,
+        collection_name: str,
+        filter_cond: Optional[Any] = None,
+        limit: int = 100,
+        offset: Optional[Any] = None,
+        with_payload: bool = True,
+        with_vectors: bool = False,
+    ) -> Tuple[List[Any], Optional[Any]]:
+        pass
+    @abstractmethod
+    def delete_points(self, collection_name: str, ids: List[str]) -> bool:
+        pass
 class QdrantVectorStorageAdapter(VectorStorage):
     """Concrete adapter satisfying VectorStorage seam using QdrantClient."""
     def __init__(self, client_or_url: Optional[Any] = None):
@@ -135,4 +148,36 @@ class QdrantVectorStorageAdapter(VectorStorage):
             self._client.delete_collection(collection_name)
             return True
         except Exception:
+            return False
+    def scroll_points(
+        self,
+        collection_name: str,
+        filter_cond: Optional[Any] = None,
+        limit: int = 100,
+        offset: Optional[Any] = None,
+        with_payload: bool = True,
+        with_vectors: bool = False,
+    ) -> Tuple[List[Any], Optional[Any]]:
+        try:
+            res, next_page_offset = self._client.scroll(
+                collection_name=collection_name,
+                scroll_filter=filter_cond,
+                limit=limit,
+                offset=offset,
+                with_payload=with_payload,
+                with_vectors=with_vectors,
+            )
+            return res, next_page_offset
+        except Exception as e:
+            logger.error(f"Failed to scroll points in collection {collection_name}: {e}")
+            return [], None
+    def delete_points(self, collection_name: str, ids: List[str]) -> bool:
+        try:
+            self._client.delete(
+                collection_name=collection_name,
+                points_selector=ids,
+            )
+            return True
+        except Exception as e:
+            logger.error(f"Failed to delete points in collection {collection_name}: {e}")
             return False

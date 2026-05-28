@@ -116,6 +116,21 @@ def test_rag_custom_seams():
             self.collections.pop(collection_name, None)
             self.points.pop(collection_name, None)
             return True
+        def scroll_points(self, collection_name: str, filter_cond: Any = None, limit: int = 100, offset: Any = None, with_payload: bool = True, with_vectors: bool = False) -> Any:
+            pts = self.points.get(collection_name, [])
+            # Filter by matching doc title if specified in filter_cond (for indexer calls)
+            if filter_cond and hasattr(filter_cond, "must"):
+                # if it is a Filter object from qdrant_client.models
+                for cond in filter_cond.must:
+                    if hasattr(cond, "key") and cond.key == "document_title":
+                        match_val = cond.match.text if hasattr(cond.match, "text") else getattr(cond.match, "value", None)
+                        if match_val:
+                            pts = [p for p in pts if p.payload.get("document_title") == match_val]
+            return pts[:limit], None
+        def delete_points(self, collection_name: str, ids: List[str]) -> bool:
+            if collection_name in self.points:
+                self.points[collection_name] = [p for p in self.points[collection_name] if p.id not in ids]
+            return True
 
     class MockEmbeddingModel(EmbeddingModel):
         def embed_text(self, text: str, task_type: str = "RETRIEVAL_QUERY") -> List[float]:

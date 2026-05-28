@@ -8,7 +8,7 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 
 from qdrant_client import QdrantClient
-from qdrant_client.models import Distance, VectorParams, PointStruct, Filter, FieldCondition, MatchText
+from qdrant_client.models import Distance, VectorParams, PointStruct, Filter, FieldCondition, MatchText, MatchValue
 
 from app.core.config import settings
 from app.core.vertex_client import GeminiVertexClient
@@ -254,10 +254,19 @@ class LegalRAGIndexer:
         return working_blocks
 
     @classmethod
+    def generate_point_id(cls, doc_title: str, article_number: str, content_quote: str) -> str:
+        """
+        Generates a deterministic UUIDv5 for a chunk based on its document title,
+        article number, and content hash.
+        """
+        content_hash = hashlib.sha256(content_quote.encode("utf-8")).hexdigest()
+        doc_key = f"{str(doc_title)}:{str(article_number)}"
+        doc_key_ns = uuid.uuid5(uuid.NAMESPACE_DNS, doc_key)
+        return str(uuid.uuid5(doc_key_ns, content_hash))
+    @classmethod
     def parse_and_index_document(cls, raw_text: str, doc_title: str, doc_type: str = "code") -> int:
         """
         Parses a raw legal document into structured blocks and indexes into Qdrant.
-
         Returns the number of new/updated points indexed.
         """
         # Step 1: Parse locally into structured blocks
@@ -265,7 +274,6 @@ class LegalRAGIndexer:
         if not blocks:
             logger.warning("No blocks extracted from document: %s", doc_title)
             return 0
-
         # Step 2: Local deduplication via Granite embeddings
         deduped = cls.deduplicate_blocks_local(blocks)
         if deduped is not None:
@@ -276,10 +284,9 @@ class LegalRAGIndexer:
             blocks = deduped
         else:
             logger.info("Local dedup skipped, using %d parsed blocks", len(blocks))
-
-        # Step 3: Index into Qdrant
-        return cls.index_blocks(blocks)
-
+        # Step 3: Index into Qdrant using delta sync
+        res = cls.update_document_index(blocks, doc_title)
+        return res.get("added", 0)
     @classmethod
     def parse_legal_text_to_blocks(cls, raw_text: str, doc_title: str, doc_type: str = "code") -> List[Dict[str, Any]]:
         """Parses raw legal text into structured blocks (articles and sections), preserving article boundaries.
@@ -292,19 +299,20 @@ class LegalRAGIndexer:
     def index_blocks(cls, blocks: List[Dict[str, Any]]) -> int:
         """
         Ingests parsed blocks into Qdrant collection.
-        Uses deterministic UUIDv5 point IDs from document_title + article_number
+        Uses deterministic UUIDv5 point IDs from document_title + article_number + content_hash
         for idempotent upsert, and SHA256 content hash for dedup.
         """
         cls.setup_collection()
-
         points = []
         skipped = 0
         updated = 0
         for block in blocks:
-            doc_key = f"{block['document_title']}:{block['article_number']}"
-            point_id = str(uuid.uuid5(uuid.NAMESPACE_DNS, doc_key))
+            point_id = cls.generate_point_id(
+                doc_title=block["document_title"],
+                article_number=block["article_number"],
+                content_quote=block["content_quote"]
+            )
             content_hash = hashlib.sha256(block["content_quote"].encode("utf-8")).hexdigest()
-
             # Dedup check: query by point_id (deterministic UUIDv5)
             try:
                 existing = cls._vector_storage.retrieve_points(
@@ -320,15 +328,12 @@ class LegalRAGIndexer:
                         updated += 1  # Content changed, will overwrite
             except Exception:
                 pass  # If retrieve fails, proceed with upsert
-
             text_to_embed = f"Document: {block['document_title']}\nReference: {block['article_number']}\nContent: {block['content_quote']}"
-
             # Generate embedding vector via local Sentence‑Transformer model
             vector = cls._embedding_model.embed_text(
                 text=text_to_embed,
                 task_type="RETRIEVAL_DOCUMENT"
             )
-
             payload = {
                 "document_title": block["document_title"],
                 "article_number": block["article_number"],
@@ -337,13 +342,11 @@ class LegalRAGIndexer:
                 "tags": block.get("tags", []),
                 "keywords": block.get("keywords", "")
             }
-
             points.append(PointStruct(
                 id=point_id,
                 vector=vector,
                 payload=payload
             ))
-
         logger.info(f"Upserting {len(points)} points into Qdrant collection: {cls.COLLECTION_NAME} "
                      f"(skipped {skipped} duplicates, updated {updated})")
         if points:
@@ -351,9 +354,95 @@ class LegalRAGIndexer:
                 collection_name=cls.COLLECTION_NAME,
                 points=points
             )
-
         return len(points)
-
+    @classmethod
+    def update_document_index(cls, blocks: List[Dict[str, Any]], doc_title: str) -> Dict[str, int]:
+        """
+        Syncs document blocks pointwise. Computes additions and deletions using
+        Qdrant Scroll API.
+        """
+        cls.setup_collection()
+        new_blocks_map = {}
+        for block in blocks:
+            pid = cls.generate_point_id(
+                doc_title=block["document_title"],
+                article_number=block["article_number"],
+                content_quote=block["content_quote"]
+            )
+            new_blocks_map[pid] = block
+        new_chunk_ids = set(new_blocks_map.keys())
+        # Retrieve existing point IDs for this document from Qdrant
+        old_chunk_ids = set()
+        offset = None
+        filter_cond = Filter(
+            must=[
+                FieldCondition(
+                    key="document_title",
+                    match=MatchValue(value=doc_title)
+                )
+            ]
+        )
+        try:
+            while True:
+                res_points, next_offset = cls._vector_storage.scroll_points(
+                    collection_name=cls.COLLECTION_NAME,
+                    filter_cond=filter_cond,
+                    limit=100,
+                    offset=offset,
+                    with_payload=True,
+                    with_vectors=False
+                )
+                for pt in res_points:
+                    old_chunk_ids.add(pt.id)
+                if next_offset is None or not res_points:
+                    break
+                offset = next_offset
+        except Exception as e:
+            logger.warning(f"Failed to scroll points for document '{doc_title}', treating old as empty: {e}")
+            pass
+        to_delete = old_chunk_ids - new_chunk_ids
+        to_add = new_chunk_ids - old_chunk_ids
+        unchanged = old_chunk_ids & new_chunk_ids
+        # Delete obsolete points
+        if to_delete:
+            cls._vector_storage.delete_points(cls.COLLECTION_NAME, list(to_delete))
+        # Embed and upsert newly added/modified points
+        points_to_upsert = []
+        for pid in to_add:
+            block = new_blocks_map[pid]
+            content_hash = hashlib.sha256(block["content_quote"].encode("utf-8")).hexdigest()
+            text_to_embed = f"Document: {block['document_title']}\nReference: {block['article_number']}\nContent: {block['content_quote']}"
+            vector = cls._embedding_model.embed_text(
+                text=text_to_embed,
+                task_type="RETRIEVAL_DOCUMENT"
+            )
+            payload = {
+                "document_title": block["document_title"],
+                "article_number": block["article_number"],
+                "content_quote": block["content_quote"],
+                "content_hash": content_hash,
+                "tags": block.get("tags", []),
+                "keywords": block.get("keywords", "")
+            }
+            points_to_upsert.append(PointStruct(
+                id=pid,
+                vector=vector,
+                payload=payload
+            ))
+        if points_to_upsert:
+            cls._vector_storage.upsert_points(
+                collection_name=cls.COLLECTION_NAME,
+                points=points_to_upsert
+            )
+        logger.info(
+            f"Pointwise sync for '{doc_title}' completed. "
+            f"Added: {len(to_add)}, Deleted: {len(to_delete)}, Unchanged: {len(unchanged)}"
+        )
+        return {
+            "added": len(to_add),
+            "deleted": len(to_delete),
+            "unchanged": len(unchanged)
+        }
     @classmethod
     def seed_initial_legal_base(cls) -> int:
         """Seeds the standard reference RK codes and EAEU decisions on startup."""
