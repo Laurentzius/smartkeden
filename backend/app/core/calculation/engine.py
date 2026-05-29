@@ -25,13 +25,13 @@ class StaticMCIRegistry(MCIRegistry):
     """Concrete adapter with historical and current MCI rates in RK."""
     def get_mci(self, year: int) -> float:
         mci_table = {
-            2026: 3692.0,
-            2025: 3692.0,
-            2024: 3692.0,
+            2026: 4325.0,  # Официальный МРП РК на 2026 год
+            2025: 3932.0,  # Официальный МРП РК на 2025 год
+            2024: 3692.0,  # Официальный МРП РК на 2024 год
             2023: 3450.0,
             2022: 3063.0,
         }
-        return mci_table.get(year, 3692.0)
+        return mci_table.get(year, 4325.0)
 
 class CalculationRequest(BaseModel):
     invoice_price: float = Field(..., description="Invoice price in foreign currency or KZT")
