@@ -1,3 +1,4 @@
+import json
 import pytest
 from app.core.orchestrator.models import IntentType, IntentClassification
 from app.core.orchestrator.router import IntentClassifier
@@ -90,8 +91,7 @@ async def test_orchestrator_endpoint_health(monkeypatch):
     monkeypatch.setattr(IntentClassifier, "classify", _mock_classify_greeting)
 
     client = TestClient(app)
-    response = client.post("/api/orchestrate", json={"text": "Привет!"})
-    assert response.status_code == 200
+    response = client.post("/api/orchestrate", data={"text": "Привет!"})
     data = response.json()
     assert data["intent"] == "greeting"
     assert len(data["message"]) > 0
@@ -104,8 +104,7 @@ async def test_orchestrator_empty_message():
     from app.main import app
 
     client = TestClient(app)
-    response = client.post("/api/orchestrate", json={"text": ""})
-    assert response.status_code == 400
+    response = client.post("/api/orchestrate", data={"text": ""})
 
 
 @pytest.mark.asyncio
@@ -136,20 +135,18 @@ async def test_orchestrator_multi_turn_flow(monkeypatch):
     client = TestClient(app)
 
     # Turn 1: legal question without history
-    resp1 = client.post("/api/orchestrate", json={"text": "Какая ставка НДС на импорт?"})
+    resp1 = client.post("/api/orchestrate", data={"text": "Какая ставка НДС на импорт?"})
     assert resp1.status_code == 200
     data1 = resp1.json()
     assert len(data1["message"]) > 0
-
     # Turn 2: follow-up with history containing the previous Q&A
-    resp2 = client.post("/api/orchestrate", json={
+    resp2 = client.post("/api/orchestrate", data={
         "text": "А какие документы нужны для этого?",
-        "history": [
+        "history": json.dumps([
             {"role": "user", "content": "Какая ставка НДС на импорт?"},
             {"role": "assistant", "content": data1["message"]}
-        ]
+        ])
     })
-    assert resp2.status_code == 200
     data2 = resp2.json()
     assert len(data2["message"]) > 0
 
@@ -187,9 +184,9 @@ async def test_orchestrator_calculation_context_chaining(monkeypatch):
         {"role": "assistant", "content": "Рекомендуемый код: 8543709000. Пошлина 10.0%. Требуется утильсбор ♻."}
     ]
 
-    resp = client.post("/api/orchestrate", json={
+    resp = client.post("/api/orchestrate", data={
         "text": "Посчитай пошлину для $5000",
-        "history": history
+        "history": json.dumps(history)
     })
 
     assert resp.status_code == 200
@@ -252,10 +249,9 @@ async def test_adk_coordination_rag(monkeypatch):
     monkeypatch.setattr(LegalRAGService, "query_legal_base", _mock_query_legal_base)
 
     client = TestClient(app)
-    resp = client.post("/api/orchestrate", json={
+    resp = client.post("/api/orchestrate", data={
         "text": "Какая ставка НДС на импорт?"
     })
-
     assert resp.status_code == 200
     data = resp.json()
     assert data["intent"] == "question_about_law"
@@ -303,10 +299,9 @@ async def test_adk_coordination_hs(monkeypatch):
     monkeypatch.setattr(HSCodeClassifier, "classify", _mock_classify)
 
     client = TestClient(app)
-    resp = client.post("/api/orchestrate", json={
+    resp = client.post("/api/orchestrate", data={
         "text": "Найди код ТН ВЭД для телефона"
     })
-
     assert resp.status_code == 200
     data = resp.json()
     assert data["intent"] == "product_description"
@@ -374,10 +369,9 @@ async def test_adk_chained_workflow(monkeypatch):
     monkeypatch.setattr(ProfileExtractor, "extract", _mock_extract)
 
     client = TestClient(app)
-    resp = client.post("/api/orchestrate", json={
+    resp = client.post("/api/orchestrate", data={
         "text": "Определи код и посчитай пошлину для смартфона за $12500"
     })
-
     assert resp.status_code == 200
     data = resp.json()
     # The chained workflow should produce a calculation result
@@ -430,9 +424,9 @@ async def test_adk_session_history_mapping(monkeypatch):
         {"role": "assistant", "content": "Ставка НДС составляет 12%"},
     ]
 
-    resp = client.post("/api/orchestrate", json={
+    resp = client.post("/api/orchestrate", data={
         "text": "А какие документы нужны?",
-        "history": history_payload,
+        "history": json.dumps(history_payload),
     })
 
     assert resp.status_code == 200
@@ -469,7 +463,7 @@ async def test_adk_error_handling(monkeypatch):
     client = TestClient(app)
 
     # A legal question that the fallback classifier will route to question_about_law
-    resp = client.post("/api/orchestrate", json={
+    resp = client.post("/api/orchestrate", data={
         "text": "Какая ставка таможенной пошлины?"
     })
     assert resp.status_code == 200

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { 
   Calculator, 
   MessageSquare, 
@@ -12,7 +12,8 @@ import {
   BookOpen, 
   ShieldAlert,
   MapPin,
-  RefreshCw
+  RefreshCw,
+  Paperclip
 } from "lucide-react";
 
 // Types corresponding to FastAPI backend models
@@ -90,16 +91,14 @@ interface OrchestrateResponse {
 
 export default function CustomsDashboard() {
   // Common states
-  const [activeTab, setActiveTab] = useState<"classifier" | "rag">("classifier");
   const [sessionId, setSessionId] = useState<string>("");
-
+  const fileInputRef = useRef<HTMLInputElement>(null);
   useEffect(() => {
     // Generate UUID for Langfuse session grouping
     setSessionId(self.crypto.randomUUID());
   }, []);
   const [exchangeRates, setExchangeRates] = useState<ExchangeRates>({ USD: 450.0, EUR: 485.0, RUB: 5.0, CNY: 62.0, KZT: 1.0 });
   const [ratesLoading, setRatesLoading] = useState<boolean>(false);
-
   // Calculator form states
   const [invoicePrice, setInvoicePrice] = useState<number>(1000);
   const [currency, setCurrency] = useState<string>("USD");
@@ -111,25 +110,28 @@ export default function CustomsDashboard() {
   const [calcResult, setCalcResult] = useState<CalculationResponse | null>(null);
   const [calcLoading, setCalcLoading] = useState<boolean>(false);
   const [calcError, setCalcError] = useState<string | null>(null);
-
-  // HS Classifier states
-  const [productDesc, setProductDesc] = useState<string>("");
+  // Unified Chat States
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
-  const [classificationResult, setClassificationResult] = useState<HSClassificationResponse | null>(null);
-  const [classLoading, setClassLoading] = useState<boolean>(false);
-  const [classError, setClassError] = useState<string | null>(null);
-
-  // Legal RAG states
-  const [ragQuery, setRagQuery] = useState<string>("");
-  const [ragHistory, setRagHistory] = useState<Array<{ role: "user" | "assistant"; text: string; laws?: LegalChunk[]; chain_warning?: string }>>([
+  const [latestProductName, setLatestProductName] = useState<string>("");
+  const [latestCandidates, setLatestCandidates] = useState<HSCodeCandidate[] | null>(null);
+  const [chatQuery, setChatQuery] = useState<string>("");
+  const [chatHistory, setChatHistory] = useState<Array<{ 
+    role: "user" | "assistant"; 
+    text: string; 
+    laws?: LegalChunk[]; 
+    candidates?: HSCodeCandidate[];
+    calculation?: CalculationResponse;
+    chain_warning?: string;
+    filePreview?: string;
+    fileName?: string;
+  }>>([
     {
       role: "assistant",
-      text: "Здравствуйте! Я ИИ-консультант Кеден Көмекшісі. Задайте мне любой вопрос о таможенном кодексе РК, ставках налогов или требованиях к импорту.",
+      text: "Здравствуйте! Я ИИ-консультант «Интеллектуальный Помощник Keden». Я могу подобрать код ТН ВЭД для вашего товара (в том числе по фотографии), проконсультировать по таможенному законодательству РК (RAG по кодексам) и помочь рассчитать таможенные платежи.",
     }
   ]);
-  const [ragLoading, setRagLoading] = useState<boolean>(false);
-
+  const [chatLoading, setChatLoading] = useState<boolean>(false);
 
   // Fetch exchange rates from National Bank on mount
   const fetchRates = async () => {
@@ -195,34 +197,6 @@ export default function CustomsDashboard() {
     }
   };
 
-  // Handle HS classification action
-  const handleClassify = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!productDesc.trim()) return;
-    setClassLoading(true);
-    setClassError(null);
-    try {
-      const formData = new FormData();
-      formData.append("description", productDesc);
-      if (uploadedFile) {
-        formData.append("file", uploadedFile);
-      }
-
-      const res = await fetch("/api/classify", {
-        method: "POST",
-        body: formData
-      });
-
-      if (!res.ok) throw new Error("Classification API failed");
-      const result = await res.json();
-      setClassificationResult(result);
-    } catch (err: any) {
-      setClassError(err.message || "Ошибка классификации");
-    } finally {
-      setClassLoading(false);
-    }
-  };
-
   // Handle image upload and preview
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -231,64 +205,81 @@ export default function CustomsDashboard() {
       setFilePreview(URL.createObjectURL(file));
     }
   };
-
   // Handle selection of a candidate from the list
   const applyCandidateToCalculator = (candidate: HSCodeCandidate) => {
     setDutyRate(candidate.duty_rate_percent);
     setExciseRate(candidate.excise_rate_percent);
     setIsRecycling(candidate.is_subject_to_recycling_fee);
-    
     // Smooth scroll back to calculator
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
-
-  // Handle chat submission via universal orchestrator
-  const handleRagSubmit = async (e: React.FormEvent) => {
+  // Handle chat submission via universal orchestrator accepting multipart/form-data
+  const handleChatSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!ragQuery.trim()) return;
-    const userMessage = ragQuery;
-    setRagHistory(prev => [...prev, { role: "user", text: userMessage }]);
-    setRagQuery("");
-    setRagLoading(true);
-
-    const historyPayload = ragHistory.slice(-10).map(msg => ({
+    if (!chatQuery.trim() && !uploadedFile) return;
+    const userMessage = chatQuery;
+    const currentFile = uploadedFile;
+    const currentPreview = filePreview;
+    setChatHistory(prev => [
+      ...prev,
+      { 
+        role: "user", 
+        text: userMessage || (currentFile ? `[Загружен файл: ${currentFile.name}]` : ""),
+        filePreview: currentPreview || undefined,
+        fileName: currentFile ? currentFile.name : undefined
+      }
+    ]);
+    setChatQuery("");
+    setUploadedFile(null);
+    setFilePreview(null);
+    setChatLoading(true);
+    const historyPayload = chatHistory.slice(-10).map(msg => ({
       role: msg.role,
       content: msg.text,
     }));
-
     try {
-    const res = await fetch("/api/orchestrate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        text: userMessage,
-        session_id: sessionId,
-        history: historyPayload,
-      })
-    });
-
+      const formData = new FormData();
+      formData.append("text", userMessage || "Классифицировать изображение");
+      formData.append("session_id", sessionId);
+      formData.append("history", JSON.stringify(historyPayload));
+      if (currentFile) {
+        formData.append("file", currentFile);
+      }
+      const res = await fetch("/api/orchestrate", {
+        method: "POST",
+        body: formData
+      });
       if (!res.ok) throw new Error("Orchestrator API failed");
       const data: OrchestrateResponse = await res.json();
-
-      setRagHistory(prev => [
+      // Extract details from pipeline results if any
+      const laws = data.pipeline_results?.supporting_laws;
+      const candidates = data.pipeline_results?.candidates;
+      const calculation = (data.pipeline_results as any)?.calculation_response;
+      if (candidates && candidates.length > 0) {
+        setLatestCandidates(candidates);
+        setLatestProductName(candidates[0].product_name_ru || userMessage || "Таможенный товар");
+      }
+      setChatHistory(prev => [
         ...prev,
         {
           role: "assistant",
           text: data.message,
-          laws: data.pipeline_results?.supporting_laws,
+          laws: laws,
+          candidates: candidates,
+          calculation: calculation,
           chain_warning: data.chain_warning
         }
       ]);
     } catch (err: any) {
-      setRagHistory(prev => [
+      setChatHistory(prev => [
         ...prev,
         {
           role: "assistant",
-          text: "Извините, произошла ошибка подключения к серверу."
+          text: "Извините, произошла ошибка подключения к серверу или обработки запроса."
         }
       ]);
     } finally {
-      setRagLoading(false);
+      setChatLoading(false);
     }
   };
   // Document generation state & handlers
@@ -302,8 +293,8 @@ export default function CustomsDashboard() {
         incoterms: "FCA Shenzhen",
         items: [
           {
-            name: productDesc.trim() || "Таможенный товар (импорт)",
-            hs_code: classificationResult?.candidates?.[0]?.hs_code || "8517130000",
+            name: latestProductName.trim() || "Таможенный товар (импорт)",
+            hs_code: latestCandidates?.[0]?.hs_code || "8517130000",
             qty: 1,
             unit: "pcs",
             price: Number(invoicePrice)
@@ -617,248 +608,226 @@ export default function CustomsDashboard() {
           )}
         </section>
 
-        {/* Right Column: Ingestion/Classifier + Legal RAG Workspace (7/12 span) */}
-        <section className="lg:col-span-7 flex flex-col h-fit space-y-6">
-          
-          {/* Navigation Tab bar */}
-          <div className="flex border-b border-slate-200">
-            <button
-              onClick={() => setActiveTab("classifier")}
-              className={`flex items-center space-x-2 py-3 px-6 font-bold text-sm tracking-wide transition border-b-2 cursor-pointer ${
-                activeTab === "classifier"
-                  ? "border-teal-500 text-teal-600"
-                  : "border-transparent text-slate-500 hover:text-slate-800"
-              }`}
-            >
-              <Search className="h-4 w-4" />
-              <span>ИИ-Подбор ТН ВЭД</span>
-            </button>
-            <button
-              onClick={() => setActiveTab("rag")}
-              className={`flex items-center space-x-2 py-3 px-6 font-bold text-sm tracking-wide transition border-b-2 cursor-pointer ${
-                activeTab === "rag"
-                  ? "border-teal-500 text-teal-600"
-                  : "border-transparent text-slate-500 hover:text-slate-800"
-              }`}
-            >
-              <MessageSquare className="h-4 w-4" />
-              <span>Правовой RAG Чат</span>
-            </button>
-          </div>
-
-          {/* Tab 1: Multimodal HS Code Classifier */}
-          {activeTab === "classifier" && (
-            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 space-y-6 animate-fadeIn">
-              <div className="flex items-center space-x-2 border-b border-slate-100 pb-3">
-                <Search className="h-5 w-5 text-teal-600" />
-                <h3 className="font-bold text-slate-800">ИИ-Классификатор ТН ВЭД (10 цифр)</h3>
+        {/* Right Column: Unified Intellect Chat Workspace (7/12 span) */}
+        <section className="lg:col-span-7 flex flex-col h-[650px] bg-white border border-slate-200 rounded-2xl shadow-sm overflow-hidden">
+          {/* Header */}
+          <div className="bg-slate-50 border-b border-slate-100 px-6 py-4 flex items-center justify-between">
+            <div className="flex items-center space-x-2.5">
+              <div className="bg-teal-500/10 p-2 rounded-lg text-teal-600">
+                <MessageSquare className="h-5 w-5" />
               </div>
-
-              <form onSubmit={handleClassify} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1">
-                    Описание товара (на русском или казахском)
-                  </label>
-                  <textarea
-                    rows={3}
-                    required
-                    value={productDesc}
-                    onChange={(e) => setProductDesc(e.target.value)}
-                    className="block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none text-sm"
-                    placeholder="Пример: Пластиковые детские конструкторы Lego, состоящие из цветных кубиков, в картонной коробке для сборки моделей..."
-                  />
-                </div>
-
-                {/* Multimodal Image Input */}
-                <div>
-                  <label className="block text-sm font-semibold text-slate-700 mb-1">
-                    Фото товара (необязательно, для ИИ-анализа зрения)
-                  </label>
-                  <div className="flex items-center space-x-4">
-                    <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-300 rounded-lg cursor-pointer hover:border-teal-500 p-4 w-40 text-center transition duration-150">
-                      <Upload className="h-6 w-6 text-slate-400 mb-1" />
-                      <span className="text-xs text-slate-600">Загрузить фото</span>
-                      <input 
-                        type="file" 
-                        accept="image/*" 
-                        onChange={handleFileChange} 
-                        className="hidden" 
-                      />
-                    </label>
-                    
-                    {filePreview && (
-                      <div className="relative">
-                        <img 
-                          src={filePreview} 
-                          alt="Product preview" 
-                          className="h-20 w-20 object-cover rounded-lg border border-slate-200 shadow-sm"
-                        />
-                        <button 
-                          type="button"
-                          onClick={() => { setUploadedFile(null); setFilePreview(null); }}
-                          className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 text-xs hover:bg-red-600 cursor-pointer"
-                        >
-                          ✕
-                        </button>
+              <div>
+                <h3 className="font-bold text-slate-800 text-base">«Интеллектуальный Помощник Keden»</h3>
+                <p className="text-xs text-slate-500">Мультимодальный подбор кодов ТН ВЭД, правовой RAG и расчеты</p>
+              </div>
+            </div>
+            {/* Session ID display / Reset indicator */}
+            <div className="text-[10px] bg-slate-200/60 text-slate-600 px-2 py-1 rounded font-mono">
+              SESS: {sessionId.substring(0, 8)}...
+            </div>
+          </div>
+          {/* Chat Feed */}
+          <div className="flex-1 overflow-y-auto p-6 space-y-4 text-sm bg-slate-50/50">
+            {chatHistory.map((msg, idx) => (
+              <div 
+                key={idx} 
+                className={`flex flex-col max-w-[85%] rounded-2xl p-4 shadow-sm border ${
+                  msg.role === "user" 
+                    ? "bg-teal-600 border-teal-500 text-white self-end ml-auto rounded-tr-none" 
+                    : "bg-white border-slate-100 text-slate-950 self-start rounded-tl-none"
+                }`}
+              >
+                <span className={`font-bold text-[10px] uppercase tracking-wider mb-1 select-none ${
+                  msg.role === "user" ? "text-teal-200" : "text-teal-600"
+                }`}>
+                  {msg.role === "user" ? "Вы" : "ИИ Keden"}
+                </span>
+                {/* User file attachment preview inside the bubble */}
+                {msg.filePreview && (
+                  <div className="mb-2 rounded-lg overflow-hidden border border-black/10 max-w-xs bg-black/5">
+                    <img 
+                      src={msg.filePreview} 
+                      alt="Attachment preview" 
+                      className="max-h-40 w-auto object-contain mx-auto"
+                    />
+                    {msg.fileName && (
+                      <div className="bg-black/20 px-2 py-1 text-xs text-center font-mono truncate text-white">
+                        {msg.fileName}
                       </div>
                     )}
                   </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={classLoading}
-                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg text-sm shadow-sm transition duration-150 disabled:bg-slate-300 disabled:cursor-not-allowed cursor-pointer"
-                >
-                  {classLoading ? "Классифицируем..." : "Определить код ТН ВЭД"}
-                </button>
-              </form>
-
-              {classError && (
-                <div className="p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg text-xs flex items-center space-x-2">
-                  <AlertTriangle className="h-4 w-4 text-red-500" />
-                  <span>{classError}</span>
-                </div>
-              )}
-
-              {/* Classification Candidates Result */}
-              {classificationResult && (
-                <div className="space-y-4 pt-4 border-t border-slate-100">
-                  <div className="flex items-center justify-between text-xs text-slate-500">
-                    <span>Распознано ИИ:</span>
-                    <span className="font-semibold text-slate-800">Найдены соответствия</span>
+                )}
+                <p className="whitespace-pre-line leading-relaxed text-sm">{msg.text}</p>
+                {/* Context chaining warning block */}
+                {msg.chain_warning && (
+                  <div className="mt-3 border-t border-slate-100 pt-2.5 text-xs">
+                    <div className="flex items-center space-x-1.5 text-amber-600 font-bold mb-1">
+                      <TrendingUp className="h-3.5 w-3.5" />
+                      <span>Связывание контекста:</span>
+                    </div>
+                    <p className="bg-amber-50 p-2.5 rounded-lg border border-amber-100/50 text-[11px] leading-relaxed italic text-amber-800">
+                      {msg.chain_warning}
+                    </p>
                   </div>
-                  
-                  {classificationResult.candidates.map((candidate, idx) => (
-                    <div 
-                      key={idx} 
-                      className="border border-slate-100 bg-slate-50 rounded-xl p-4 hover:border-teal-200 transition duration-150"
-                    >
-                      <div className="flex items-start justify-between mb-2">
-                        <div>
-                          <span className="inline-block bg-teal-100 text-teal-800 text-xs font-bold px-2 py-0.5 rounded mr-2">
-                            Код {candidate.hs_code}
-                          </span>
-                          <span className="font-bold text-slate-800 text-sm">{candidate.product_name_ru}</span>
-                        </div>
-                        <span className="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded">
-                          {(candidate.confidence_score * 100).toFixed(0)}% совпадение
-                        </span>
-                      </div>
-                      
-                      <p className="text-slate-600 text-xs mb-3">{candidate.reasoning}</p>
-                      
-                      <div className="flex items-center justify-between border-t border-slate-200/50 pt-3 text-xs">
-                        <div className="flex space-x-4 text-slate-500">
-                          <span>Пошлина: <span className="font-bold text-slate-800">{candidate.duty_rate_percent}%</span></span>
-                          {candidate.is_subject_to_recycling_fee && (
-                            <span className="text-amber-700 font-semibold flex items-center">
-                              <AlertTriangle className="h-3 w-3 mr-1" /> Утильсбор
+                )}
+                {/* HS classification cards displayed beautifully inside bubble stream */}
+                {msg.candidates && msg.candidates.length > 0 && (
+                  <div className="mt-4 border-t border-slate-100 pt-3 space-y-3">
+                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide block">Рекомендуемые коды ТН ВЭД:</span>
+                    {msg.candidates.map((candidate, cIdx) => (
+                      <div 
+                        key={cIdx} 
+                        className="bg-slate-50 border border-slate-100 rounded-xl p-3 text-slate-800 text-xs transition hover:border-teal-200"
+                      >
+                        <div className="flex items-start justify-between mb-1.5">
+                          <div>
+                            <span className="inline-block bg-teal-100 text-teal-800 text-[10px] font-bold px-1.5 py-0.5 rounded mr-1.5">
+                              Код {candidate.hs_code}
                             </span>
-                          )}
+                            <span className="font-bold text-slate-800 text-xs">{candidate.product_name_ru}</span>
+                          </div>
+                          <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded shrink-0">
+                            {(candidate.confidence_score * 100).toFixed(0)}% совпадение
+                          </span>
                         </div>
-                        <button
-                          onClick={() => applyCandidateToCalculator(candidate)}
-                          className="text-teal-600 hover:text-teal-800 font-bold transition flex items-center space-x-1 cursor-pointer"
-                        >
-                          <CheckCircle className="h-4 w-4" />
-                          <span>Применить к расчету</span>
-                        </button>
+                        <p className="text-slate-500 text-[11px] leading-normal mb-2">{candidate.reasoning}</p>
+                        <div className="flex items-center justify-between border-t border-slate-200/40 pt-2 text-[10px]">
+                          <span className="text-slate-500">Пошлина: <span className="font-bold text-slate-700">{candidate.duty_rate_percent}%</span></span>
+                          <button
+                            onClick={() => applyCandidateToCalculator(candidate)}
+                            className="text-teal-600 hover:text-teal-800 font-bold transition flex items-center space-x-1 cursor-pointer"
+                          >
+                            <CheckCircle className="h-3.5 w-3.5" />
+                            <span>Применить к расчету</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {/* Duty Calculation details displayed beautifully inside bubble stream */}
+                {msg.calculation && (
+                  <div className="mt-4 border-t border-slate-100 pt-3 space-y-2">
+                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide block">Расчет таможенных платежей:</span>
+                    <div className="bg-slate-50 border border-slate-100 rounded-xl p-3.5 text-slate-800 text-xs space-y-1.5">
+                      <div className="flex justify-between text-[11px]">
+                        <span className="text-slate-500">Таможенная стоимость:</span>
+                        <span className="font-semibold">{msg.calculation.customs_value_kzt?.toLocaleString()} ₸</span>
+                      </div>
+                      <div className="flex justify-between text-[11px]">
+                        <span className="text-slate-500">Пошлина:</span>
+                        <span className="font-semibold">{msg.calculation.customs_duty_kzt?.toLocaleString()} ₸</span>
+                      </div>
+                      {msg.calculation.excise_kzt > 0 && (
+                        <div className="flex justify-between text-[11px]">
+                          <span className="text-slate-500">Акциз:</span>
+                          <span className="font-semibold">{msg.calculation.excise_kzt?.toLocaleString()} ₸</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between text-[11px]">
+                        <span className="text-slate-500">Импортный НДС:</span>
+                        <span className="font-semibold">{msg.calculation.import_vat_kzt?.toLocaleString()} ₸</span>
+                      </div>
+                      {msg.calculation.recycling_fee_kzt > 0 && (
+                        <div className="flex justify-between text-[11px]">
+                          <span className="text-slate-500">Утильсбор:</span>
+                          <span className="font-semibold">{msg.calculation.recycling_fee_kzt?.toLocaleString()} ₸</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between border-t border-slate-200/50 pt-2 mt-1.5 font-bold text-teal-700">
+                        <span>Итого платежей:</span>
+                        <span>{msg.calculation.total_payments_kzt?.toLocaleString()} ₸</span>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Tab 2: Legal RAG Chat Feed */}
-          {activeTab === "rag" && (
-            <div className="bg-white border border-slate-200 rounded-2xl shadow-sm p-6 flex flex-col h-[550px] animate-fadeIn">
-              <div className="flex items-center space-x-2 border-b border-slate-100 pb-3 mb-4">
-                <BookOpen className="h-5 w-5 text-teal-600" />
-                <h3 className="font-bold text-slate-800">Нормативная база RAG (Таможенный & Налоговый Кодексы РК)</h3>
-              </div>
-
-              {/* Chat history list */}
-              <div className="flex-1 overflow-y-auto space-y-4 pr-1 mb-4 text-sm">
-                {ragHistory.map((msg, idx) => (
-                  <div 
-                    key={idx} 
-                    className={`flex flex-col max-w-[85%] rounded-xl p-3 ${
-                      msg.role === "user" 
-                        ? "bg-teal-50 border border-teal-100 text-teal-950 self-end ml-auto" 
-                        : "bg-slate-50 border border-slate-100 text-slate-950 self-start"
-                    }`}
-                  >
-                    <span className="font-bold text-xs text-slate-400 mb-1 select-none">
-                      {msg.role === "user" ? "Вы" : "ИИ Кеден Көмекшісі"}
-                    </span>
-                    <p className="whitespace-pre-line leading-relaxed">{msg.text}</p>
-                    
-                    {/* Context chaining display */}
-                    {msg.chain_warning && (
-                      <div className="mt-3 border-t border-slate-200/65 pt-2 text-xs text-slate-600">
-                        <div className="flex items-center space-x-1.5 text-teal-700 font-bold mb-1">
-                          <TrendingUp className="h-3.5 w-3.5" />
-                          <span>Связывание контекста:</span>
-                        </div>
-                        <p className="bg-teal-50/50 p-2 rounded border border-teal-100/50 text-[11px] leading-relaxed italic text-slate-700">
-                          {msg.chain_warning}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Citations/Supporting Laws */}
-                    {msg.laws && msg.laws.length > 0 && (
-                      <div className="mt-3 border-t border-slate-200/65 pt-2 space-y-1.5">
-                        <span className="text-xs font-bold text-slate-500 uppercase tracking-wide block">Официальные ссылки:</span>
-                        {msg.laws.map((law, lIdx) => (
-                          <details key={lIdx} className="text-xs text-slate-600 bg-white/70 rounded border border-slate-150 p-1.5 cursor-pointer">
-                            <summary className="font-semibold text-teal-800 hover:underline">
-                              {law.document_title}, {law.article_number}
-                            </summary>
-                            <p className="mt-1 text-slate-600 bg-slate-50 p-1.5 rounded text-[11px] leading-relaxed border-l-2 border-teal-500 select-all italic">
-                              "{law.content_quote}"
-                            </p>
-                          </details>
-                        ))}
-                      </div>
-                    )}
                   </div>
-                ))}
-                
-                {/* Chat Loading state */}
-                {ragLoading && (
-                  <div className="bg-slate-50 border border-slate-100 rounded-xl p-3 text-slate-500 text-xs self-start flex items-center space-x-2">
-                    <span className="h-2 w-2 bg-teal-500 rounded-full animate-bounce" />
-                    <span className="h-2 w-2 bg-teal-500 rounded-full animate-bounce [animation-delay:0.2s]" />
-                    <span className="h-2 w-2 bg-teal-500 rounded-full animate-bounce [animation-delay:0.4s]" />
-                    <span>Поиск по статьям кодексов РК...</span>
+                )}
+                {/* Citations/Supporting Laws */}
+                {msg.laws && msg.laws.length > 0 && (
+                  <div className="mt-4 border-t border-slate-100 pt-3 space-y-1.5 text-xs text-slate-800">
+                    <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wide block">Официальные ссылки:</span>
+                    {msg.laws.map((law, lIdx) => (
+                      <details key={lIdx} className="bg-slate-50 rounded-xl border border-slate-100 p-2.5 cursor-pointer">
+                        <summary className="font-semibold text-teal-800 hover:underline">
+                          {law.document_title}, {law.article_number}
+                        </summary>
+                        <p className="mt-1.5 text-slate-600 bg-white p-2 rounded-lg text-[11px] leading-relaxed border-l-2 border-teal-500 select-all italic font-serif">
+                          "{law.content_quote}"
+                        </p>
+                      </details>
+                    ))}
                   </div>
                 )}
               </div>
-
-              {/* Chat input box */}
-              <form onSubmit={handleRagSubmit} className="flex space-x-2">
-                <input
-                  type="text"
-                  required
-                  value={ragQuery}
-                  onChange={(e) => setRagQuery(e.target.value)}
-                  placeholder="Задайте вопрос по таможенному законодательству..."
-                  className="flex-1 rounded-lg border border-slate-300 px-3 py-2 text-slate-900 text-sm focus:border-teal-500 focus:outline-none"
-                />
-                <button
-                  type="submit"
-                  disabled={ragLoading || !ragQuery.trim()}
-                  className="bg-teal-600 hover:bg-teal-700 text-white font-bold px-4 py-2 rounded-lg text-sm transition duration-150 disabled:bg-slate-300 disabled:cursor-not-allowed cursor-pointer"
-                >
-                  Спросить ИИ
-                </button>
-              </form>
-            </div>
-          )}
+            ))}
+            {/* Chat Loading state */}
+            {chatLoading && (
+              <div className="bg-white border border-slate-100 rounded-2xl p-4 text-slate-500 text-xs self-start flex items-center space-x-2 shadow-sm max-w-[85%] rounded-tl-none">
+                <span className="h-2 w-2 bg-teal-500 rounded-full animate-bounce" />
+                <span className="h-2 w-2 bg-teal-500 rounded-full animate-bounce [animation-delay:0.2s]" />
+                <span className="h-2 w-2 bg-teal-500 rounded-full animate-bounce [animation-delay:0.4s]" />
+                <span>ИИ Keden анализирует ваш запрос...</span>
+              </div>
+            )}
+          </div>
+          {/* Chat Form Area */}
+          <div className="p-4 border-t border-slate-100 bg-white flex flex-col space-y-2">
+            {/* Uploaded file preview strip above the input box */}
+            {filePreview && (
+              <div className="flex items-center space-x-3 p-2 bg-slate-50 border border-slate-200/60 rounded-xl max-w-md">
+                <div className="relative shrink-0">
+                  <img 
+                    src={filePreview} 
+                    alt="File thumbnail" 
+                    className="h-10 w-10 object-cover rounded border border-slate-200"
+                  />
+                  <button 
+                    type="button"
+                    onClick={() => { setUploadedFile(null); setFilePreview(null); }}
+                    className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full h-4 w-4 flex items-center justify-center text-[10px] font-bold hover:bg-red-600 cursor-pointer"
+                  >
+                    ✕
+                  </button>
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-xs font-semibold text-slate-700 truncate">{uploadedFile?.name}</p>
+                  <p className="text-[10px] text-slate-400 font-mono">{(uploadedFile?.size ? uploadedFile.size / 1024 : 0).toFixed(1)} KB</p>
+                </div>
+              </div>
+            )}
+            <form onSubmit={handleChatSubmit} className="flex items-center space-x-2">
+              {/* Permanent file upload button (paperclip) */}
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                className="p-2.5 text-slate-500 hover:text-teal-600 hover:bg-slate-50 rounded-lg border border-slate-200 transition shrink-0 cursor-pointer"
+                title="Прикрепить фото товара для классификации"
+              >
+                <Paperclip className="h-5 w-5" />
+              </button>
+              <input 
+                type="file" 
+                ref={fileInputRef}
+                accept="image/*" 
+                onChange={handleFileChange} 
+                className="hidden" 
+              />
+              <input
+                type="text"
+                required={!uploadedFile}
+                value={chatQuery}
+                onChange={(e) => setChatQuery(e.target.value)}
+                placeholder="Спросите Keden о ТН ВЭД, законодательстве или прикрепите фото..."
+                className="flex-1 rounded-lg border border-slate-300 px-4 py-2.5 text-slate-900 text-sm focus:border-teal-500 focus:outline-none placeholder-slate-400"
+              />
+              <button
+                type="submit"
+                disabled={chatLoading || (!chatQuery.trim() && !uploadedFile)}
+                className="bg-teal-600 hover:bg-teal-700 text-white font-bold px-5 py-2.5 rounded-lg text-sm transition duration-150 disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed shrink-0 cursor-pointer"
+              >
+                Отправить
+              </button>
+            </form>
+          </div>
         </section>
       </main>
 

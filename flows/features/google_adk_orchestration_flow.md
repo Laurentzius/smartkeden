@@ -27,10 +27,10 @@ This document defines the transition from our manual, static `IntentClassifier` 
     - `CustomsCalculatorAgent` (`Task` mode)
   - Definition of an ADK 2.0 **Graph-based Workflow** (`KedenCustomsWorkflow`) to handle sequential and parallel agent execution (e.g. HS Classify -> check legal registry/RAG -> calculate duties).
   - Session history mapping between Next.js/FastAPI request payloads and ADK's native Session state.
+  - Support for **unified multimodal file uploads** (PDFs, images, Excel sheets) inside the single orchestrator chat, mapping uploaded files to ADK session/context state (`ctx.state["uploaded_file_bytes"]`, etc.) for multimodal subagent execution (e.g., image-based HS classification).
 * **Out of Scope / Deferred:**
   - Replacing the frontend UI with ADK-specific widgets (the existing chat component in `frontend/app/page.tsx` is kept, and we preserve backward compatibility of the `/api/orchestrate` endpoint).
   - Storing ADK sessions in GCP Vertex AI Agent Engine database (we maintain stateless server requests using memory-based ADK sessions or lightweight SQLite persistence).
-
 ---
 
 ## 3. Actors and Permissions
@@ -106,22 +106,19 @@ stateDiagram-v2
 ---
 
 ## 6. Events/Actions (ADK API Integration)
-
 | Direction | Event Name / API Method | Source/Target | Payload | Trigger Conditions |
 | :--- | :--- | :--- | :--- | :--- |
-| Incoming | `POST /api/orchestrate` | Next.js -> FastAPI | `OrchestrateRequest(text, history, session_id)` | User sends a chat message |
+| Incoming | `POST /api/orchestrate` | Next.js -> FastAPI | **Multipart Form Data**: `text` (string), optional `session_id` (string), optional `history` (JSON-stringified history), optional `file` (UploadFile) | User sends a chat message or uploads a file |
 | Internal | `adk.Agent.delegate_task()` | Coordinator -> Subagent | `TaskRequest(task_description, context_data)` | Coordinator decides to utilize specialized agent |
 | Internal | `adk.Agent.call_tool()` | Subagent -> Core Tool | `ToolCall(func_name, arguments)` | Subagent executes its primary logic |
 | Outgoing | `/api/orchestrate` response | FastAPI -> Next.js | `OrchestrateResponse(text, intent, confidence, calculation?)` | Graph execution completes |
-
----
 
 ## 7. Edge Cases
 * **Subagent fails / returns invalid schema**: The Coordinator catches `AgentExecutionError` and executes a deterministic fallback, returning: *"Извините, не удалось завершить операцию. Вы можете выполнить классификацию вручную."*
 * **Incomplete parameters for CalculatorAgent**: If the user wants a calculation but lacks parameters (e.g. missing value or country of origin), `CalculatorAgent` is executed in `Multi-turn / Task` mode, prompting the user for the missing values step-by-step instead of failing.
 * **Low-confidence routing**: If the coordinator's confidence is < 0.7, it falls back to a clarifying menu offering the user specific action buttons.
-
----
+* **Unsupported or corrupted file uploaded**: Returns a clear API validation error or system message: *"Неподдерживаемый формат файла или файл поврежден. Пожалуйста, загрузите изображение, PDF или Excel-таблицу."*
+* **File uploaded without text message**: The `KedenCoordinatorAgent` inspects the file type. If it is an image, it defaults to routing to `HSClassifierAgent` with an implicit classification intent. If it is an unclassifiable file or unclear, it asks the user: *"Какую операцию вы хотите выполнить с этим файлом?"*
 
 ## 8. Side Effects
 * **Vertex AI / Gemini API Calls**: Parallel tool execution might trigger multiple concurrent model calls. We utilize local caching where possible (e.g. for identical embeddings or static classification lookups).

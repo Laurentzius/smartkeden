@@ -3,7 +3,7 @@ import json
 import logging
 from typing import List, Optional, Any
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Form, File, UploadFile
 from langfuse import observe, propagate_attributes
 from app.core.config import settings
 
@@ -401,8 +401,13 @@ async def legal_rag_node(ctx, node_input):
 async def hs_classifier_node(ctx, node_input):
     """Handle product_description intent using HSCodeClassifier."""
     text = ctx.state.get("user_text", "")
-    hs_result = await HSCodeClassifier.classify(description=text)
-
+    uploaded_bytes = ctx.state.get("uploaded_file_bytes")
+    uploaded_mime = ctx.state.get("uploaded_file_mime", "image/jpeg")
+    hs_result = await HSCodeClassifier.classify(
+        description=text,
+        image_bytes=uploaded_bytes,
+        image_mime_type=uploaded_mime,
+    )
     msg_lines = [f"**Товар:** {hs_result.product_description}"]
     if hs_result.qdrant_backed:
         msg_lines.append("_Результаты подтверждены поиском в базе кодов ТН ВЭД._")
@@ -628,20 +633,44 @@ _runner: Runner = Runner(
 
 @router.post("", response_model=OrchestrateResponse)
 @observe(name="orchestrate")
-async def orchestrate(req: OrchestrateRequest):
+async def orchestrate(
+    text: str = Form(...),
+    session_id: Optional[str] = Form(None),
+    history: Optional[str] = Form(None),
+    file: Optional[UploadFile] = File(None),
+):
     """
     Main orchestrator endpoint. Accepts a user message, runs it through
     the ADK 2.0 ``KedenCustomsWorkflow`` graph, and returns the
     ``OrchestrateResponse`` from the terminating workflow node.
     """
-    if not req.text or not req.text.strip():
+    if not text or not text.strip():
         raise HTTPException(
             status_code=400,
             detail="Пожалуйста, напишите ваш вопрос или загрузите файл.",
         )
 
-    text = req.text.strip()
-    sess_id = req.session_id or "default"
+    clean_text = text.strip()
+    sess_id = session_id or "default"
+
+    # Parse history
+    parsed_history: List[ChatMessage] = []
+    if history:
+        try:
+            data_list = json.loads(history)
+            if isinstance(data_list, list):
+                parsed_history = [ChatMessage(**m) for m in data_list]
+        except Exception as e:
+            logger.error(f"Failed to parse history: {e}")
+
+    # Read uploaded file
+    file_bytes: Optional[bytes] = None
+    file_mime: Optional[str] = None
+    file_name: Optional[str] = None
+    if file is not None:
+        file_bytes = await file.read()
+        file_mime = file.content_type
+        file_name = file.filename
 
     async def _run_workflow() -> Optional[dict[str, Any]]:
         """Create an ADK session seeded with request state, run the workflow,
@@ -658,14 +687,20 @@ async def orchestrate(req: OrchestrateRequest):
 
         # Create a session whose initial state is picked up as ctx.state
         # by the workflow nodes (user_text + history).
+        state_dict = {
+            "user_text": clean_text,
+            "history": [m.model_dump() for m in parsed_history] if parsed_history else [],
+        }
+        if file_bytes is not None:
+            state_dict["uploaded_file_bytes"] = file_bytes
+            state_dict["uploaded_file_mime"] = file_mime
+            state_dict["uploaded_file_name"] = file_name
+
         await _session_service.create_session(
             app_name=_APP_NAME,
             user_id=_USER_ID,
             session_id=sess_id,
-            state={
-                "user_text": text,
-                "history": [m.model_dump() for m in req.history] if req.history else [],
-            },
+            state=state_dict,
         )
         final_output: Optional[dict[str, Any]] = None
         try:
@@ -674,7 +709,7 @@ async def orchestrate(req: OrchestrateRequest):
                 session_id=sess_id,
                 new_message=genai_types.Content(
                     role="user",
-                    parts=[genai_types.Part(text=text)],
+                    parts=[genai_types.Part(text=clean_text)],
                 ),
             ):
                 if event.output is not None:

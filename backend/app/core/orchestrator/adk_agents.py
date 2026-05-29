@@ -16,7 +16,7 @@ import logging
 from typing import Optional
 
 from google.adk import Agent
-
+from google.adk.tools import ToolContext
 from app.core.calculation.engine import CalculationRequest, CustomsCalculator
 from app.core.hs_classifier.classifier import HSCodeClassifier
 from app.core.rag.service import LegalRAGService
@@ -33,6 +33,7 @@ async def classify_hs_code(
     description: str,
     image_bytes: Optional[bytes] = None,
     image_mime_type: str = "image/jpeg",
+    tool_context: Optional[ToolContext] = None,
 ) -> str:
     """Classify a product description into Kazakhstan HS Codes (TH VED EAES).
 
@@ -44,8 +45,18 @@ async def classify_hs_code(
         image_bytes: Optional raw image bytes (base64-encoded) for visual
             product analysis.  Pass ``None`` for text-only classification.
         image_mime_type: MIME type of the image (e.g. ``image/jpeg``,
-            ``image/png``).  Ignored when *image_bytes* is ``None``.
+            `image/png`).  Ignored when *image_bytes* is ``None``.
+        tool_context: Optional ADK tool context to extract uploaded file state.
     """
+
+    if tool_context and tool_context.state:
+        state_bytes = tool_context.state.get("uploaded_file_bytes")
+        state_mime = tool_context.state.get("uploaded_file_mime")
+        if state_bytes:
+            image_bytes = state_bytes
+        if state_mime:
+            image_mime_type = state_mime
+
     result = await HSCodeClassifier.classify(
         description=description,
         image_bytes=image_bytes,

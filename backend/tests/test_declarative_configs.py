@@ -79,7 +79,7 @@ def test_api_orchestrate_faq_redirect():
     client = TestClient(app)
     response = client.post(
         "/api/orchestrate",
-        json={"text": "Каков лимит беспошлинного ввоза для посылок?"}
+        data={"text": "Каков лимит беспошлинного ввоза для посылок?"}
     )
     assert response.status_code == 200
     data = response.json()

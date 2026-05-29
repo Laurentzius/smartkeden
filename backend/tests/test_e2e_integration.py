@@ -1,3 +1,4 @@
+import json
 import os
 import pytest
 from fastapi.testclient import TestClient
@@ -19,7 +20,7 @@ async def test_e2e_classification_calculation_generation(monkeypatch, tmp_path):
 
     # 2. Turn 1: Classify product description
     user_msg_1 = "Определи код ТН ВЭД для портативного ноутбука из Китая"
-    resp1 = client.post("/api/orchestrate", json={"text": user_msg_1})
+    resp1 = client.post("/api/orchestrate", data={"text": user_msg_1})
     assert resp1.status_code == 200
     data1 = resp1.json()
     assert data1["intent"] == "product_description"
@@ -35,9 +36,9 @@ async def test_e2e_classification_calculation_generation(monkeypatch, tmp_path):
     ]
     
     user_msg_2 = "Посчитай таможенную пошлину для партии стоимостью $12500"
-    resp2 = client.post("/api/orchestrate", json={
+    resp2 = client.post("/api/orchestrate", data={
         "text": user_msg_2,
-        "history": history
+        "history": json.dumps(history)
     })
     assert resp2.status_code == 200
     data2 = resp2.json()
