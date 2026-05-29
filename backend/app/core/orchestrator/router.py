@@ -438,10 +438,20 @@ async def calculator_node(ctx, node_input):
 
         extraction = ProfileExtractor.extract(chat_history, text)
         profile = extraction.accumulated_profile
-
+        # Smart Enhancement: Auto-lookup duty rate if HS Code is provided but duty rate is missing
+        if profile.hs_code and profile.duty_rate_percent is None:
+            try:
+                from app.core.hs_classifier.classifier import HSCodeClassifier
+                hs_result = await HSCodeClassifier.classify(description=profile.hs_code)
+                if hs_result and hs_result.candidates:
+                    best_match = hs_result.candidates[0]
+                    profile.duty_rate_percent = best_match.duty_rate_percent
+                    profile.is_subject_to_recycling_fee = best_match.is_subject_to_recycling_fee
+                    logger.info(f"Auto-populated duty rate for HS Code {profile.hs_code} using {best_match.hs_code}: {best_match.duty_rate_percent}%")
+            except Exception as hs_err:
+                logger.warning(f"Failed to auto-lookup duty rate for HS Code {profile.hs_code}: {hs_err}")
         if (profile.invoice_price is not None and profile.invoice_price > 0.0
                 and profile.currency is not None and profile.duty_rate_percent is not None):
-
             is_recycling = bool(profile.is_subject_to_recycling_fee)
             calc_req = CalculationRequest(
                 invoice_price=profile.invoice_price,
