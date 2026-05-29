@@ -222,8 +222,7 @@ flowchart LR
 ---
 
 ## Implementation Trace & Flow Map
-
-* **Orchestrator (Chat):** `backend/app/core/orchestrator/` → Flow Document: `flows/features/agent_orchestrator_flow.md`
+* **Orchestrator (Chat):** `backend/app/core/orchestrator/` → Flow Document: `flows/features/agent_orchestrator_flow.md` (ADK 2.0 migration designed in `flows/features/google_adk_orchestration_flow.md`)
 * **Legal RAG Flow:** `backend/app/core/rag/` → Flow Document: `flows/features/semantic_embedding_flow.md`
 * **Document Ingestion:** `backend/app/core/rag/indexer.py` → Flow Document: `flows/features/blockify_ingestion_flow.md`
 * **HS Code Classifier:** `backend/app/core/hs_classifier/` → Flow Document: `flows/features/hs_classification_flow.md`
