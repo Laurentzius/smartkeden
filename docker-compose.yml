@@ -1,32 +1,8 @@
-services:
-  # 1. PostgreSQL Database for Langfuse
-  langfuse-db:
-    image: postgres:16-alpine
-    container_name: langfuse-db
-    restart: always
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: langfuse_db_password_123
-      POSTGRES_DB: langfuse
-    ports:
-      - "54322:5432"
-    volumes:
-      - langfuse_db_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d langfuse"]
-      interval: 5s
-      timeout: 5s
-      retries: 5
-    networks:
-      - smartkeden-network
-    deploy:
-      resources:
-        limits:
-          memory: 2G
 
-  # 2. Qdrant Vector Database
+services:
+  # 1. Qdrant Vector Database
   qdrant:
-    image: qdrant/qdrant:latest
+    image: qdrant/qdrant:v1.18.1
     container_name: qdrant
     restart: always
     ports:
@@ -41,175 +17,7 @@ services:
         limits:
           memory: 4G
 
-  # 4. ClickHouse OLAP Database (required by Langfuse v3)
-  clickhouse:
-    image: clickhouse/clickhouse-server:25.8
-    container_name: langfuse-clickhouse
-    restart: always
-    user: "101:101"
-    environment:
-      CLICKHOUSE_DB: default
-      CLICKHOUSE_USER: clickhouse
-      CLICKHOUSE_PASSWORD: clickhouse
-    volumes:
-      - langfuse_clickhouse_data:/var/lib/clickhouse
-      - langfuse_clickhouse_logs:/var/log/clickhouse-server
-    ports:
-      - "8123:8123"
-      - "9000:9000"
-    healthcheck:
-      test: wget --no-verbose --tries=1 --spider http://localhost:8123/ping || exit 1
-      interval: 5s
-      timeout: 5s
-      retries: 10
-      start_period: 5s
-    networks:
-      - smartkeden-network
-    deploy:
-      resources:
-        limits:
-          memory: 6G
-
-  # 5. MinIO S3-compatible storage (required by Langfuse v3)
-  minio:
-    image: minio/minio:latest
-    container_name: langfuse-minio
-    restart: always
-    entrypoint: sh
-    command: -c 'mkdir -p /data/langfuse-events && minio server --address ":9000" --console-address ":9001" /data'
-    environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin123
-    volumes:
-      - langfuse_minio_data:/data
-    ports:
-      - "9001:9001"
-      - "9002:9000"
-    healthcheck:
-      test: curl -s http://localhost:9000/minio/health/live || exit 1
-      interval: 5s
-      timeout: 5s
-      retries: 5
-      start_period: 5s
-    networks:
-      - smartkeden-network
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-
-  # 6. Redis Queue (required by Langfuse v3)
-  redis:
-    image: redis:7
-    container_name: langfuse-redis
-    restart: always
-    command: >
-      --requirepass langfuse_redis_pass
-      --maxmemory-policy noeviction
-    ports:
-      - "6379:6379"
-    volumes:
-      - langfuse_redis_data:/data
-    healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
-      interval: 3s
-      timeout: 10s
-      retries: 10
-    networks:
-      - smartkeden-network
-    deploy:
-      resources:
-        limits:
-          memory: 1G
-
-  # 7. Langfuse Worker (async event processing for v3)
-  langfuse-worker:
-    image: langfuse/langfuse-worker:3
-    container_name: langfuse-worker
-    restart: always
-    depends_on:
-      langfuse-db:
-        condition: service_healthy
-      clickhouse:
-        condition: service_healthy
-      minio:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    environment:
-      DATABASE_URL: postgresql://postgres:langfuse_db_password_123@langfuse-db:5432/langfuse
-      SALT: d209be36e7bc6e709fc57908b68cb267e8139
-      TELEMETRY_ENABLED: false
-      CLICKHOUSE_URL: http://clickhouse:8123
-      CLICKHOUSE_MIGRATION_URL: clickhouse://clickhouse:9000
-      CLICKHOUSE_USER: clickhouse
-      CLICKHOUSE_PASSWORD: clickhouse
-      CLICKHOUSE_CLUSTER_ENABLED: false
-      LANGFUSE_S3_EVENT_UPLOAD_BUCKET: langfuse-events
-      LANGFUSE_S3_EVENT_UPLOAD_PREFIX: events/
-      LANGFUSE_S3_EVENT_UPLOAD_REGION: us-east-1
-      LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT: http://minio:9000
-      LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID: minioadmin
-      LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY: minioadmin123
-      LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE: true
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_AUTH: langfuse_redis_pass
-      NEXTAUTH_URL: http://localhost:4000
-    networks:
-      - smartkeden-network
-    deploy:
-      resources:
-        limits:
-          memory: 2G
-
-  # 8. Langfuse Web Server (Tracing Dashboard + OTLP)
-  langfuse-server:
-    image: langfuse/langfuse:3
-    container_name: langfuse-server
-    restart: always
-    depends_on:
-      langfuse-db:
-        condition: service_healthy
-      clickhouse:
-        condition: service_healthy
-      minio:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-    ports:
-      - "4000:3000"
-    environment:
-      DATABASE_URL: postgresql://postgres:langfuse_db_password_123@langfuse-db:5432/langfuse
-      NEXTAUTH_SECRET: 9be36e7bc6e709fc57908b68cb267e813959bc2981ef80a0680cbcd1930
-      NEXTAUTH_URL: http://localhost:4000
-      SALT: d209be36e7bc6e709fc57908b68cb267e8139
-      TELEMETRY_ENABLED: false
-      PORT: 3000
-      CLICKHOUSE_URL: http://clickhouse:8123
-      CLICKHOUSE_MIGRATION_URL: clickhouse://clickhouse:9000
-      CLICKHOUSE_USER: clickhouse
-      CLICKHOUSE_PASSWORD: clickhouse
-      CLICKHOUSE_DB: default
-      CLICKHOUSE_CLUSTER_ENABLED: false
-      LANGFUSE_S3_EVENT_UPLOAD_BUCKET: langfuse-events
-      LANGFUSE_S3_EVENT_UPLOAD_PREFIX: events/
-      LANGFUSE_S3_EVENT_UPLOAD_REGION: us-east-1
-      LANGFUSE_S3_EVENT_UPLOAD_ENDPOINT: http://minio:9000
-      LANGFUSE_S3_EVENT_UPLOAD_ACCESS_KEY_ID: minioadmin
-      LANGFUSE_S3_EVENT_UPLOAD_SECRET_ACCESS_KEY: minioadmin123
-      LANGFUSE_S3_EVENT_UPLOAD_FORCE_PATH_STYLE: true
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
-      REDIS_AUTH: langfuse_redis_pass
-    networks:
-      - smartkeden-network
-    deploy:
-      resources:
-        limits:
-          memory: 3G
-
-  # 9. Backend Service (FastAPI)
+  # 2. Backend Service (FastAPI)
   backend:
     build:
       context: ./backend
@@ -225,11 +33,8 @@ services:
     environment:
       - QDRANT_HOST=qdrant
       - QDRANT_PORT=6333
-      - LANGFUSE_HOST=http://langfuse-server:3000
-      - LANGFUSE_BASE_URL=http://langfuse-server:3000
     depends_on:
       - qdrant
-      - langfuse-server
     networks:
       - smartkeden-network
     deploy:
@@ -237,7 +42,7 @@ services:
         limits:
           memory: 4G
 
-  # 10. Frontend Service (Next.js)
+  # 3. Frontend Service (Next.js)
   frontend:
     build:
       context: ./frontend
@@ -262,12 +67,7 @@ services:
           memory: 1G
 
 volumes:
-  langfuse_db_data:
   qdrant_data:
-  langfuse_clickhouse_data:
-  langfuse_clickhouse_logs:
-  langfuse_minio_data:
-  langfuse_redis_data:
 
 networks:
   smartkeden-network:

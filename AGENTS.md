@@ -153,7 +153,7 @@ smartkeden/
 │   ├── app/services/            # External integrations, APIs, caches
 │   ├── app/                 # HTTP/WS handlers, controllers
 │   └── tests/               # Backend tests
-├── frontend/                # Next.js 15 + React + TypeScript (e.g., Next.js, React Native, Swift)
+├── frontend/                # Next.js 16 + React + TypeScript (e.g., Next.js, React Native, Swift)
 │   ├── src/
 │   └── tests/
 ├── flows/                           # Flow documents (see §3)
@@ -177,7 +177,9 @@ All agents must execute runtime commands strictly within the project's isolated 
 | Action | Command |
 |---|---|
 | **Backend dev server** | `.venv/Scripts/uvicorn app.main:app --reload --app-dir backend` |
-| **Backend tests** | `.venv/Scripts/pytest backend/tests/` |
+| **Docker: start all** | `docker compose up -d` |
+| **Docker: stop all** | `docker compose down` |
+| **Backend tests** (with PYTHONPATH) | `set PYTHONPATH=backend&& .venv/Scripts/pytest backend/tests/` |
 | **Backend linter** | `.venv/Scripts/ruff check .` |
 | **Backend formatter** | `.venv/Scripts/ruff format .` |
 | **Frontend dev server** | `npm run dev --prefix frontend` |
@@ -267,7 +269,7 @@ A sub-agent must stop work and return the task to the Main Agent when:
 ```yaml
 PROJECT_NAME: "CustomAI Kazakhstan (Кеден Көмекшісі)"
 BACKEND_STACK: "Python 3.12 + FastAPI"
-FRONTEND_STACK: "Next.js 15 + React + TypeScript"
+FRONTEND_STACK: "Next.js 16 + React + TypeScript"
 VENV_PATH: ".venv/"
 
 BACKEND_DEV_CMD: ".venv/Scripts/uvicorn app.main:app --reload --app-dir backend"

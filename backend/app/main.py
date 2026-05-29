@@ -1,3 +1,4 @@
+from contextlib import asynccontextmanager
 from langfuse import observe
 from fastapi import FastAPI, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
@@ -13,22 +14,23 @@ from app.core.rag.service import LegalRAGService, LegalRAGResponse
 from app.core.hs_classifier.classifier import HSCodeClassifier, HSClassificationResponse
 from app.core.orchestrator import orchestrator_router
 
-# Create tables in SQLite on application startup
-Base.metadata.create_all(bind=engine)
-
-app = FastAPI(
-    title="CustomAI Kazakhstan (Кеден Көмекшісі) API",
-    description="AI Assistant for Customs Clearance in Kazakhstan",
-    version="1.0.0",
-)
-
-@app.on_event("startup")
-def startup_event():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Startup: create tables and seed initial data."""
+    Base.metadata.create_all(bind=engine)
     db = SessionLocal()
     try:
         KGDRegistryService.seed_initial_brokers(db)
     finally:
         db.close()
+    yield
+
+app = FastAPI(
+    title="CustomAI Kazakhstan (Кеден Көмекшісі) API",
+    description="AI Assistant for Customs Clearance in Kazakhstan",
+    version="1.0.0",
+    lifespan=lifespan,
+)
 
 # Enable CORS for frontend integration
 app.add_middleware(
