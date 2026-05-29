@@ -56,3 +56,38 @@ def test_profile_extractor_mock_llm_behavior(monkeypatch):
     assert isinstance(result.accumulated_profile, CustomsProfileAccumulator)
     assert isinstance(result.missing_fields, list)
     assert isinstance(result.next_question, str)
+def test_profile_extractor_fallback_empty_text():
+    """Empty text should return all missing fields without crashing."""
+    result = ProfileExtractor._fallback_extraction("", history=None)
+    assert isinstance(result, ProfileExtractionResult)
+    assert "invoice_price" in result.missing_fields
+    assert "currency" in result.missing_fields
+    assert "duty_rate_percent" in result.missing_fields
+
+
+def test_profile_extractor_fallback_special_chars():
+    """Special characters and XSS injection should not cause incorrect extraction."""
+    text = "<script>alert('xss')</script> цена 5000 USD"
+    result = ProfileExtractor._fallback_extraction(text, history=None)
+    assert result.accumulated_profile.invoice_price == 5000.0
+    assert result.accumulated_profile.currency == "USD"
+    assert "duty_rate_percent" in result.missing_fields
+
+
+def test_profile_extractor_fallback_text_with_no_price():
+    """Text with no numeric price should leave invoice_price as None."""
+    text = "Расскажи мне про таможенное оформление"
+    result = ProfileExtractor._fallback_extraction(text, history=None)
+    assert result.accumulated_profile.invoice_price is None
+    assert "invoice_price" in result.missing_fields
+
+
+def test_profile_extractor_fallback_history_with_only_assistant():
+    """History with only assistant messages should not crash."""
+    history = [
+        ChatMessage(role="assistant", content="Обратитесь к таможенному брокеру для расчёта."),
+    ]
+    text = "Что такое пошлина?"
+    result = ProfileExtractor._fallback_extraction(text, history=history)
+    assert isinstance(result, ProfileExtractionResult)
+    assert result.accumulated_profile.invoice_price is None

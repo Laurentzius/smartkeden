@@ -60,3 +60,39 @@ def test_hs_classifier_recycling_fee_flag_in_payload():
     assert result is not None
     # Structure is valid regardless of mock
     assert hasattr(result, "qdrant_backed")
+def test_hs_classifier_empty_description():
+    """Empty description should not crash the classifier."""
+    LegalRAGIndexer.setup_hs_code_collection(force_recreate=True)
+    result: HSClassificationResponse = asyncio.run(
+        HSCodeClassifier.classify(description="")
+    )
+    assert result is not None
+    assert isinstance(result.product_description, str)
+    assert isinstance(result.candidates, list)
+
+
+def test_hs_classifier_special_characters():
+    """Special characters and XSS injection attempts should not crash."""
+    LegalRAGIndexer.setup_hs_code_collection(force_recreate=True)
+    result: HSClassificationResponse = asyncio.run(
+        HSCodeClassifier.classify(description="<script>alert('xss')</script>")
+    )
+    assert result is not None
+    assert len(result.candidates) > 0
+    for c in result.candidates:
+        assert isinstance(c.hs_code, str)
+        assert len(c.hs_code) > 0
+
+
+def test_hs_classifier_long_description():
+    """Very long text should be handled without crashing."""
+    LegalRAGIndexer.setup_hs_code_collection(force_recreate=True)
+    long_desc = "Детские игрушки " + "очень " * 500 + "красивые"
+    result: HSClassificationResponse = asyncio.run(
+        HSCodeClassifier.classify(description=long_desc)
+    )
+    assert result is not None
+    assert len(result.candidates) > 0
+    for c in result.candidates:
+        assert isinstance(c.hs_code, str)
+        assert len(c.hs_code) > 0

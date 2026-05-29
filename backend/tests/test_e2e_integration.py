@@ -107,3 +107,18 @@ async def test_e2e_classification_calculation_generation(monkeypatch, tmp_path):
     assert os.path.exists(result_contract_path)
     assert result_invoice_path == invoice_path
     assert result_contract_path == contract_path
+    # 5. Validate generated file contents
+    import openpyxl
+    import docx as docx_lib
+    wb = openpyxl.load_workbook(result_invoice_path)
+    ws = wb["Commercial Invoice"]
+    assert ws["A4"].value == "Shenzhen Tech Corp"
+    assert ws["A9"].value == "SmartKeden Almaty LLP"
+    doc = docx_lib.Document(result_contract_path)
+    assert "ДОГОВОР ПОСТАВКИ №" in doc.paragraphs[0].text
+@pytest.mark.asyncio
+async def test_e2e_empty_request_returns_error():
+    """Empty text in orchestrate endpoint should return a validation error."""
+    client = TestClient(app)
+    response = client.post("/api/orchestrate", data={"text": ""})
+    assert response.status_code in (400, 422)

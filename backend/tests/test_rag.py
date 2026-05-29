@@ -224,3 +224,37 @@ def test_gemini_chunk_filter_fallback_on_error(monkeypatch):
     filtered = GeminiChunkFilter.filter_chunks("Query", chunks, threshold=5)
     assert len(filtered) == 2  # Fallback to returning all chunks
 
+def test_legal_rag_empty_query():
+    """Empty query should not crash the RAG pipeline."""
+    LegalRAGIndexer.setup_collection(force_recreate=True)
+    LegalRAGIndexer.seed_initial_legal_base()
+
+    query = ""
+    res: LegalRAGResponse = asyncio.run(LegalRAGService.query_legal_base(query))
+    assert res is not None
+    assert isinstance(res.answer_synthesis, str)
+
+
+def test_legal_rag_non_ascii_query():
+    """Unicode and special characters in query should not crash."""
+    LegalRAGIndexer.setup_collection(force_recreate=True)
+    LegalRAGIndexer.seed_initial_legal_base()
+
+    query = "⚖️📋 Статья 422 — НДС: ставка (12%) на импорт товаров из Китая ©️"
+    res: LegalRAGResponse = asyncio.run(LegalRAGService.query_legal_base(query))
+    assert res is not None
+    assert len(res.answer_synthesis) > 0
+
+
+def test_legal_rag_indexed_chunks_structure():
+    """All seeded chunks should have required payload fields."""
+    LegalRAGIndexer.setup_collection(force_recreate=True)
+    LegalRAGIndexer.seed_initial_legal_base()
+
+    client = LegalRAGIndexer.get_client()
+    scroll_result = client.scroll(collection_name=LegalRAGIndexer.COLLECTION_NAME, limit=100)
+    for point in scroll_result[0]:
+        payload = point.payload or {}
+        assert isinstance(payload.get("article_number"), str) or payload.get("article_number") is None
+        assert isinstance(payload.get("document_title"), str) or payload.get("document_title") is None
+        assert isinstance(payload.get("content_quote"), str) or payload.get("content_quote") is None

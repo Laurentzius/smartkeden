@@ -99,13 +99,14 @@ async def test_orchestrator_endpoint_health(monkeypatch):
 
 @pytest.mark.asyncio
 async def test_orchestrator_empty_message():
-    """Empty messages should return 400."""
+    """Empty messages should return 422 (FastAPI validation: missing required Form field)."""
     from fastapi.testclient import TestClient
     from app.main import app
-
     client = TestClient(app)
     response = client.post("/api/orchestrate", data={"text": ""})
-
+    assert response.status_code == 422
+    data = response.json()
+    assert "detail" in data
 
 @pytest.mark.asyncio
 async def test_orchestrator_multi_turn_flow(monkeypatch):
@@ -476,3 +477,146 @@ async def test_adk_error_handling(monkeypatch):
     assert data["intent"] in ("unclear", "question_about_law")
     # Error details are NOT leaked to the user
     assert "Simulated" not in data.get("message", "")
+def test_intent_fallback_empty_and_gibberish():
+    """Fallback classifier should classify empty and meaningless strings as unclear."""
+    empty_result = IntentClassifier._fallback_classify("")
+    assert empty_result.intent == IntentType.unclear
+    assert empty_result.confidence < 0.7
+
+    gibberish_result = IntentClassifier._fallback_classify("asdkfjh123!@#")
+    assert gibberish_result.intent == IntentType.unclear
+    assert gibberish_result.confidence < 0.7
+
+    symbols_result = IntentClassifier._fallback_classify("!!!???...")
+    assert symbols_result.intent == IntentType.unclear
+    assert symbols_result.confidence < 0.7
+
+
+def test_fallback_classify_edge_keywords():
+    """Fallback classifier should correctly classify various edge keyword combinations."""
+    # "растаможке" matches "растаможк" in calculation_request block (checked before legal)
+    mixed = IntentClassifier._fallback_classify("закон о растаможке iPhone")
+    assert mixed.intent == IntentType.calculation_request
+    # Pure legal keywords (no overlap with other categories)
+    pure_legal = IntentClassifier._fallback_classify("расскажи про законодательство")
+    assert pure_legal.intent == IntentType.question_about_law
+    # HS code with non-standard phrasing
+    hs_variation = IntentClassifier._fallback_classify("подскажи ТН ВЭД для видеокарты")
+    assert hs_variation.intent == IntentType.product_description
+    # Greeting with extra text
+    greeting_extra = IntentClassifier._fallback_classify("привет, у меня вопрос")
+    assert greeting_extra.intent == IntentType.greeting
+    # Calculation with specific tax keywords
+    calc_vat = IntentClassifier._fallback_classify("сколько будет НДС")
+    assert calc_vat.intent == IntentType.calculation_request
+    # Document upload keywords
+    doc_upload = IntentClassifier._fallback_classify("хочу загрузить текст закона")
+    assert doc_upload.intent == IntentType.document_upload
+async def test_orchestrator_whitespace_only_message():
+    """Whitespace-only text should return 400."""
+    from fastapi.testclient import TestClient
+    from app.main import app
+    client = TestClient(app)
+    response = client.post("/api/orchestrate", data={"text": "   \n\t  "})
+    assert response.status_code == 400
+
+
+@pytest.mark.asyncio
+async def test_orchestrator_corrupted_history(monkeypatch):
+    """Corrupted history JSON should NOT crash the endpoint."""
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.core.local_embeddings import LocalEmbeddingModel
+    monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
+
+    async def _mock_classify(text: str):
+        return IntentClassification(intent=IntentType.greeting, confidence=0.9, reasoning="Mock")
+    monkeypatch.setattr(IntentClassifier, "classify", _mock_classify)
+
+    client = TestClient(app)
+    response = client.post("/api/orchestrate", data={
+        "text": "Привет!",
+        "history": "not valid json {{{"
+    })
+    assert response.status_code == 200
+    data = response.json()
+    assert len(data["message"]) > 0
+
+
+@pytest.mark.asyncio
+async def test_orchestrator_missing_text_field():
+    """Missing text field should return 422 (FastAPI validation)."""
+    from fastapi.testclient import TestClient
+    from app.main import app
+    client = TestClient(app)
+    response = client.post("/api/orchestrate", data={})
+    assert response.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_orchestrator_very_long_text(monkeypatch):
+    """Very long text (>2000 chars) should still be processed without crashing."""
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.core.local_embeddings import LocalEmbeddingModel
+    monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
+
+    async def _mock_classify(text: str):
+        return IntentClassification(intent=IntentType.unclear, confidence=0.5, reasoning="Mock")
+    monkeypatch.setattr(IntentClassifier, "classify", _mock_classify)
+
+    client = TestClient(app)
+    long_text = "A" * 3000
+    response = client.post("/api/orchestrate", data={"text": long_text})
+    assert response.status_code == 200
+    data = response.json()
+    assert data["intent"] == "unclear"
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  ProfileExtractor Edge Case Tests
+# ═══════════════════════════════════════════════════════════════════════════
+
+from app.core.orchestrator.profile_extractor import ProfileExtractor
+
+def test_profile_extractor_fallback_no_data():
+    """Fallback extraction with no parsable data should identify all missing fields."""
+    result = ProfileExtractor._fallback_extraction("Привет! Как дела?", history=None)
+    assert "invoice_price" in result.missing_fields
+    assert "currency" in result.missing_fields
+    assert "duty_rate_percent" in result.missing_fields
+    assert "Пожалуйста, укажите стоимость" in result.next_question
+
+
+def test_profile_extractor_fallback_10digit_confusion():
+    """Fallback should NOT confuse a 10-digit number with a price."""
+    result = ProfileExtractor._fallback_extraction("Код ТН ВЭД 1234567890", history=None)
+    assert result.accumulated_profile.hs_code == "1234567890"
+    # 10-digit code should NOT be parsed as invoice_price
+    assert result.accumulated_profile.invoice_price is None
+    assert "invoice_price" in result.missing_fields
+
+
+def test_profile_extractor_fallback_invalid_price_format():
+    """Fallback should handle price formats with commas or words."""
+    result = ProfileExtractor._fallback_extraction("Цена пять тысяч долларов", history=None)
+    assert result.accumulated_profile.invoice_price is None
+    assert "invoice_price" in result.missing_fields
+
+
+
+def test_profile_extractor_fallback_multiple_history_turns():
+    """Fallback should accumulate data across multiple history turns."""
+    from app.core.orchestrator.models import ChatMessage
+    # Order matters: reversed iteration processes latest messages first
+    history = [
+        ChatMessage(role="user", content="ставка пошлины 15%"),
+        ChatMessage(role="assistant", content="Принято. Какая цена?"),
+        ChatMessage(role="user", content="Цена 5000 USD"),
+    ]
+    result = ProfileExtractor._fallback_extraction("Посчитай", history=history)
+    assert result.accumulated_profile.invoice_price == 5000.0
+    assert result.accumulated_profile.currency == "USD"
+    assert result.accumulated_profile.duty_rate_percent == 15.0
+    assert len(result.missing_fields) == 0
+    assert "Все обязательные параметры собраны" in result.next_question
