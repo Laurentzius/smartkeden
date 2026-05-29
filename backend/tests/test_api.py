@@ -72,3 +72,13 @@ def test_api_classify_endpoint():
     assert "candidates" in data
     assert len(data["candidates"]) > 0
     assert data["candidates"][0]["confidence_score"] > 0.0
+def test_api_calculate_missing_fields():
+    # Send empty payload to verify validation error (422 Unprocessable Entity)
+    response = client.post("/api/calculate", json={})
+    assert response.status_code == 422
+def test_api_specific_rate_not_found():
+    # Send an invalid currency code to verify 400 Bad Request error
+    response = client.get("/api/rates/INVALID_CURRENCY_CODE")
+    assert response.status_code == 400
+    data = response.json()
+    assert "detail" in data

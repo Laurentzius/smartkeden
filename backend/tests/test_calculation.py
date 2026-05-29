@@ -78,10 +78,53 @@ def test_customs_calculation_auto_resolve_mci():
         recycling_fee_base_mci=50.0,
         declaration_date="2023-06-15",
     )
-
     # Act
     res = CustomsCalculator.calculate(req)
-
     # Assert: 2023 MCI was 3450 KZT
     # Recycling fee = 50 * 3450 = 172,500 KZT
     assert res.recycling_fee_kzt == 172500.0
+def test_customs_calculation_edge_cases():
+    # 1. Zero invoice price
+    req_zero = CalculationRequest(
+        invoice_price=0.0,
+        currency="USD",
+        exchange_rate=450.0,
+        transport_to_border=50000.0,
+        duty_rate_percent=10.0,
+    )
+    res_zero = CustomsCalculator.calculate(req_zero)
+    assert res_zero.customs_value_kzt == 50000.0  # Just transport
+    assert res_zero.customs_duty_kzt == 5000.0
+    assert res_zero.total_payments_kzt == 20000.0 + 5000.0 + ((50000 + 20000 + 5000) * 0.12)
+    # 2. Duty rate 0%
+    req_no_duty = CalculationRequest(
+        invoice_price=1000.0,
+        currency="KZT",
+        exchange_rate=1.0,
+        transport_to_border=10000.0,
+        duty_rate_percent=0.0,
+    )
+    res_no_duty = CustomsCalculator.calculate(req_no_duty)
+    assert res_no_duty.customs_duty_kzt == 0.0
+    assert res_no_duty.import_vat_kzt == (11000.0 + 20000.0) * 0.12
+    # 3. High duty rate (150%)
+    req_high_duty = CalculationRequest(
+        invoice_price=1000.0,
+        currency="KZT",
+        exchange_rate=1.0,
+        transport_to_border=0.0,
+        duty_rate_percent=150.0,
+    )
+    res_high_duty = CustomsCalculator.calculate(req_high_duty)
+    assert res_high_duty.customs_duty_kzt == 1500.0
+    # 4. Specific excise with zero count vs non-zero count
+    req_excise = CalculationRequest(
+        invoice_price=1000.0,
+        currency="KZT",
+        exchange_rate=1.0,
+        transport_to_border=0.0,
+        excise_specific_rate=500.0,
+        excise_units_count=10.0,
+    )
+    res_excise = CustomsCalculator.calculate(req_excise)
+    assert res_excise.excise_tax_kzt == 5000.0  # 500 * 10

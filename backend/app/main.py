@@ -75,8 +75,8 @@ async def get_specific_rate(currency: str):
         rate = NBKExchangeRatesService.get_rate(currency)
         return {"currency": currency.upper(), "rate_to_kzt": rate}
     except ValueError as e:
-        return {"error": str(e)}, 400
-
+        from fastapi import HTTPException
+        raise HTTPException(status_code=400, detail=str(e))
 class ChatRequest(BaseModel):
     query: str
 

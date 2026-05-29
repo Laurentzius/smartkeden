@@ -43,12 +43,57 @@ def test_gemini_vertex_client_embedding_mock():
     or mock zeros if sentence-transformers is unavailable."""
     # Arrange
     text = "Налог на добавленную стоимость"
-
     # Act
     vec = GeminiVertexClient.get_text_embedding(text)
-
     # Assert
     assert isinstance(vec, list)
     assert len(vec) == 384  # settings.EMBEDDING_DIMENSION
     # When local model is available → non-zero values
     # When only mock path → all zeros
+def test_gemini_vertex_client_real_sdk_mock():
+    # Arrange
+    from unittest.mock import MagicMock
+    import json
+    # Mock the client structures
+    mock_client = MagicMock()
+    mock_response = MagicMock()
+    # Setup response content conforming to HSCandidate schema
+    candidate_data = {
+        "code": "8517130000",
+        "reasoning": "Mocked SDK response for testing",
+        "duty_rate": 10.0
+    }
+    mock_response.text = json.dumps(candidate_data)
+    # Mocking usage metadata
+    mock_usage = MagicMock()
+    mock_usage.prompt_token_count = 120
+    mock_usage.candidates_token_count = 45
+    mock_response.usage_metadata = mock_usage
+    # Set the mock client return value
+    mock_client.models.generate_content.return_value = mock_response
+    # Inject mock client and switch mode
+    original_client = GeminiVertexClient._client
+    original_mode = GeminiVertexClient._client_mode
+    GeminiVertexClient._client = mock_client
+    GeminiVertexClient._client_mode = GeminiVertexClient.API_KEY
+    try:
+        # Act
+        res = GeminiVertexClient.generate_structured_content(
+            prompt="Test prompt",
+            response_schema=HSCandidate
+        )
+        # Assert
+        assert isinstance(res, HSCandidate)
+        assert res.code == "8517130000"
+        assert res.duty_rate == 10.0
+        assert res.reasoning == "Mocked SDK response for testing"
+        # Verify the generate_content call structure
+        mock_client.models.generate_content.assert_called_once()
+        call_kwargs = mock_client.models.generate_content.call_args[1]
+        assert "model" in call_kwargs
+        assert "contents" in call_kwargs
+        assert "config" in call_kwargs
+    finally:
+        # Restore original state
+        GeminiVertexClient._client = original_client
+        GeminiVertexClient._client_mode = original_mode
