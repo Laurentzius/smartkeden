@@ -291,7 +291,77 @@ export default function CustomsDashboard() {
       setRagLoading(false);
     }
   };
-
+  // Document generation state & handlers
+  const [docLoading, setDocLoading] = useState<boolean>(false);
+  const handleDownloadInvoice = async () => {
+    setDocLoading(true);
+    try {
+      const payload = {
+        seller_name: "FOREIGN VENDOR LTD (Шэньчжэнь, Китай)",
+        buyer_name: "TOO KAZAKH IMPORTER (Алматы, Казахстан)",
+        incoterms: "FCA Shenzhen",
+        items: [
+          {
+            name: productDesc.trim() || "Таможенный товар (импорт)",
+            hs_code: classificationResult?.candidates?.[0]?.hs_code || "8517130000",
+            qty: 1,
+            unit: "pcs",
+            price: Number(invoicePrice)
+          }
+        ]
+      };
+      const res = await fetch("/api/generate-excel", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error("Invoice generation failed");
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Commercial_Invoice.xlsx";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (err) {
+      console.error(err);
+      alert("Ошибка при генерации инвойса");
+    } finally {
+      setDocLoading(false);
+    }
+  };
+  const handleDownloadContract = async () => {
+    setDocLoading(true);
+    try {
+      const payload = {
+        contract_no: "KED-2026/089",
+        contract_date: new Date().toLocaleDateString("ru-RU", { day: 'numeric', month: 'long', year: 'numeric' }),
+        seller_name: "FOREIGN VENDOR LTD (Китай)",
+        buyer_name: "TOO KAZAKH IMPORTER (Казахстан)",
+        incoterms: "DDP Almaty"
+      };
+      const res = await fetch("/api/generate-word", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error("Contract generation failed");
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Supply_Agreement.docx";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+    } catch (err) {
+      console.error(err);
+      alert("Ошибка при генерации договора");
+    } finally {
+      setDocLoading(false);
+    }
+  };
   return (
     <div className="min-h-screen flex flex-col font-sans">
       {/* Navigation Header */}
@@ -521,7 +591,28 @@ export default function CustomsDashboard() {
                   </div>
                 </div>
               )}
-
+              {/* Document Download Section */}
+              <div className="pt-4 border-t border-slate-100 flex flex-col space-y-2">
+                <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">Экспорт документов</span>
+                <div className="grid grid-cols-2 gap-2">
+                  <button
+                    type="button"
+                    onClick={handleDownloadInvoice}
+                    disabled={docLoading}
+                    className="flex items-center justify-center space-x-1.5 border border-slate-300 hover:border-teal-500 hover:text-teal-600 text-slate-700 bg-white px-3 py-2 rounded-lg text-xs font-bold transition duration-150 cursor-pointer disabled:opacity-50"
+                  >
+                    <span>📊 Скачать Инвойс (Excel)</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleDownloadContract}
+                    disabled={docLoading}
+                    className="flex items-center justify-center space-x-1.5 border border-slate-300 hover:border-teal-500 hover:text-teal-600 text-slate-700 bg-white px-3 py-2 rounded-lg text-xs font-bold transition duration-150 cursor-pointer disabled:opacity-50"
+                  >
+                    <span>📝 Скачать Договор (Word)</span>
+                  </button>
+                </div>
+              </div>
             </div>
           )}
         </section>

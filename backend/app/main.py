@@ -111,3 +111,34 @@ async def classify_hs_code(
         image_bytes=image_bytes,
         image_mime_type=image_mime_type
     )
+from fastapi.responses import FileResponse
+import tempfile
+from app.core.documents.generator import DocumentGenerator, CustomsInvoiceSchema, SupplyAgreementSchema
+@app.post("/api/generate-excel", tags=["Document Generation"])
+async def generate_invoice_excel_api(req: CustomsInvoiceSchema):
+    """
+    Generate an Excel (.xlsx) commercial invoice from schema data and return it as a downloadable file.
+    """
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".xlsx")
+    tmp_path = tmp.name
+    tmp.close()
+    DocumentGenerator.generate_invoice_excel(req, tmp_path)
+    return FileResponse(
+        tmp_path, 
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", 
+        filename="Commercial_Invoice.xlsx"
+    )
+@app.post("/api/generate-word", tags=["Document Generation"])
+async def generate_contract_word_api(req: SupplyAgreementSchema):
+    """
+    Generate a Word (.docx) supply agreement contract from schema data and return it as a downloadable file.
+    """
+    tmp = tempfile.NamedTemporaryFile(delete=False, suffix=".docx")
+    tmp_path = tmp.name
+    tmp.close()
+    DocumentGenerator.generate_contract_word(req, tmp_path)
+    return FileResponse(
+        tmp_path, 
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document", 
+        filename="Supply_Agreement.docx"
+    )
