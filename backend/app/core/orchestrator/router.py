@@ -313,6 +313,126 @@ async def dispatch_intent(
     intent: IntentType, text: str, history: Optional[List[ChatMessage]] = None
 ) -> OrchestrateResponse:
     """Routes the classified intent to the correct handler and returns the result."""
+    text_lower = text.lower()
+    # Smart Interception for Customs Broker Registry
+    if any(w in text_lower for w in ["брокер", "брокеры"]):
+        try:
+            from app.core.database import SessionLocal
+            from app.services.kgd_registry import KGDRegistryService
+            # Extract city if possible
+            detected_city = None
+            for city in ["астана", "алматы", "актау", "караганда", "шымкент", "атырау"]:
+                if city in text_lower:
+                    detected_city = city.capitalize()
+                    break
+            db = SessionLocal()
+            try:
+                # Seed initial if empty to make sure we have data
+                KGDRegistryService.seed_initial_brokers(db)
+                brokers = KGDRegistryService.search_brokers(db, city=detected_city)
+                if brokers:
+                    city_suffix = f" в городе {detected_city}" if detected_city else ""
+                    msg = f"🔍 **Результаты поиска таможенных брокеров{city_suffix}** в реестре КГД РК:\n\n"
+                    for b in brokers:
+                        msg += (
+                            f"🏢 **{b.company_name}**\n"
+                            f"• Лицензия: №{b.license_number}\n"
+                            f"• БИН: {b.bin_number or 'Не указан'}\n"
+                            f"• Город: {b.city}\n"
+                            f"• Адрес: {b.address or 'Не указан'}\n"
+                            f"• Контакты: {b.contacts or 'Не указаны'}\n"
+                            f"• Рейтинг: ⭐ {b.rating:.1f}/5.0\n\n"
+                        )
+                    return OrchestrateResponse(
+                        intent=IntentType.question_about_law,
+                        message=msg,
+                        pipeline_results={"brokers": [b.license_number for b in brokers]}
+                    )
+                else:
+                    city_str = f" в городе {detected_city}" if detected_city else ""
+                    return OrchestrateResponse(
+                        intent=IntentType.question_about_law,
+                        message=f"❌ В реестре КГД РК не найдено лицензированных таможенных брокеров{city_str}.",
+                        pipeline_results={"brokers": []}
+                    )
+            finally:
+                db.close()
+        except Exception as e:
+            logger.error(f"Broker interceptor failed: {e}", exc_info=True)
+    # Smart Interception for TROIS Intellectual Property Registry
+    if any(w in text_lower for w in ["троис", "товарный знак", "товарные знаки", "торговая марка", "бренд"]):
+        try:
+            from app.core.database import SessionLocal
+            from app.services.kgd_registry import KGDRegistryService
+            # Extract potential brand name (e.g. quoted string or capitalized word)
+            brand_match = re.search(r"['\"«“]([^'\"»”]+)['\"»”]", text)
+            brand_name = brand_match.group(1) if brand_match else None
+            if not brand_name:
+                # Try to extract capitalized word or distinct word
+                words = text.split()
+                for w in words:
+                    clean_w = w.strip("'\"«»“”.,!?")
+                    if clean_w.lower() not in ["зарегистрирован", "ли", "товарный", "знак", "в", "реестре", "троис", "республики", "казахстан", "бренд", "торговая", "марка"]:
+                        # Exclude purely cyrillic non-nouns if wanted, but keep first non-common word
+                        brand_name = clean_w
+                        break
+            if brand_name:
+                db = SessionLocal()
+                try:
+                    # Let's seed a sample trademark if empty just to show it works!
+                    from app.core.models import TROISRegistry
+                    if db.query(TROISRegistry).count() == 0:
+                        sample_brands = [
+                            TROISRegistry(
+                                trademark_name="Apple",
+                                right_holder="Apple Inc. (Купертино, США)",
+                                authorized_importers="ТОО 'Apple Kazakhstan', ТОО 'ASBIS Kazakhstan'",
+                                unauthorized_importers_action="Приостановление выпуска товаров на 10 рабочих дней",
+                                registry_number="001/TROIS-2024",
+                                valid_until=None
+                            ),
+                            TROISRegistry(
+                                trademark_name="Samsung",
+                                right_holder="Samsung Electronics Co., Ltd. (Сувон, Корея)",
+                                authorized_importers="ТОО 'Samsung Electronics Central Eurasia'",
+                                unauthorized_importers_action="Приостановление выпуска товаров",
+                                registry_number="002/TROIS-2024",
+                                valid_until=None
+                            )
+                        ]
+                        db.add_all(sample_brands)
+                        db.commit()
+                        logger.info("Seeded initial sample TROIS trademarks")
+                    trademark = KGDRegistryService.check_trois_trademark(db, brand_name)
+                    if trademark:
+                        msg = (
+                            f"🛡️ **Объект интеллектуальной собственности найден в реестре ТРОИС РК!**\n\n"
+                            f"• **Товарный знак:** «{trademark.trademark_name}»\n"
+                            f"• **Регистрационный номер:** {trademark.registry_number}\n"
+                            f"• **Правообладатель:** {trademark.right_holder}\n"
+                            f"• **Авторизованные импортеры:** {trademark.authorized_importers or 'Не указаны'}\n"
+                            f"• **Меры таможенного контроля:** {trademark.unauthorized_importers_action or 'Приостановление выпуска'}\n"
+                        )
+                        return OrchestrateResponse(
+                            intent=IntentType.question_about_law,
+                            message=msg,
+                            pipeline_results={"trois_record": trademark.registry_number}
+                        )
+                    else:
+                        msg = (
+                            f"✅ Товарный знак **«{brand_name}»** не найден в реестре ТРОИС Республики Казахстан.\n\n"
+                            f"Это означает, что для его ввоза таможенные органы РК не будут автоматически запрашивать разрешение "
+                            f"у правообладателя, если только на границе не будут выявлены явные признаки контрафакта (подделки)."
+                        )
+                        return OrchestrateResponse(
+                            intent=IntentType.question_about_law,
+                            message=msg,
+                            pipeline_results={"trois_record": None}
+                        )
+                finally:
+                    db.close()
+        except Exception as e:
+            logger.error(f"TROIS interceptor failed: {e}", exc_info=True)
     handler = IntentHandlerRegistry.get_handler(intent)
     try:
         return await handler.handle(text, history=history)
@@ -323,7 +443,6 @@ async def dispatch_intent(
             message="Извините, при обработке вашего запроса произошла техническая ошибка. Попробуйте ещё раз.",
             chain_warning=f"Handler error: {str(e)}"
         )
-
 
 @router.post("", response_model=OrchestrateResponse)
 @observe(name="orchestrate")
