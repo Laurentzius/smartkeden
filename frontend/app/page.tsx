@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import type { HSCodeCandidate, OrchestrateResponse } from "@/types/api";
-import { orchestrate } from "@/lib/api";
+import React, { useState, useEffect, useCallback } from "react";
+import type { HSCodeCandidate, OrchestrateResponse, InvoiceData, ParseDocumentResponse } from "@/types/api";
+import { orchestrate, parseDocument, confirmExtraction } from "@/lib/api";
 
 import { useExchangeRates } from "@/hooks/useExchangeRates";
 import { useCalculator } from "@/hooks/useCalculator";
@@ -13,6 +13,8 @@ import { Header } from "@/components/Header";
 import { CalculatorForm } from "@/components/CalculatorForm";
 import { CalculationResult } from "@/components/CalculationResult";
 import { ChatWorkspace } from "@/components/ChatWorkspace";
+import { FileUpload } from "@/components/workspace/FileUpload";
+import { InvoiceReview } from "@/components/workspace/InvoiceReview";
 import { Footer } from "@/components/Footer";
 
 export default function CustomsDashboard() {
@@ -24,6 +26,51 @@ export default function CustomsDashboard() {
 
   // ── Hooks ─────────────────────────────────────────────────────────────────
   const calc = useCalculator();
+
+  // ── Document Parsing ─────────────────────────────────────────────────────
+  const [parsing, setParsing] = useState(false);
+  const [parseResult, setParseResult] = useState<ParseDocumentResponse | null>(null);
+  const [parseError, setParseError] = useState<string | null>(null);
+
+  const handleFileSelect = useCallback(async (file: File) => {
+    setParsing(true);
+    setParseError(null);
+    setParseResult(null);
+    try {
+      const result = await parseDocument(file, sessionId);
+      setParseResult(result);
+    } catch (err) {
+      setParseError(err instanceof Error ? err.message : "Ошибка обработки файла");
+    } finally {
+      setParsing(false);
+    }
+  }, [sessionId]);
+
+  const handleParseConfirm = useCallback(async (edited: InvoiceData) => {
+    setParsing(true);
+    try {
+      await confirmExtraction(edited, sessionId);
+      // Auto-fill the calculator with extracted data
+      if (edited.items.length > 0) {
+        const firstItem = edited.items[0];
+        calc.setInvoicePrice(firstItem.total_price);
+      }
+      if (edited.currency) {
+        calc.setCurrency(edited.currency);
+      }
+      setParseResult(null);
+      setParseError(null);
+    } catch (err) {
+      setParseError(err instanceof Error ? err.message : "Ошибка подтверждения");
+    } finally {
+      setParsing(false);
+    }
+  }, [sessionId, calc]);
+
+  const handleParseCancel = useCallback(() => {
+    setParseResult(null);
+    setParseError(null);
+  }, []);
   const { loading: docLoading, exportInvoice, exportContract } = useDocumentExport();
   const chat = useChat(sessionId);
 
@@ -134,8 +181,31 @@ export default function CustomsDashboard() {
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column: Calculator & Calculation Results */}
+        {/* Left Column: Invoice Upload & Calculator */}
         <div className="lg:col-span-5 flex flex-col gap-6">
+          <FileUpload
+            onFileSelect={handleFileSelect}
+            disabled={parsing}
+            loading={parsing}
+          />
+
+          {parseError && (
+            <div className="bg-red-50 border border-red-200 rounded-xl p-4 text-sm text-red-700">
+              {parseError}
+            </div>
+          )}
+
+          {parseResult && (
+            <InvoiceReview
+              data={parseResult.data}
+              metadata={parseResult.metadata}
+              warnings={parseResult.warnings}
+              onConfirm={handleParseConfirm}
+              onCancel={handleParseCancel}
+              loading={parsing}
+            />
+          )}
+
           <CalculatorForm
             invoicePrice={calc.invoicePrice}
             onInvoicePriceChange={calc.setInvoicePrice}

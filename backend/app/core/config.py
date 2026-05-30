@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     GOOGLE_API_KEY: Optional[str] = os.getenv("GOOGLE_API_KEY") or os.getenv(
         "GOOGLE_CLOUD_API_KEY"
     )
-    GEMINI_MODEL_ID: str = os.getenv("GEMINI_MODEL_ID", "gemini-3.5-flash")
+    GEMINI_MODEL_ID: str = os.getenv("GEMINI_MODEL_ID", "gemini-3.1-flash-lite")
     # Gemini Embedding (disabled by default — use local model instead)
     GEMINI_EMBEDDING_MODEL_ID: str = os.getenv(
         "GEMINI_EMBEDDING_MODEL_ID", "gemini-embedding-2"
@@ -57,6 +57,11 @@ class Settings(BaseSettings):
     model_config = SettingsConfigDict(
         case_sensitive=True, env_file=".env", env_file_encoding="utf-8", extra="ignore"
     )
+
+    # ── Document Parsing / Upload ─────────────────────────────────────────────
+    MAX_UPLOAD_SIZE_MB: int = int(os.getenv("MAX_UPLOAD_SIZE_MB", "10"))
+    TEMP_UPLOAD_DIR: str = os.getenv("TEMP_UPLOAD_DIR", "/tmp/smartkeden_uploads")
+    OCR_PRIMARY: str = os.getenv("OCR_PRIMARY", "gemini")  # gemini | tesseract
 
 
 settings = Settings()

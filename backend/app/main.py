@@ -24,6 +24,7 @@ from app.core.orchestrator import orchestrator_router
 from app.api.admin import router as admin_router
 from app.api.admin_config import router as admin_config_router
 from app.api.admin_rules import router as admin_rules_router
+from app.services.parser import parser_router
 
 
 @asynccontextmanager
@@ -59,6 +60,8 @@ app.include_router(orchestrator_router)
 app.include_router(admin_router)
 app.include_router(admin_config_router)
 app.include_router(admin_rules_router)
+app.include_router(parser_router)
+
 
 @app.get("/")
 async def root():

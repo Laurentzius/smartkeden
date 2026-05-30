@@ -5,6 +5,8 @@ import type {
   CalculationRequest,
   CalculationResponse,
   OrchestrateResponse,
+  ParseDocumentResponse,
+  InvoiceData,
 } from "@/types/api";
 
 const API_BASE = ""; // same-origin, Next.js rewrites to backend
@@ -82,4 +84,31 @@ export function triggerDownload(blob: Blob, filename: string): void {
   a.click();
   a.remove();
   window.URL.revokeObjectURL(url);
+}
+
+// ── Document Parsing ─────────────────────────────────────────────────────────
+export async function parseDocument(
+  file: File,
+  sessionId: string,
+): Promise<ParseDocumentResponse> {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("session_id", sessionId);
+  return request<ParseDocumentResponse>("/api/workspace/parse-document", {
+    method: "POST",
+    body: formData,
+  });
+}
+
+export async function confirmExtraction(
+  data: InvoiceData,
+  sessionId: string,
+): Promise<{ status: string; data: InvoiceData }> {
+  const formData = new FormData();
+  formData.append("data", JSON.stringify(data));
+  formData.append("session_id", sessionId);
+  return request("/api/workspace/parse-document/confirm", {
+    method: "POST",
+    body: formData,
+  });
 }

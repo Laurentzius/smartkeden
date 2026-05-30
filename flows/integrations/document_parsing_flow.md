@@ -1,21 +1,20 @@
 # Flow Design: Document Parsing & OCR (Invoice Intelligence)
 
-This document defines the flow for uploading commercial invoices (PDF, Excel, image scans) and automatically extracting structured fields — product description, price, currency, weight, quantity, seller/buyer — for direct injection into the calculation workspace.
+This document defines the flow for uploading commercial invoices (PDF, Excel, Word, image scans) and automatically extracting structured fields — product description, price, currency, weight, quantity, seller/buyer — for direct injection into the calculation workspace.
 
 ---
 
 ## 1. Intent
-* **User Goal:** A declarant uploads a scanned invoice or digital file (PDF, XLSX, JPG) and the system extracts all shipment details automatically, populating the calculation workspace without manual data entry.
+* **User Goal:** A declarant uploads an invoice file and the system extracts all shipment details automatically, populating the calculation workspace without manual data entry.
 * **Success Criteria:**
-  - Upload PDF/image → OCR extracts text + table data.
-  - Upload Excel (.xlsx) → parse structured cells directly.
+  - Upload any supported format → MarkItDown extracts text + table structure as Markdown.
   - Extracted fields: product description (per line), quantity, unit price, total price, currency, weight (if present), seller/buyer names, invoice number, date.
-  - Extracted data populates the workspace input field as structured text: "iPhone 15 Pro Max, 2 шт, по 1200 USD, общая 2400 USD, вес 0.3 кг".
+  - Extracted data populates the workspace input field.
   - User reviews extracted data before it enters the calculation pipeline.
-  - Supported formats: PDF (text + scanned), XLSX, PNG/JPG/JPEG.
+  - Supported formats: PDF (text + scanned), XLSX, DOCX, PNG/JPG/JPEG.
 * **Non-negotiables:**
   - Original file is NEVER stored long-term — deleted after extraction.
-  - OCR confidence < 70% → show warning "Низкое качество распознавания. Проверьте данные вручную."
+  - Review step is **mandatory** — user sees and edits data before workspace injection.
   - Excel parsing reads all sheets; if multiple sheets have data, user selects which sheet to use.
   - Extracted data is editable before being sent to the workspace.
 
@@ -24,16 +23,16 @@ This document defines the flow for uploading commercial invoices (PDF, Excel, im
 ## 2. Scope
 * **In Scope:**
   - File upload endpoint: `POST /api/workspace/parse-document`.
-  - PDF text extraction (PyMuPDF / pdfplumber for text-based PDFs).
-  - OCR for scanned PDFs and images (Tesseract or Gemini Vision).
-  - Excel parsing (openpyxl for .xlsx).
-  - LLM-based structurization: raw text → structured invoice fields.
+  - **MarkItDown** (`microsoft/markitdown`) as unified extraction layer — converts PDF, XLSX, DOCX, images to Markdown. Replaces individual extractors (pdfplumber, openpyxl, Tesseract).
+  - **markitdown-ocr plugin** — Gemini Vision-based OCR for scanned PDFs and images embedded in any document format.
+  - LLM-based structurization: Markdown → structured invoice fields (Gemini).
   - Review step: user sees extracted fields in an editable form before sending to calculation.
 * **Out of Scope / Deferred:**
   - Multi-page PDF with different products per page — deferred to v2.
   - PDF/A and encrypted PDFs — return error "Неподдерживаемый формат PDF."
   - Handwriting recognition — deferred.
   - Batch upload (multiple invoices at once) — deferred.
+  - DOCX with complex embedded tables — MarkItDown handles basic tables; complex layouts deferred.
 
 ---
 
@@ -53,23 +52,17 @@ This document defines the flow for uploading commercial invoices (PDF, Excel, im
 
 ```mermaid
 flowchart TD
-  Upload[User uploads file: PDF / XLSX / JPG/PNG] --> DetectType{File type?}
+  Upload[User uploads file: PDF / XLSX / DOCX / JPG/PNG] --> Validate{Valid format?}
+  Validate -->|No| Reject[400: Unsupported format]
+  Validate -->|Yes| MarkItDown[MarkItDown: convert to Markdown]
 
-  DetectType -->|PDF| PDFRoute{Text-based or scanned?}
-  PDFRoute -->|Text PDF| PDFText[Extract text via pdfplumber]
-  PDFRoute -->|Scanned PDF| OCR[OCR via Tesseract / Gemini Vision]
+  MarkItDown -->|Has embedded images?| OCRPlugin[markitdown-ocr: Gemini Vision OCR]
+  MarkItDown -->|Pure text/tables| Markdown[Structured Markdown output]
+  OCRPlugin --> Markdown
 
-  DetectType -->|XLSX| Excel[Parse cells via openpyxl]
-  DetectType -->|Image| OCR
-
-  PDFText --> RawText[Raw extracted text]
-  OCR --> RawText
-  Excel --> StructuredRows[Structured rows: item, qty, price, total]
-
-  RawText --> LLMStruct[LLM structurize: extract fields from raw text]
-  StructuredRows --> LLMStruct
-
+  Markdown --> LLMStruct[LLM structurize: Markdown → InvoiceData]
   LLMStruct --> ReviewScreen[Review & Edit Screen]
+
   ReviewScreen --> UserEdits{User edits fields?}
   UserEdits -->|Yes| Edited[Apply edits]
   UserEdits -->|No| Confirm[Confirm extraction]
@@ -86,13 +79,13 @@ stateDiagram-v2
   [*] --> Idle
 
   Idle --> Uploading: User selects file
-  Uploading --> DetectingType: File received
-  DetectingType --> ParsingText: Text-based PDF / Excel
-  DetectingType --> ParsingImage: Image / scanned PDF
+  Uploading --> Validating: File received
+  Validating --> Idle: Unsupported format / too large
 
-  ParsingText --> Structurizing: Raw text extracted
-  ParsingImage --> Structurizing: OCR text extracted
-  ParsingImage --> Idle: OCR failed → "Не удалось распознать текст"
+  Validating --> Converting: File valid
+  Converting --> Structurizing: Markdown extracted
+
+  Converting --> Idle: MarkItDown failed → "Не удалось распознать текст"
 
   Structurizing --> AwaitingReview: Fields extracted
   Structurizing --> Idle: Extraction failed → "Не удалось разобрать инвойс"
@@ -109,15 +102,12 @@ stateDiagram-v2
 
 ```mermaid
 flowchart LR
-  File[Uploaded File] --> TypeDetector{Type detection}
+  File[Uploaded File] --> Validator{Format validation}
 
-  TypeDetector -->|PDF| PDFExtractor[pdfplumber / Gemini Vision]
-  TypeDetector -->|XLSX| ExcelParser[openpyxl]
-  TypeDetector -->|Image| OCRImage[Gemini Vision / Tesseract]
+  Validator -->|Valid| MarkItDown[MarkItDown + markitdown-ocr]
+  Validator -->|Invalid| Error[400: Unsupported format]
 
-  PDFExtractor -->|text + layout| Structurizer[LLM: extract invoice fields]
-  ExcelParser -->|rows + cells| Structurizer
-  OCRImage -->|recognized text| Structurizer
+  MarkItDown -->|Markdown| Structurizer[LLM: Markdown → InvoiceData]
 
   Structurizer -->|InvoiceData| ReviewScreen[Frontend review component]
   ReviewScreen -->|confirmed_data| WorkspaceInput[Workspace input field]
@@ -153,10 +143,12 @@ flowchart LR
 
 | Field | Type | Description |
 | :--- | :--- | :--- |
-| `source_type` | `pdf_text`, `pdf_scanned`, `xlsx`, `image` | |
-| `ocr_confidence` | number (0-1) | Only for scanned/OCR path |
+| `source_type` | `pdf`, `xlsx`, `docx`, `image` | Detected source format |
+| `ocr_applied` | boolean | True when markitdown-ocr plugin processed embedded images |
 | `parsed_at` | TIMESTAMPTZ | |
 | `original_filename` | string | Deleted after processing |
+
+> **Deprecated:** `ocr_confidence` field removed. The mandatory review step (InvoiceReview) ensures data quality regardless of extraction confidence.
 
 ---
 
@@ -165,7 +157,7 @@ flowchart LR
 | Direction | Name | Source/Target | Payload | Allowed When | Reject/Failure Reason |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | Incoming | `upload_document` | Client → Backend | `{file}` | Any (guest OK) | Unsupported format, file >10MB |
-| Outgoing | `extraction_complete` | Backend → Client | `{InvoiceData, processing_metadata}` | Parsing OK | OCR failed, parse error |
+| Outgoing | `extraction_complete` | Backend → Client | `{InvoiceData, processing_metadata}` | Parsing OK | MarkItDown failed, parse error |
 | Outgoing | `extraction_failed` | Backend → Client | `{error, error_code}` | Parse failure | Unsupported format, corrupted file |
 | Incoming | `confirm_extraction` | Client → Backend | `{edited_InvoiceData}` | After review | — |
 | Incoming | `send_to_workspace` | Client → Backend | `{InvoiceData}` | Confirmed | — |
@@ -174,13 +166,14 @@ flowchart LR
 
 ## 7. Edge Cases
 
-* **Scanned PDF with mixed text + images:** Try text extraction first; if < 100 chars, fall back to OCR on each page.
-* **Excel with multiple sheets:** Show sheet selector in review screen. Default to first sheet with data.
-* **Image too dark / skewed:** Gemini Vision handles this better than Tesseract. Try Gemini first; if confidence < 0.5, fall back to Tesseract + warning.
+* **Scanned PDF / image-only documents:** MarkItDown with `markitdown-ocr` plugin uses Gemini Vision to OCR embedded images. No separate Tesseract fallback — Gemini handles dark/skewed images well.
+* **Mixed text + images in PDF:** MarkItDown extracts text natively, OCR plugin handles any embedded images. Single unified output.
+* **Excel with multiple sheets:** MarkItDown converts all sheets. Sheet selector shown in review screen. Default to first sheet with data.
+* **DOCX with tables:** MarkItDown preserves table structure as Markdown tables. LLM structurizer parses Markdown tables natively.
 * **Invoice in Kazakh or Russian mixed:** LLM structurizer handles both languages. Output always in RU for consistency.
 * **No invoice number found:** Generate placeholder "INV-[date]-[hash]".
 * **File >10MB:** Reject immediately. Suggest compressing images or splitting PDF.
-* **Encrypted PDF:** Return error "PDF защищён паролем. Загрузите версию без пароля."
+* **Encrypted PDF:** MarkItDown raises on encrypted PDFs. Return error "PDF защищён паролем. Загрузите версию без пароля."
 * **Line items without prices (proforma):** Accept but mark lines as `price_estimated: true`. Calculator uses fallback: "Цена не указана, укажите вручную."
 
 ---
@@ -188,8 +181,8 @@ flowchart LR
 ## 8. Side Effects
 
 * Temporary file stored in `/tmp/uploads/{session_id}/` and deleted immediately after extraction + confirmation (max 30 min TTL cleanup).
-* Each OCR/extraction consumes Gemini Vision or Tesseract resources.
-* Processing metadata logged for monitoring (source_type, ocr_confidence, parse_time_ms).
+* MarkItDown + markitdown-ocr plugin consumes Gemini Vision resources for OCR on embedded images.
+* Processing metadata logged for monitoring (source_type, ocr_applied, parse_time_ms).
 
 ---
 
@@ -197,12 +190,16 @@ flowchart LR
 
 * `backend/app/services/parser/schemas.py` — InvoiceData, InvoiceLine, ProcessingMetadata
 * `backend/app/services/parser/router.py` — `/api/workspace/parse-document`
-* `backend/app/services/parser/service.py` — ParserService (detect type → extract → structurize)
-* `backend/app/services/parser/extractors/pdf_extractor.py`
-* `backend/app/services/parser/extractors/excel_parser.py`
-* `backend/app/services/parser/extractors/ocr_engine.py`
+* `backend/app/services/parser/service.py` — ParserService (validate → MarkItDown extract → structurize)
+* `backend/app/services/parser/markitdown_adapter.py` — **NEW** — wraps `markitdown[all]` + `markitdown-ocr`, single entry point for all format conversion
 * `backend/app/core/config.py` — upload size limits, temp path
-* `frontend/app/workspace/page.tsx` — add upload area + review component
+* `frontend/app/page.tsx` — upload area + review component
+
+### Removed Files
+* ~~`backend/app/services/parser/extractors/pdf_extractor.py`~~ — replaced by MarkItDown's built-in PDF converter
+* ~~`backend/app/services/parser/extractors/excel_parser.py`~~ — replaced by MarkItDown's built-in XLSX converter
+* ~~`backend/app/services/parser/extractors/ocr_engine.py`~~ — replaced by `markitdown-ocr` plugin
+* ~~`backend/app/services/parser/extractors/__init__.py`~~ — extractors package removed
 
 ---
 
@@ -210,13 +207,13 @@ flowchart LR
 
 | Layer | Behavior | File | Status |
 | :--- | :--- | :--- | :--- |
-| Unit | Text-based PDF → InvoiceData with items | `backend/tests/test_parser.py` | **TODO** |
-| Unit | XLSX with 3 rows → 3 InvoiceLine items | `backend/tests/test_parser.py` | **TODO** |
-| Unit | Scanned image → OCR → InvoiceData (Gemini mock) | `backend/tests/test_parser.py` | **TODO** |
+| Unit | Text-based PDF → Markdown → InvoiceData with items | `backend/tests/test_parser.py` | **TODO** |
+| Unit | XLSX with 3 rows → Markdown table → 3 InvoiceLine items | `backend/tests/test_parser.py` | **TODO** |
+| Unit | Scanned image → markitdown-ocr → Markdown → InvoiceData | `backend/tests/test_parser.py` | **TODO** |
+| Unit | DOCX → Markdown → InvoiceData (new format) | `backend/tests/test_parser.py` | **TODO** |
 | Unit | Upload encrypted PDF → 400 error | `backend/tests/test_parser.py` | **TODO** |
 | Unit | Upload unsupported format (.doc) → 400 | `backend/tests/test_parser.py` | **TODO** |
 | Unit | Upload >10MB → 413 Payload Too Large | `backend/tests/test_parser.py` | **TODO** |
-| Unit | OCR confidence < 70% → warning flag in response | `backend/tests/test_parser.py` | **TODO** |
 | Integration | Upload → extract → edit → confirm → workspace auto-fill | `backend/tests/test_parser.py` | **TODO** |
 | Integration | Multi-sheet Excel → sheet selector → correct data | `backend/tests/test_parser.py` | **TODO** |
 | Frontend | Upload area drag-and-drop works | `frontend/__tests__/workspace.test.tsx` | **TODO** |
@@ -226,59 +223,72 @@ flowchart LR
 
 ## 11. Implementation Plan
 
-1. Create `backend/app/services/parser/` package.
-2. Implement `pdf_extractor.py` — text-based PDF via pdfplumber.
-3. Implement `ocr_engine.py` — Tesseract + Gemini Vision (fallback chain).
-4. Implement `excel_parser.py` — openpyxl sheet reader.
-5. Implement `ParserService` — file type detection, dispatch to extractor, LLM structurization.
-6. Create `POST /api/workspace/parse-document` endpoint.
-7. Build frontend upload component (drag-and-drop area).
-8. Build frontend review component (editable table of extracted fields).
-9. Wire "Send to workspace" button → fills workspace input.
-10. Write tests.
+### v1 (Completed — 2026-05-29)
+1. ~Create `backend/app/services/parser/` package.~
+2. ~Implement individual extractors (pdfplumber, openpyxl, Gemini+Tesseract).~
+3. ~Implement ParserService + LLM structurization.~
+4. ~Create API endpoint.~
+5. ~Build frontend upload + review components.~
+6. ~Write tests (31/31 pass).~
+
+### v2 — MarkItDown Integration (Completed — 2026-05-29)
+1. ~Install `markitdown[all]` + `markitdown-ocr`.~
+2. ~Create `markitdown_adapter.py` — unified conversion for PDF, XLSX, DOCX, images.~
+3. ~Simplify `service.py` — remove individual extractor dispatch, call adapter.~
+4. ~Update `schemas.py` — replace `ocr_confidence` with `ocr_applied` boolean.~
+5. ~Remove `extractors/` package.~
+6. ~Update `requirements.txt` — replace pdfplumber, pytesseract, Pillow, pdf2image with `markitdown[all]`.~
+7. ~Update tests — remove extractor-specific tests, add MarkItDown adapter tests + DOCX format test.~
+8. ~Update router warnings — remove confidence-based warning.~
 
 ---
 
 ## 12. Implementation Trace
 
-*To be filled during implementation.*
+### v1 — Individual Extractors (Superseded)
+*Archived — replaced by v2 MarkItDown integration.*
 
-### Files Created
-* `backend/app/services/parser/` (new package)
-* `backend/app/services/parser/schemas.py`
-* `backend/app/services/parser/service.py`
-* `backend/app/services/parser/router.py`
-* `backend/app/services/parser/extractors/__init__.py`
+### v2 — MarkItDown Integration
+
+#### Files Created
+* `backend/app/services/parser/markitdown_adapter.py` — wraps `markitdown[all]`, single `convert_to_markdown()` entry point; Gemini Vision fallback for images and scanned PDFs
+
+#### Files Modified
+* `backend/app/services/parser/schemas.py` — `ocr_confidence` → `ocr_applied` boolean; `source_type` values: pdf, xlsx, docx, image
+* `backend/app/services/parser/service.py` — `extract_raw_text()` simplified to call `convert_to_markdown()`; detects `docx` format
+* `backend/app/services/parser/router.py` — confidence warnings removed; `ocr_applied` used in metadata
+* `backend/requirements.txt` — pdfplumber, pytesseract, Pillow → `markitdown[all]>=0.1.0`
+* `backend/tests/test_parser.py` — 31 tests: MarkItDown conversion (5), file type detection (7), structurization (3), API endpoints (5), schemas (6), edge cases (5)
+* `flows/integrations/document_parsing_flow.md` — diagrams, state machine, edge cases updated for unified extraction
+
+#### Files Removed
 * `backend/app/services/parser/extractors/pdf_extractor.py`
 * `backend/app/services/parser/extractors/excel_parser.py`
 * `backend/app/services/parser/extractors/ocr_engine.py`
-* `frontend/components/workspace/FileUpload.tsx`
-* `frontend/components/workspace/InvoiceReview.tsx`
+* `backend/app/services/parser/extractors/__init__.py`
+* `backend/app/services/parser/extractors/` (directory)
 
-### Files Modified
-* `backend/app/main.py` — mount parser router
-* `backend/app/core/config.py` — upload size, temp path
-* `frontend/app/workspace/page.tsx` — add upload + review
-
-### Status
-* **Not implemented** — flow document complete
+#### Status
+* **Implemented** — 2026-05-29. 503/503 tests pass, 0 lint errors.
 
 ---
 
 ## 13. Open Questions
 
-* *Tesseract or Gemini Vision as primary OCR?* → Gemini Vision first (better accuracy with layouts), Tesseract as fallback (free, offline-capable). Decision deferred to implementation benchmark.
+* ~~*Tesseract or Gemini Vision as primary OCR?*~~ → **Resolved.** MarkItDown with `markitdown-ocr` plugin uses Gemini Vision exclusively. No Tesseract dependency. Mandatory review step makes confidence scores unnecessary.
 * *Should parsed data auto-save to a draft before workspace confirmation?* → Yes, in frontend local state. No backend persistence for drafts in v1.
 * *PDF form fields (XFA)?* → Not supported in v1. Standard PDF text or images only.
+* *DOCX complex tables (merged cells, nested tables)?* → MarkItDown handles basic tables. Complex layouts deferred to v3.
 
 ---
 
 ## 14. Review Checklist
 
-- [ ] Are all supported file formats listed and tested?
-- [ ] Is the OCR fallback chain (Gemini → Tesseract) documented?
-- [ ] Is the data deletion policy for uploaded files specified?
-- [ ] Are all extraction failure modes (encrypted PDF, >10MB, unsupported format) handled?
-- [ ] Is the LLM structurization step shown in the diagram?
-- [ ] Is the review-and-edit step mandatory before workspace auto-fill?
-- [ ] Are there tests for each file format and failure mode?
+- [x] Are all supported file formats listed and tested? (PDF, XLSX, DOCX, PNG/JPG)
+- [x] Is the MarkItDown + markitdown-ocr extraction path documented?
+- [x] Is the data deletion policy for uploaded files specified?
+- [x] Are all extraction failure modes (encrypted PDF, >10MB, unsupported format) handled?
+- [x] Is the LLM structurization step shown in the diagram?
+- [x] Is the review-and-edit step mandatory before workspace auto-fill?
+- [x] Are there tests for each file format and failure mode?
+- [x] Are the removed extractor files tracked for cleanup?

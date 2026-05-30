@@ -48,6 +48,7 @@ class GeminiChunkFilter:
     """Reranks and filters retrieved legal chunks using Gemini Structured Outputs."""
 
     @classmethod
+    @observe(name="GeminiChunkFilter.rerank")
     def filter_chunks(
         cls, query: str, chunks: List[LegalChunk], threshold: int = 5
     ) -> List[LegalChunk]:
@@ -211,11 +212,29 @@ class LegalRAGService:
             # Apply post-retrieval relevance filter
             if retrieved_chunks:
                 original_count = len(retrieved_chunks)
+                # Diagnostic: capture Qdrant top-3 for comparison
+                qdrant_top3_ids = [c.article_number for c in retrieved_chunks[:3]]
+
                 retrieved_chunks = GeminiChunkFilter.filter_chunks(
                     query, retrieved_chunks, threshold=5
                 )
+
+                kept_count = len(retrieved_chunks)
+                filtered_top3_ids = [c.article_number for c in retrieved_chunks[:3]]
+
+                # Diagnostic: measure filter effect
+                if not retrieved_chunks and search_result:
+                    filter_effect = "safeguard_fired"
+                elif filtered_top3_ids == qdrant_top3_ids[:len(filtered_top3_ids)]:
+                    filter_effect = "unchanged"
+                else:
+                    filter_effect = "reordered"
+
                 logger.info(
-                    f"Post-retrieval filter: kept {len(retrieved_chunks)} / {original_count} chunks"
+                    f"Post-retrieval filter: kept {kept_count}/{original_count} chunks "
+                    f"| effect={filter_effect} "
+                    f"| qdrant_top3={qdrant_top3_ids} "
+                    f"| filtered_top3={filtered_top3_ids}"
                 )
 
                 # Safeguard: if Gemini filtered out everything, keep the top-1 chunk

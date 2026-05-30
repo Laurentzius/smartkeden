@@ -85,7 +85,7 @@ class IntentClassifier:
         # Greeting keywords
         if any(
             w in text_lower
-            for w in ["привет", "здравствуйте", "здрасте", "hi", "hello"]
+            for w in ["привет", "здравствуйте", "здрасте", "добр", "hi", "hello", "сәлем", "салам", "аман", "қош"]
         ):
             return IntentClassification(
                 intent=IntentType.greeting,
@@ -93,28 +93,7 @@ class IntentClassifier:
                 reasoning="Greeting keywords detected",
             )
 
-        # Calculation keywords
-        if any(
-            w in text_lower
-            for w in ["пошлин", "растаможк", "ндс", "платеж", "калькуляци", "сколько"]
-        ):
-            return IntentClassification(
-                intent=IntentType.calculation_request,
-                confidence=0.8,
-                reasoning="Calculation keywords detected",
-            )
-
-        # HS code classification keywords
-        if any(
-            w in text_lower for w in ["тн вэд", "hs", "код", "классифициру", "товар"]
-        ):
-            return IntentClassification(
-                intent=IntentType.product_description,
-                confidence=0.8,
-                reasoning="HS code keywords detected",
-            )
-
-        # Document upload keywords
+        # Document upload keywords — check BEFORE legal since "закон" is a legal keyword too
         if any(w in text_lower for w in ["загрузи", "документ", "текст закон"]):
             return IntentClassification(
                 intent=IntentType.document_upload,
@@ -122,14 +101,34 @@ class IntentClassifier:
                 reasoning="Document upload keywords detected",
             )
 
-        # Legal question keywords
-        if any(w in text_lower for w in ["ставк", "закон", "кодекс", "статья", "норм"]):
+        # Legal question keywords — check BEFORE HS and calculation since overlaps exist
+        if any(w in text_lower for w in ["ставк", "закон", "кодекс", "статья", "норм", "процедур", "режим", "декларировани"]):
             return IntentClassification(
                 intent=IntentType.question_about_law,
                 confidence=0.75,
                 reasoning="Legal question keywords detected",
             )
 
+        # Calculation keywords
+        if any(
+            w in text_lower
+            for w in ["пошлин", "растаможк", "ндс", "платеж", "калькуляци", "посчитай", "рассчитай"]
+        ):
+            return IntentClassification(
+                intent=IntentType.calculation_request,
+                confidence=0.8,
+                reasoning="Calculation keywords detected",
+            )
+
+        # HS code classification keywords — "товар" deliberately excluded (too generic)
+        if any(
+            w in text_lower for w in ["тн вэд", "hs ", "код", "классифициру"]
+        ):
+            return IntentClassification(
+                intent=IntentType.product_description,
+                confidence=0.8,
+                reasoning="HS code keywords detected",
+            )
         return IntentClassification(
             intent=IntentType.unclear, confidence=0.5, reasoning="No matching keywords"
         )

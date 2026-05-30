@@ -166,6 +166,9 @@ def test_rag_custom_seams():
                             ]
             return pts[:limit], None
 
+        def count_points(self, collection_name: str) -> int:
+            return len(self.points.get(collection_name, []))
+
         def delete_points(self, collection_name: str, ids: List[str]) -> bool:
             if collection_name in self.points:
                 self.points[collection_name] = [

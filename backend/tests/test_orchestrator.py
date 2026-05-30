@@ -572,9 +572,9 @@ def test_intent_fallback_empty_and_gibberish():
 
 def test_fallback_classify_edge_keywords():
     """Fallback classifier should correctly classify various edge keyword combinations."""
-    # "растаможке" matches "растаможк" in calculation_request block (checked before legal)
+    # Legal keywords checked before calculation — "закон" wins over "растаможк"
     mixed = IntentClassifier._fallback_classify("закон о растаможке iPhone")
-    assert mixed.intent == IntentType.calculation_request
+    assert mixed.intent == IntentType.question_about_law
     # Pure legal keywords (no overlap with other categories)
     pure_legal = IntentClassifier._fallback_classify("расскажи про законодательство")
     assert pure_legal.intent == IntentType.question_about_law

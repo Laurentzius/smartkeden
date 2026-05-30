@@ -112,3 +112,36 @@ export interface ContractGenerateRequest {
   buyer_name: string;
   incoterms: string;
 }
+
+// ── Document Parsing ─────────────────────────────────────────────────────────
+export interface InvoiceLine {
+  description: string;
+  quantity: number;
+  unit_price: number;
+  total_price: number;
+  weight_kg?: number | null;
+  hs_code_hint?: string | null;
+  price_estimated?: boolean;
+}
+
+export interface InvoiceData {
+  invoice_number?: string | null;
+  invoice_date?: string | null;
+  seller?: string | null;
+  buyer?: string | null;
+  currency?: string | null;
+  items: InvoiceLine[];
+}
+
+export interface ProcessingMetadata {
+  source_type: string;
+  ocr_confidence?: number | null;
+  parsed_at: string;
+  original_filename: string;
+}
+
+export interface ParseDocumentResponse {
+  data: InvoiceData;
+  metadata: ProcessingMetadata;
+  warnings: string[];
+}
