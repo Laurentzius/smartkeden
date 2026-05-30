@@ -3,7 +3,7 @@ import logging
 import re
 import csv
 import io
-from typing import List, Dict, Any
+from typing import List, Dict, Any, Optional
 
 logger = logging.getLogger(__name__)
 
@@ -13,7 +13,7 @@ class BaseDocumentParser(ABC):
 
     @abstractmethod
     def parse(self, raw_text: str, doc_title: str) -> List[Dict[str, Any]]:
-        """Parses raw text and returns a list of standardized IdeaBlocks."""
+        """Parses raw text and returns a list of standardized KnowledgeChunks."""
         pass
 
 
@@ -186,6 +186,83 @@ class TariffTableParser(BaseDocumentParser):
         return blocks
 
 
+class MarkdownBlockParser(BaseDocumentParser):
+    """Parses MarkItDown-produced Markdown into KnowledgeChunk dicts by heading and article boundaries.
+
+    Splits on Markdown ATX headings (#, ##, ###). When a heading or the first body line
+    contains ``Статья N`` near its start, that is used as ``article_number``; otherwise the
+    heading text itself becomes the article reference.
+    """
+
+    HEADING_RE = re.compile(r"^(#{1,3})\s+(.+?)(?:\s+#{1,3}\s*)?$")
+    ARTICLE_RE = re.compile(r"Статья\s+(\d+)")
+
+    def parse(self, raw_text: str, doc_title: str) -> List[Dict[str, Any]]:
+        if not raw_text or not raw_text.strip():
+            return []
+
+        lines = raw_text.split("\n")
+        blocks: List[Dict[str, Any]] = []
+        current_heading: Optional[str] = None
+        current_content: List[str] = []
+
+        for line in lines:
+            s = line.strip()
+            if not s:
+                continue
+
+            hm = self.HEADING_RE.match(s)
+            if hm:
+                # Flush previous block if it has content
+                if current_heading is not None and current_content:
+                    blocks.append(
+                        self._make_block(doc_title, current_heading, current_content)
+                    )
+                current_heading = hm.group(2).strip()
+                current_content = []
+                continue
+
+            if current_heading is not None:
+                current_content.append(s)
+
+        # Flush final block
+        if current_heading is not None and current_content:
+            blocks.append(
+                self._make_block(doc_title, current_heading, current_content)
+            )
+
+        return blocks
+
+    def _make_block(
+        self, doc_title: str, heading: str, content_lines: List[str]
+    ) -> Dict[str, Any]:
+        """Build a single KnowledgeChunk dict from a heading and its body lines."""
+        content_text = " ".join(content_lines).strip()
+
+        # Default article_number from heading text
+        article_number = heading
+
+        # Check heading for explicit "Статья N"
+        art_match = self.ARTICLE_RE.search(heading)
+        if art_match:
+            article_number = art_match.group(0)
+        elif content_lines:
+            # Check first body line for "Статья N" near the start
+            first = content_lines[0].strip()
+            if "Статья " in first[:30]:
+                art_match = self.ARTICLE_RE.search(first)
+                if art_match:
+                    article_number = art_match.group(0)
+
+        return {
+            "document_title": doc_title,
+            "article_number": article_number,
+            "content_quote": content_text,
+            "tags": ["AUTO_PARSED", "MARKDOWN"],
+            "keywords": ", ".join(article_number.lower().split()),
+        }
+
+
 class DocumentParserRegistry:
     """Registry to register and retrieve document parsers."""
 
@@ -230,3 +307,4 @@ class DocumentParserRegistry:
 DocumentParserRegistry.register("code", CodeDocumentParser())
 DocumentParserRegistry.register("decision", DecisionDocumentParser())
 DocumentParserRegistry.register("tariff", TariffTableParser())
+DocumentParserRegistry.register("markdown", MarkdownBlockParser())

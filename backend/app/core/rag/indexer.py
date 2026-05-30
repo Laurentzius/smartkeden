@@ -1,3 +1,4 @@
+import datetime
 import logging
 import hashlib
 import uuid
@@ -22,10 +23,11 @@ from app.core.rag.seams import (
     QdrantVectorStorageAdapter,
     LocalEmbeddingModelAdapter,
 )
+from app.core.rag.seed_loader import load_seed_law_blocks, load_seed_hs_codes
+
 
 logger = logging.getLogger(__name__)
 
-from app.core.rag.seed_loader import load_seed_law_blocks, load_seed_hs_codes
 
 # Sample/Seeding law data loaded from JSON — kept as module-level for backward compat
 SEED_LAW_BLOCKS = load_seed_law_blocks()
@@ -69,10 +71,8 @@ class LegalRAGIndexer:
     ) -> Optional[List[Dict[str, Any]]]:
         """
         In-process deduplication using Granite embeddings + rule-based merging.
-
-        Replaces the Blockify Distill Docker service with a fully local,
-        deterministic deduplication pipeline.
-
+        Fully local deterministic deduplication pipeline using cosine similarity
+        and rule-based merging — no external service required.
         Parameters
         ----------
         blocks:
@@ -272,11 +272,98 @@ class LegalRAGIndexer:
     ) -> List[Dict[str, Any]]:
         """Parses raw legal text into structured blocks (articles and sections), preserving article boundaries.
         Splits text by structural markers (e.g., 'Статья X') or paragraphs,
-        producing clean, semantically dense IdeaBlock structures.
+        producing clean, semantically dense KnowledgeChunk structures.
         """
         from app.core.rag.parsers import DocumentParserRegistry
 
         return DocumentParserRegistry.parse(raw_text, doc_title, doc_type=doc_type)
+
+    @classmethod
+    def _normalize_source_metadata(
+        cls, markdown_text: str, source_metadata: Dict[str, Any]
+    ) -> Dict[str, Any]:
+        """Normalize and enrich source metadata with conservative defaults and computed fields.
+
+        Must produce: source_filename, source_type, source_hash, converter, ocr_applied, ingested_at.
+        """
+        meta = dict(source_metadata) if source_metadata else {}
+
+        # Conservative defaults for required provenance fields
+        meta.setdefault("source_filename", "unknown")
+        meta.setdefault("converter", "unknown")
+        meta.setdefault("source_type", "markdown")
+        meta.setdefault("ocr_applied", False)
+
+        # Compute source_hash from markdown if not explicitly provided
+        if not meta.get("source_hash"):
+            meta["source_hash"] = hashlib.sha256(
+                markdown_text.encode("utf-8")
+            ).hexdigest()
+
+        # Timestamp the ingestion
+        if not meta.get("ingested_at"):
+            meta["ingested_at"] = (
+                datetime.datetime.now(datetime.timezone.utc).isoformat()
+            )
+
+        return meta
+
+    @classmethod
+    def parse_and_index_markdown(
+        cls,
+        markdown_text: str,
+        doc_title: str,
+        source_metadata: Dict[str, Any],
+    ) -> Dict[str, int]:
+        """Parse MarkItDown-produced Markdown into legal RAG chunks with source provenance.
+
+        Validates inputs, enriches source metadata, parses via ``doc_type="markdown"``,
+        deduplicates, and syncs into Qdrant via pointwise delta. Returns the same
+        ``{added, deleted, unchanged}`` count dict from ``update_document_index``,
+        or zero counts when no chunks are extracted.
+        """
+        # Validate
+        if not markdown_text or not markdown_text.strip():
+            logger.warning(
+                "Empty markdown text rejected for doc_title='%s'", doc_title
+            )
+            return {"added": 0, "deleted": 0, "unchanged": 0}
+        if not doc_title or not doc_title.strip():
+            logger.warning("Missing doc_title rejected for markdown ingestion")
+            return {"added": 0, "deleted": 0, "unchanged": 0}
+
+        # Normalize and enrich source metadata
+        enriched_meta = cls._normalize_source_metadata(markdown_text, source_metadata)
+
+        # Parse
+        from app.core.rag.parsers import DocumentParserRegistry
+
+        blocks = DocumentParserRegistry.parse(
+            markdown_text, doc_title, doc_type="markdown"
+        )
+        if not blocks:
+            logger.warning(
+                "No chunks extracted from markdown for '%s'", doc_title
+            )
+            return {"added": 0, "deleted": 0, "unchanged": 0}
+
+        # Enrich each block with source provenance so it survives indexing
+        for block in blocks:
+            block.update(enriched_meta)
+
+        # Deduplicate
+        deduped = cls.deduplicate_blocks_local(blocks)
+        if deduped is not None:
+            logger.info(
+                "Local dedup: %d → %d blocks", len(blocks), len(deduped)
+            )
+            blocks = deduped
+        else:
+            logger.info("Local dedup skipped, using %d parsed blocks", len(blocks))
+
+        # Pointwise delta sync
+        return cls.update_document_index(blocks, doc_title)
+
 
     @classmethod
     def index_blocks(cls, blocks: List[Dict[str, Any]]) -> int:
@@ -325,6 +412,10 @@ class LegalRAGIndexer:
                 "tags": block.get("tags", []),
                 "keywords": block.get("keywords", ""),
             }
+            # Carry unknown/extra block fields (e.g. source provenance) into payload
+            for key, value in block.items():
+                if key not in payload and not key.startswith("_"):
+                    payload[key] = value
             points.append(PointStruct(id=point_id, vector=vector, payload=payload))
         logger.info(
             f"Upserting {len(points)} points into Qdrant collection: {cls.COLLECTION_NAME} "
@@ -407,6 +498,10 @@ class LegalRAGIndexer:
                 "tags": block.get("tags", []),
                 "keywords": block.get("keywords", ""),
             }
+            # Carry unknown/extra block fields (e.g. source provenance) into payload
+            for key, value in block.items():
+                if key not in payload and not key.startswith("_"):
+                    payload[key] = value
             points_to_upsert.append(PointStruct(id=pid, vector=vector, payload=payload))
         if points_to_upsert:
             cls._vector_storage.upsert_points(

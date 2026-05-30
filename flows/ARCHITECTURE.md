@@ -27,10 +27,12 @@ flowchart LR
     end
 
     subgraph Ingest["Document Ingestion Flow"]
-        ING_Parse[Local Structure Parsing]
+        ING_Source[Official Source File]
+        ING_Markdown[MarkItDown Markdown Artifact]
+        ING_Parse[Markdown / Local Structure Parsing]
         ING_Dedup[Local Dedup via Granite]
-        ING_Embed[Gemini Embedding]
-        ING_Store[Upsert to Qdrant]
+        ING_Embed[Granite Embedding]
+        ING_Store[Upsert to Qdrant with Provenance]
     end
 
     subgraph Calc["Customs Calculation Flow"]
@@ -123,6 +125,11 @@ flowchart LR
     Calc_Math -- "calculation_results" --> Doc_Gen
 
     %% Vector Index Connections (existing)
+    ING_Source -- "rag_ingestion:markdown_ready" --> ING_Markdown
+    ING_Markdown -- "rag_ingestion:chunks_extracted" --> ING_Parse
+    ING_Parse --> ING_Dedup
+    ING_Dedup --> ING_Embed
+    ING_Embed -- "rag_ingestion:points_synced" --> ING_Store
     ING_Store --> Q_Legal
     RAG_Retrieve --> Q_Legal
     HS_Vector --> Q_HS
@@ -288,7 +295,7 @@ flowchart LR
 ## Implementation Trace & Flow Map
 * **Orchestrator (Chat):** `backend/app/core/orchestrator/` → Flow Document: `flows/features/agent_orchestrator_flow.md` (ADK 2.0 migration designed in `flows/features/google_adk_orchestration_flow.md`)
 * **Legal RAG Flow:** `backend/app/core/rag/` → Flow Document: `flows/features/semantic_embedding_flow.md`
-* **Document Ingestion:** `backend/app/core/rag/indexer.py` → Flow Document: `flows/features/blockify_ingestion_flow.md`
+* **Document Ingestion:** `backend/app/core/rag/indexer.py` → Flow Document: `flows/integrations/markdown_rag_ingestion_flow.md`
 * **HS Code Classifier:** `backend/app/core/hs_classifier/` → Flow Document: `flows/features/hs_classification_flow.md`
 * **Customs Calculation:** `backend/app/core/calculation/` → Flow Document: `flows/features/customs_calculation_flow.md`
 * **Dynamic Profile Extraction:** `backend/app/core/orchestrator/profile_extractor.py` → Flow Document: `flows/features/customs_profile_flow.md`
