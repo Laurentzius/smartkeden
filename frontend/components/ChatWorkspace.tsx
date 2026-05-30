@@ -35,23 +35,23 @@ export function ChatWorkspace({
   onApplyCandidate,
 }: ChatWorkspaceProps) {
   return (
-    <section className="flex flex-col h-[650px] bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-slate-200">
+    <section className="flex flex-col h-[650px] bg-white/90 backdrop-blur-xs border border-slate-200/60 rounded-2xl shadow-sm overflow-hidden transition-all duration-200 hover:shadow-md hover:border-slate-200/80">
       {/* Header */}
-      <div className="bg-slate-50 border-b border-slate-100 px-6 py-4 flex items-center justify-between">
-        <div className="flex items-center space-x-2.5">
-          <div className="bg-teal-500/10 p-2 rounded-lg text-teal-600">
+      <div className="bg-blue-50/40 border-b border-blue-100/50 px-6 py-4.5 flex items-center justify-between">
+        <div className="flex items-center space-x-3">
+          <div className="bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-100/85 p-2.5 rounded-xl text-blue-600 shadow-xs">
             <MessageSquare className="h-5 w-5" />
           </div>
           <div>
-            <h3 className="font-bold text-slate-800 text-base">
+            <h3 className="font-extrabold text-slate-900 text-base tracking-tight text-balance">
               «Интеллектуальный Помощник Keden»
             </h3>
-            <p className="text-xs text-slate-500">
+            <p className="text-xs text-slate-600 font-medium text-pretty">
               Мультимодальный подбор кодов ТН ВЭД, правовой RAG и расчеты
             </p>
           </div>
         </div>
-        <div className="text-[10px] bg-slate-200/60 text-slate-600 px-2 py-1 rounded font-mono">
+        <div className="text-[10px] bg-blue-100/60 text-blue-700 border border-blue-200/40 px-2.5 py-1 rounded-lg font-mono font-bold">
           SESS: {sessionId.substring(0, 8)}...
         </div>
       </div>
@@ -69,9 +69,9 @@ export function ChatWorkspace({
         {/* Loading state */}
         {loading && (
           <div className="bg-white border border-slate-100 rounded-2xl p-4 text-slate-500 text-xs self-start flex items-center space-x-2 shadow-sm max-w-[85%] rounded-tl-none">
-            <span className="h-2 w-2 bg-teal-500 rounded-full animate-bounce" />
-            <span className="h-2 w-2 bg-teal-500 rounded-full animate-bounce [animation-delay:0.2s]" />
-            <span className="h-2 w-2 bg-teal-500 rounded-full animate-bounce [animation-delay:0.4s]" />
+            <span className="h-2 w-2 bg-blue-600 rounded-full animate-bounce" />
+            <span className="h-2 w-2 bg-blue-600 rounded-full animate-bounce [animation-delay:0.2s]" />
+            <span className="h-2 w-2 bg-blue-600 rounded-full animate-bounce [animation-delay:0.4s]" />
             <span>ИИ Keden анализирует ваш запрос...</span>
           </div>
         )}
@@ -91,7 +91,8 @@ export function ChatWorkspace({
               <button
                 type="button"
                 onClick={onClearFile}
-                className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full h-4 w-4 flex items-center justify-center text-[10px] font-bold hover:bg-red-600 cursor-pointer"
+                className="absolute -top-1.5 -right-1.5 bg-red-500 text-white rounded-full h-4 w-4 flex items-center justify-center text-[10px] font-bold hover:bg-red-600 transition-colors duration-150 cursor-pointer"
+                aria-label="Удалить файл"
               >
                 ✕
               </button>
@@ -111,8 +112,9 @@ export function ChatWorkspace({
           <button
             type="button"
             onClick={() => fileInputRef.current?.click()}
-            className="p-3 text-slate-500 hover:text-teal-600 hover:bg-teal-50/50 rounded-xl border border-slate-200 hover:border-teal-200 transition shrink-0 cursor-pointer shadow-xs"
+            className="p-3 text-slate-500 hover:text-blue-600 hover:bg-blue-50/50 rounded-xl border border-slate-200 hover:border-blue-200 transition shrink-0 cursor-pointer shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500/30 min-h-11 flex items-center justify-center"
             title="Прикрепить фото товара для классификации"
+            aria-label="Прикрепить фото товара для классификации"
           >
             <Paperclip className="h-5 w-5" />
           </button>
@@ -129,12 +131,12 @@ export function ChatWorkspace({
             value={query}
             onChange={(e) => onQueryChange(e.target.value)}
             placeholder="Спросите Keden о ТН ВЭД, законодательстве или прикрепите фото..."
-            className="flex-1 rounded-xl border border-slate-300 px-4 py-3 text-slate-900 text-sm focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 focus:outline-none placeholder-slate-400 transition-all shadow-xs"
+            className="flex-1 min-h-11 rounded-xl border border-slate-300 px-4 py-3 text-slate-900 text-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-hidden placeholder-slate-400 transition-all shadow-xs"
           />
           <button
             type="submit"
             disabled={loading || (!query.trim() && !file)}
-            className="bg-brand-teal hover:bg-brand-teal-hover text-white font-semibold px-6 py-3 rounded-xl text-sm transition-colors duration-150 disabled:bg-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed shrink-0 cursor-pointer shadow-xs"
+            className="min-h-11 bg-gradient-to-r from-blue-600 to-cyan-600 hover:from-blue-700 hover:to-cyan-700 text-white font-bold px-6 py-3 rounded-xl text-sm transition-all duration-150 disabled:from-slate-100 disabled:to-slate-100 disabled:text-slate-400 disabled:cursor-not-allowed shrink-0 cursor-pointer shadow-md shadow-blue-500/5 focus:outline-hidden focus:ring-2 focus:ring-blue-500/30 active:scale-[0.98]"
           >
             Отправить
           </button>

@@ -172,7 +172,7 @@ export default function CustomsDashboard() {
 
   // ── Render ────────────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen flex flex-col font-sans">
+    <div className="min-h-dvh flex flex-col font-sans bg-linear-to-br from-blue-50/20 via-slate-50 to-blue-100/10">
       <Header
         rates={rates}
         ratesLoading={ratesLoading}

@@ -46,51 +46,51 @@ export function CalculationResult({
             </h3>
           </div>
 
-          <div className="space-y-3 text-sm bg-slate-50/80 p-4.5 rounded-2xl border border-slate-100">
+          <div className="space-y-3 text-sm bg-slate-50/50 p-4.5 rounded-2xl border border-slate-200/60">
             <div className="flex justify-between">
               <span className="text-slate-500">Таможенная стоимость (СВ):</span>
-              <span className="font-semibold text-slate-800">
+              <span className="font-bold text-slate-800 tabular-nums">
                 {result.customs_value_kzt.toLocaleString()} ₸
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Таможенный сбор (фиксированный):</span>
-              <span className="font-semibold text-slate-800">
+              <span className="font-bold text-slate-800 tabular-nums">
                 {result.customs_fee_kzt.toLocaleString()} ₸
               </span>
             </div>
             <div className="flex justify-between">
               <span className="text-slate-500">Импортная пошлина ({dutyRate}%):</span>
-              <span className="font-semibold text-slate-800">
+              <span className="font-bold text-slate-800 tabular-nums">
                 {result.customs_duty_kzt.toLocaleString()} ₸
               </span>
             </div>
             {exciseRate > 0 && (
               <div className="flex justify-between">
                 <span className="text-slate-500">Акциз ({exciseRate}%):</span>
-                <span className="font-semibold text-slate-800">
+                <span className="font-bold text-slate-800 tabular-nums">
                   {result.excise_kzt.toLocaleString()} ₸
                 </span>
               </div>
             )}
             <div className="flex justify-between">
               <span className="text-slate-500">Импортный НДС (12%):</span>
-              <span className="font-semibold text-slate-800">
+              <span className="font-bold text-slate-800 tabular-nums">
                 {result.import_vat_kzt.toLocaleString()} ₸
               </span>
             </div>
             {result.recycling_fee_kzt > 0 && (
               <div className="flex justify-between">
                 <span className="text-slate-500">Утилизационный сбор:</span>
-                <span className="font-semibold text-slate-800">
+                <span className="font-bold text-slate-800 tabular-nums">
                   {result.recycling_fee_kzt.toLocaleString()} ₸
                 </span>
               </div>
             )}
 
-            <div className="flex justify-between border-t border-slate-200 pt-3.5 mt-3 text-base font-extrabold text-slate-900">
+            <div className="flex justify-between border-t border-slate-200/80 pt-3.5 mt-3 text-base font-extrabold text-slate-900">
               <span>Итого к уплате:</span>
-              <span className="text-teal-600 text-lg">
+              <span className="text-blue-600 text-xl font-black tabular-nums">
                 {result.total_payments_kzt.toLocaleString()} ₸
               </span>
             </div>
@@ -116,7 +116,8 @@ export function CalculationResult({
                 type="button"
                 onClick={onExportInvoice}
                 disabled={docLoading}
-                className="flex items-center justify-center space-x-2 border border-slate-200 hover:border-teal-500 hover:text-teal-600 hover:bg-teal-50/10 text-slate-700 bg-white px-3.5 py-3 rounded-xl text-xs font-bold transition duration-150 cursor-pointer disabled:opacity-50 shadow-xs"
+                className="flex items-center justify-center space-x-2 border border-slate-200 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50/10 text-slate-700 bg-white px-3.5 py-3 rounded-xl text-xs font-bold transition-all duration-150 cursor-pointer disabled:opacity-50 shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500/30 min-h-11"
+                aria-label="Экспортировать инвойс в формате Excel"
               >
                 <FileSpreadsheet className="h-4 w-4 text-emerald-600 shrink-0" />
                 <span>Инвойс (Excel)</span>
@@ -125,7 +126,8 @@ export function CalculationResult({
                 type="button"
                 onClick={onExportContract}
                 disabled={docLoading}
-                className="flex items-center justify-center space-x-2 border border-slate-200 hover:border-teal-500 hover:text-teal-600 hover:bg-teal-50/10 text-slate-700 bg-white px-3.5 py-3 rounded-xl text-xs font-bold transition duration-150 cursor-pointer disabled:opacity-50 shadow-xs"
+                className="flex items-center justify-center space-x-2 border border-slate-200 hover:border-blue-500 hover:text-blue-600 hover:bg-blue-50/10 text-slate-700 bg-white px-3.5 py-3 rounded-xl text-xs font-bold transition-all duration-150 cursor-pointer disabled:opacity-50 shadow-xs focus:outline-hidden focus:ring-2 focus:ring-blue-500/30 min-h-11"
+                aria-label="Экспортировать договор в формате Word"
               >
                 <FileText className="h-4 w-4 text-blue-600 shrink-0" />
                 <span>Договор (Word)</span>
