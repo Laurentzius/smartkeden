@@ -5,14 +5,26 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional
 from app.core.database import engine, Base, SessionLocal
+
 # Ensure models are loaded so Base.metadata knows about them
 from app.core import models
-from app.core.calculation.engine import CustomsCalculator, CalculationRequest, CalculationResponse
+from app.core.calculation.engine import (
+    CustomsCalculator,
+    CalculationRequest,
+    CalculationResponse,
+)
+from app.core.config import settings
+from app.core.business_rules import rules as business_rules
 from app.services.exchange_rates import NBKExchangeRatesService
 from app.services.kgd_registry import KGDRegistryService
-from app.core.rag.service import LegalRAGService, LegalRAGResponse
-from app.core.hs_classifier.classifier import HSCodeClassifier, HSClassificationResponse
+from app.core.rag.service import LegalRAGResponse
+from app.core.hs_classifier.classifier import HSClassificationResponse
+from app.core.wiring import legal_rag_service, hs_classifier
 from app.core.orchestrator import orchestrator_router
+from app.api.admin import router as admin_router
+from app.api.admin_config import router as admin_config_router
+from app.api.admin_rules import router as admin_rules_router
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -24,6 +36,7 @@ async def lifespan(app: FastAPI):
     finally:
         db.close()
     yield
+
 
 app = FastAPI(
     title="CustomAI Kazakhstan (Кеден Көмекшісі) API",
@@ -43,14 +56,24 @@ app.add_middleware(
 
 # Mount sub-routers
 app.include_router(orchestrator_router)
+app.include_router(admin_router)
+app.include_router(admin_config_router)
+app.include_router(admin_rules_router)
 
 @app.get("/")
 async def root():
     return {
         "status": "healthy",
-        "service": "CustomAI Kazakhstan",
-        "version": "1.0.0"
+        "service": settings.PROJECT_NAME,
+        "version": settings.API_VERSION,
     }
+
+
+@app.get("/api/business-rules", tags=["Configuration"])
+async def get_business_rules():
+    """Return the current business rules for frontend consumption."""
+    return business_rules.model_dump()
+
 
 @app.post("/api/calculate", response_model=CalculationResponse, tags=["Calculations"])
 async def calculate_payments(req: CalculationRequest):
@@ -59,12 +82,14 @@ async def calculate_payments(req: CalculationRequest):
     """
     return CustomsCalculator.calculate(req)
 
+
 @app.get("/api/rates", tags=["Exchange Rates"])
 async def get_exchange_rates():
     """
     Fetch official daily exchange rates from the National Bank of Kazakhstan (НБРК).
     """
     return NBKExchangeRatesService.fetch_rates()
+
 
 @app.get("/api/rates/{currency}", tags=["Exchange Rates"])
 async def get_specific_rate(currency: str):
@@ -76,9 +101,13 @@ async def get_specific_rate(currency: str):
         return {"currency": currency.upper(), "rate_to_kzt": rate}
     except ValueError as e:
         from fastapi import HTTPException
+
         raise HTTPException(status_code=400, detail=str(e))
+
+
 class ChatRequest(BaseModel):
     query: str
+
 
 @app.post("/api/chat", response_model=LegalRAGResponse, tags=["RAG / Legal Chat"])
 @observe(name="chat_with_legal_base")
@@ -87,13 +116,15 @@ async def chat_with_legal_base(req: ChatRequest):
     Query the indexed Kazakhstan/EAEU customs legislation database.
     Provides expert legal synthesis with direct citations and quotes.
     """
-    return await LegalRAGService.query_legal_base(req.query)
+    return await legal_rag_service.query_legal_base(req.query)
 
-@app.post("/api/classify", response_model=HSClassificationResponse, tags=["HS Classification"])
+
+@app.post(
+    "/api/classify", response_model=HSClassificationResponse, tags=["HS Classification"]
+)
 @observe(name="classify_hs_code")
 async def classify_hs_code(
-    description: str = Form(...),
-    file: Optional[UploadFile] = File(None)
+    description: str = Form(...), file: Optional[UploadFile] = File(None)
 ):
     """
     Identify matching 10-digit EAEU HS Codes (ТН ВЭД) for a product description.
@@ -101,19 +132,27 @@ async def classify_hs_code(
     """
     image_bytes = None
     image_mime_type = "image/jpeg"
-    
+
     if file:
         image_bytes = await file.read()
         image_mime_type = file.content_type or "image/jpeg"
-        
-    return await HSCodeClassifier.classify(
+
+    return await hs_classifier.classify(
         description=description,
         image_bytes=image_bytes,
-        image_mime_type=image_mime_type
+        image_mime_type=image_mime_type,
     )
+
+
 from fastapi.responses import FileResponse
 import tempfile
-from app.core.documents.generator import DocumentGenerator, CustomsInvoiceSchema, SupplyAgreementSchema
+from app.core.documents.generator import (
+    DocumentGenerator,
+    CustomsInvoiceSchema,
+    SupplyAgreementSchema,
+)
+
+
 @app.post("/api/generate-excel", tags=["Document Generation"])
 async def generate_invoice_excel_api(req: CustomsInvoiceSchema):
     """
@@ -124,10 +163,12 @@ async def generate_invoice_excel_api(req: CustomsInvoiceSchema):
     tmp.close()
     DocumentGenerator.generate_invoice_excel(req, tmp_path)
     return FileResponse(
-        tmp_path, 
-        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", 
-        filename="Commercial_Invoice.xlsx"
+        tmp_path,
+        media_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        filename="Commercial_Invoice.xlsx",
     )
+
+
 @app.post("/api/generate-word", tags=["Document Generation"])
 async def generate_contract_word_api(req: SupplyAgreementSchema):
     """
@@ -138,7 +179,7 @@ async def generate_contract_word_api(req: SupplyAgreementSchema):
     tmp.close()
     DocumentGenerator.generate_contract_word(req, tmp_path)
     return FileResponse(
-        tmp_path, 
-        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document", 
-        filename="Supply_Agreement.docx"
+        tmp_path,
+        media_type="application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+        filename="Supply_Agreement.docx",
     )

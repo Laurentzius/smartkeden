@@ -1,0 +1,4480 @@
+[
+  {
+    "timestamp": "2026-05-29T23:57:14.067661+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "5ceb56f0-f71c-5aa1-a616-0932997a2a89",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.b55047ce",
+      "product_name_ru": "Тестовый товар",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "5ceb56f0-f71c-5aa1-a616-0932997a2a89"
+    }
+  },
+  {
+    "timestamp": "2026-05-29T23:57:14.123937+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "ab9c5f4b-d858-573d-864f-ae11d0ecca5f",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.aca3a27b",
+      "product_name_ru": "Тестовый товар",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "ab9c5f4b-d858-573d-864f-ae11d0ecca5f"
+    }
+  },
+  {
+    "timestamp": "2026-05-29T23:57:14.172252+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "908b95fc-139b-5664-bd4f-68f68e0c3802",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.f2da682b",
+      "product_name_ru": "Тестовый товар",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "908b95fc-139b-5664-bd4f-68f68e0c3802"
+    }
+  },
+  {
+    "timestamp": "2026-05-29T23:57:14.350241+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "bb4c46d3-133a-5693-863c-23f678adee25",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.884c3cea",
+      "product_name_ru": "УникальныйТовар_8a8e08ad",
+      "product_name_en": "",
+      "duty_rate_percent": 7.5,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "bb4c46d3-133a-5693-863c-23f678adee25"
+    }
+  },
+  {
+    "timestamp": "2026-05-29T23:57:14.677882+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "ce536214-b57e-55c0-a338-d0642c67f965",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law create-201",
+      "article_number": "Article create-201",
+      "content_quote": "Test content for admin API law create-201.",
+      "content_hash": "c49364fc08da7507a85d58de9aab5dcfe2f58dd38fbf600a2908ac1451c48e5f",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "ce536214-b57e-55c0-a338-d0642c67f965"
+    }
+  },
+  {
+    "timestamp": "2026-05-29T23:57:15.301436+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "18489e9c-9de5-5935-aa70-f19d43f09ecb",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law get-200",
+      "article_number": "Article get-200",
+      "content_quote": "Test content for admin API law get-200.",
+      "content_hash": "3ceb50f9cce8cba5141fda7b503d2b6f144176a9dd32632781c8d2a1d47e2b1d",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "18489e9c-9de5-5935-aa70-f19d43f09ecb"
+    }
+  },
+  {
+    "timestamp": "2026-05-29T23:57:15.759448+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "91306a0d-0d83-5840-b75f-259bb1748fb6",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Test content for admin API law upd-200.",
+      "content_hash": "31e3703b7af1edc9398cdab34770b396b9d4554d773bac292864690e97709be3",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "91306a0d-0d83-5840-b75f-259bb1748fb6"
+    }
+  },
+  {
+    "timestamp": "2026-05-29T23:57:15.795028+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "law",
+    "entity_id": "91306a0d-0d83-5840-b75f-259bb1748fb6",
+    "changes": {
+      "title": "Updated Admin Test Law"
+    },
+    "old_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Test content for admin API law upd-200.",
+      "content_hash": "31e3703b7af1edc9398cdab34770b396b9d4554d773bac292864690e97709be3",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "91306a0d-0d83-5840-b75f-259bb1748fb6"
+    },
+    "new_values": {
+      "document_title": "Updated Admin Test Law",
+      "article_number": "Article upd-200",
+      "content_quote": "Test content for admin API law upd-200.",
+      "content_hash": "31e3703b7af1edc9398cdab34770b396b9d4554d773bac292864690e97709be3",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "91306a0d-0d83-5840-b75f-259bb1748fb6"
+    }
+  },
+  {
+    "timestamp": "2026-05-29T23:57:16.226156+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "d9bd5b34-c45b-5ce9-969b-83f70cf98b0d",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Test content for admin API law del-204.",
+      "content_hash": "d6cf95ad69ce37add36dc642f2b8617cd3d5ed2b6e67e6bfb60192f254b0c8fa",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "d9bd5b34-c45b-5ce9-969b-83f70cf98b0d"
+    }
+  },
+  {
+    "timestamp": "2026-05-29T23:57:16.246445+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "law",
+    "entity_id": "d9bd5b34-c45b-5ce9-969b-83f70cf98b0d",
+    "changes": {},
+    "old_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Test content for admin API law del-204.",
+      "content_hash": "d6cf95ad69ce37add36dc642f2b8617cd3d5ed2b6e67e6bfb60192f254b0c8fa",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "d9bd5b34-c45b-5ce9-969b-83f70cf98b0d"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-29T23:57:16.664741+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "5f6a5525-e2ca-526e-9c39-6593940bc30c",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-0",
+      "article_number": "Article list-0",
+      "content_quote": "Test content for admin API law list-0.",
+      "content_hash": "dac148ab60c6709ba060acff5a5a6f87b8eb19e1181a9380f30c3cb07670b958",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "5f6a5525-e2ca-526e-9c39-6593940bc30c"
+    }
+  },
+  {
+    "timestamp": "2026-05-29T23:57:16.730197+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-29T23:57:17.047012+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "hs_code_directory",
+    "changes": {
+      "collection": "hs_codes"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-29T23:57:17.334048+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz,hs_code_directory",
+    "changes": {
+      "collection": "all"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-29T23:57:17.633367+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-29T23:58:58.363886+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-29T23:59:10.691804+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "hs_code_directory",
+    "changes": {
+      "collection": "hs_codes"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-29T23:59:11.041806+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz,hs_code_directory",
+    "changes": {
+      "collection": "all"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-29T23:59:11.400306+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:01:58.456822+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "d278a5ce-ead2-5fd6-a869-a36c40da571b",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.5497f349",
+      "product_name_ru": "Тестовый товар",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "d278a5ce-ead2-5fd6-a869-a36c40da571b"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:01:58.726150+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "178aca7f-085f-5d3e-9d5f-a8a261aa3e80",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.1749d3cf",
+      "product_name_ru": "УникальныйТовар_ac7c7c50",
+      "product_name_en": "",
+      "duty_rate_percent": 7.5,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "178aca7f-085f-5d3e-9d5f-a8a261aa3e80"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:02:46.151797+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "0abe62e8-c7e1-597a-8335-e10e92fca5b9",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.2165cd7f",
+      "product_name_ru": "Тестовый товар 2165cd7f",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "0abe62e8-c7e1-597a-8335-e10e92fca5b9"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:02:46.202416+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "66800882-0908-51d4-ac61-e9694c27d7dc",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.59c785a4",
+      "product_name_ru": "Дубль товар 59c785a4",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "66800882-0908-51d4-ac61-e9694c27d7dc"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:02:46.263078+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "171f31fc-8687-55a9-bfca-e623a706099f",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.bb026c1e",
+      "product_name_ru": "GetTest товар bb026c1e",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "171f31fc-8687-55a9-bfca-e623a706099f"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:02:46.327662+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "eb7ac296-a55e-5d44-aa8c-4b2ae313085b",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.525247fb",
+      "product_name_ru": "UpdateTest товар 525247fb",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "eb7ac296-a55e-5d44-aa8c-4b2ae313085b"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:02:46.362850+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "hs_code",
+    "entity_id": "eb7ac296-a55e-5d44-aa8c-4b2ae313085b",
+    "changes": {
+      "product_name_ru": "Обновленный товар 525247fb",
+      "duty_rate": 10.0
+    },
+    "old_values": {
+      "hs_code": "9999.99.525247fb",
+      "product_name_ru": "UpdateTest товар 525247fb",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "eb7ac296-a55e-5d44-aa8c-4b2ae313085b"
+    },
+    "new_values": {
+      "hs_code": "9999.99.525247fb",
+      "product_name_ru": "Обновленный товар 525247fb",
+      "product_name_en": "",
+      "duty_rate_percent": 10.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "eb7ac296-a55e-5d44-aa8c-4b2ae313085b"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:02:46.416064+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "5a91e608-9cee-5d47-8aaf-40f0cf3b301d",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.5addbbfb",
+      "product_name_ru": "DeleteTest товар 5addbbfb",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "5a91e608-9cee-5d47-8aaf-40f0cf3b301d"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:02:46.433277+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "hs_code",
+    "entity_id": "5a91e608-9cee-5d47-8aaf-40f0cf3b301d",
+    "changes": {},
+    "old_values": {
+      "hs_code": "9999.99.5addbbfb",
+      "product_name_ru": "DeleteTest товар 5addbbfb",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "5a91e608-9cee-5d47-8aaf-40f0cf3b301d"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:02:46.546538+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "92168179-a9f5-5d36-9616-1687c850decf",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.4559be45",
+      "product_name_ru": "УникальныйТовар_4559be45",
+      "product_name_en": "",
+      "duty_rate_percent": 7.5,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "92168179-a9f5-5d36-9616-1687c850decf"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:04:41.257898+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "ce536214-b57e-55c0-a338-d0642c67f965",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law create-201",
+      "article_number": "Article create-201",
+      "content_quote": "Test content for admin API law create-201.",
+      "content_hash": "c49364fc08da7507a85d58de9aab5dcfe2f58dd38fbf600a2908ac1451c48e5f",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "ce536214-b57e-55c0-a338-d0642c67f965"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:04:41.975842+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "18489e9c-9de5-5935-aa70-f19d43f09ecb",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law get-200",
+      "article_number": "Article get-200",
+      "content_quote": "Test content for admin API law get-200.",
+      "content_hash": "3ceb50f9cce8cba5141fda7b503d2b6f144176a9dd32632781c8d2a1d47e2b1d",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "18489e9c-9de5-5935-aa70-f19d43f09ecb"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:04:42.469546+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "91306a0d-0d83-5840-b75f-259bb1748fb6",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Test content for admin API law upd-200.",
+      "content_hash": "31e3703b7af1edc9398cdab34770b396b9d4554d773bac292864690e97709be3",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "91306a0d-0d83-5840-b75f-259bb1748fb6"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:04:42.538042+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "law",
+    "entity_id": "91306a0d-0d83-5840-b75f-259bb1748fb6",
+    "changes": {
+      "title": "Updated Admin Test Law"
+    },
+    "old_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Test content for admin API law upd-200.",
+      "content_hash": "31e3703b7af1edc9398cdab34770b396b9d4554d773bac292864690e97709be3",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "91306a0d-0d83-5840-b75f-259bb1748fb6"
+    },
+    "new_values": {
+      "document_title": "Updated Admin Test Law",
+      "article_number": "Article upd-200",
+      "content_quote": "Test content for admin API law upd-200.",
+      "content_hash": "31e3703b7af1edc9398cdab34770b396b9d4554d773bac292864690e97709be3",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "91306a0d-0d83-5840-b75f-259bb1748fb6"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:04:43.030440+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "d9bd5b34-c45b-5ce9-969b-83f70cf98b0d",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Test content for admin API law del-204.",
+      "content_hash": "d6cf95ad69ce37add36dc642f2b8617cd3d5ed2b6e67e6bfb60192f254b0c8fa",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "d9bd5b34-c45b-5ce9-969b-83f70cf98b0d"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:04:43.057943+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "law",
+    "entity_id": "d9bd5b34-c45b-5ce9-969b-83f70cf98b0d",
+    "changes": {},
+    "old_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Test content for admin API law del-204.",
+      "content_hash": "d6cf95ad69ce37add36dc642f2b8617cd3d5ed2b6e67e6bfb60192f254b0c8fa",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "d9bd5b34-c45b-5ce9-969b-83f70cf98b0d"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:04:43.563940+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "5f6a5525-e2ca-526e-9c39-6593940bc30c",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-0",
+      "article_number": "Article list-0",
+      "content_quote": "Test content for admin API law list-0.",
+      "content_hash": "dac148ab60c6709ba060acff5a5a6f87b8eb19e1181a9380f30c3cb07670b958",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "5f6a5525-e2ca-526e-9c39-6593940bc30c"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:05:47.284522+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "5f6a5525-e2ca-526e-9c39-6593940bc30c",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-0",
+      "article_number": "Article list-0",
+      "content_quote": "Test content for admin API law list-0.",
+      "content_hash": "dac148ab60c6709ba060acff5a5a6f87b8eb19e1181a9380f30c3cb07670b958",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "5f6a5525-e2ca-526e-9c39-6593940bc30c"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:06:27.919745+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "bdf7182a-fd86-5139-801e-3a1bd04c0025",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law create-201",
+      "article_number": "Article create-201",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "bdf7182a-fd86-5139-801e-3a1bd04c0025"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:06:28.628749+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law get-200",
+      "article_number": "Article get-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:06:29.114247+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:06:29.164746+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {
+      "title": "Updated Admin Test Law"
+    },
+    "old_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    },
+    "new_values": {
+      "document_title": "Updated Admin Test Law",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:06:29.657052+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:06:29.675550+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:06:30.168552+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-0",
+      "article_number": "Article list-0",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:06:30.226550+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "522147e9-6854-5c7c-a793-8d4fa57a562b",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-1",
+      "article_number": "Article list-1",
+      "content_quote": "VAT rate applicable to imported goods for commercial resale purposes.",
+      "content_hash": "ce975d5fb428a60d164217f83b3ab43d5dd439ac85b47ce90bc689572a6b9ee6",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "522147e9-6854-5c7c-a793-8d4fa57a562b"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:06:30.284550+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "1bc30afc-fe50-59b8-aea8-069a69895b96",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-2",
+      "article_number": "Article list-2",
+      "content_quote": "Excise duty calculation methodology for tobacco products and alcohol.",
+      "content_hash": "ce60d394e0250f472828aad3b86857de88814a89c8f34b8eeba6ec34ac54d811",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "1bc30afc-fe50-59b8-aea8-069a69895b96"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:07:36.946050+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "953dffbe-f032-5aef-8fb8-1f215b28e620",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.a0addccd",
+      "product_name_ru": "GetTest товар a0addccd",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "953dffbe-f032-5aef-8fb8-1f215b28e620"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:07:37.035551+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "4268fb38-3197-5476-9b1d-f86c198a0063",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.2d7c0585",
+      "product_name_ru": "UpdateTest товар 2d7c0585",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "4268fb38-3197-5476-9b1d-f86c198a0063"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:07:37.080051+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "hs_code",
+    "entity_id": "4268fb38-3197-5476-9b1d-f86c198a0063",
+    "changes": {
+      "product_name_ru": "Обновленный товар 2d7c0585",
+      "duty_rate": 10.0
+    },
+    "old_values": {
+      "hs_code": "9999.99.2d7c0585",
+      "product_name_ru": "UpdateTest товар 2d7c0585",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "4268fb38-3197-5476-9b1d-f86c198a0063"
+    },
+    "new_values": {
+      "hs_code": "9999.99.2d7c0585",
+      "product_name_ru": "Обновленный товар 2d7c0585",
+      "product_name_en": "",
+      "duty_rate_percent": 10.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "4268fb38-3197-5476-9b1d-f86c198a0063"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:07:37.148550+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "ae15e644-64dd-5393-88c4-12fca504984c",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.b6685bc0",
+      "product_name_ru": "DeleteTest товар b6685bc0",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "ae15e644-64dd-5393-88c4-12fca504984c"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:07:37.169051+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "hs_code",
+    "entity_id": "ae15e644-64dd-5393-88c4-12fca504984c",
+    "changes": {},
+    "old_values": {
+      "hs_code": "9999.99.b6685bc0",
+      "product_name_ru": "DeleteTest товар b6685bc0",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "ae15e644-64dd-5393-88c4-12fca504984c"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:07:37.532552+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "bdf7182a-fd86-5139-801e-3a1bd04c0025",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law create-201",
+      "article_number": "Article create-201",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "bdf7182a-fd86-5139-801e-3a1bd04c0025"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:07:38.255177+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law get-200",
+      "article_number": "Article get-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:07:38.768851+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:07:38.825851+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {
+      "title": "Updated Admin Test Law"
+    },
+    "old_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    },
+    "new_values": {
+      "document_title": "Updated Admin Test Law",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:07:39.326850+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:07:39.356350+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:07:39.829448+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-0",
+      "article_number": "Article list-0",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:07:39.893946+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "522147e9-6854-5c7c-a793-8d4fa57a562b",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-1",
+      "article_number": "Article list-1",
+      "content_quote": "VAT rate applicable to imported goods for commercial resale purposes.",
+      "content_hash": "ce975d5fb428a60d164217f83b3ab43d5dd439ac85b47ce90bc689572a6b9ee6",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "522147e9-6854-5c7c-a793-8d4fa57a562b"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:07:39.955945+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "1bc30afc-fe50-59b8-aea8-069a69895b96",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-2",
+      "article_number": "Article list-2",
+      "content_quote": "Excise duty calculation methodology for tobacco products and alcohol.",
+      "content_hash": "ce60d394e0250f472828aad3b86857de88814a89c8f34b8eeba6ec34ac54d811",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "1bc30afc-fe50-59b8-aea8-069a69895b96"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:07:39.976945+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:07:40.403072+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "hs_code_directory",
+    "changes": {
+      "collection": "hs_codes"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:07:40.743073+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz,hs_code_directory",
+    "changes": {
+      "collection": "all"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:07:41.096072+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:09:14.754153+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "80da149e-ef41-5712-87df-1cde7d297e14",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.3f3af9c1",
+      "product_name_ru": "Тестовый товар 3f3af9c1",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "80da149e-ef41-5712-87df-1cde7d297e14"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:14.834154+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "c6142fa7-9c0e-508f-ae67-7b72367fb45c",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.719a4ced",
+      "product_name_ru": "Дубль товар 719a4ced",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "c6142fa7-9c0e-508f-ae67-7b72367fb45c"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:14.911701+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "6286ff65-603d-50c5-a74b-2bb9bbb37abc",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.dbb423a0",
+      "product_name_ru": "GetTest товар dbb423a0",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "6286ff65-603d-50c5-a74b-2bb9bbb37abc"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:14.993152+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "434fa181-6e51-5965-a33f-f5e92ffcec9f",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.616c4634",
+      "product_name_ru": "UpdateTest товар 616c4634",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "434fa181-6e51-5965-a33f-f5e92ffcec9f"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:15.037151+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "hs_code",
+    "entity_id": "434fa181-6e51-5965-a33f-f5e92ffcec9f",
+    "changes": {
+      "product_name_ru": "Обновленный товар 616c4634",
+      "duty_rate": 10.0
+    },
+    "old_values": {
+      "hs_code": "9999.99.616c4634",
+      "product_name_ru": "UpdateTest товар 616c4634",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "434fa181-6e51-5965-a33f-f5e92ffcec9f"
+    },
+    "new_values": {
+      "hs_code": "9999.99.616c4634",
+      "product_name_ru": "Обновленный товар 616c4634",
+      "product_name_en": "",
+      "duty_rate_percent": 10.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "434fa181-6e51-5965-a33f-f5e92ffcec9f"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:15.108151+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "841b2019-7481-59cb-953d-eee834de155c",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.3c7b4b09",
+      "product_name_ru": "DeleteTest товар 3c7b4b09",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "841b2019-7481-59cb-953d-eee834de155c"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:15.129151+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "hs_code",
+    "entity_id": "841b2019-7481-59cb-953d-eee834de155c",
+    "changes": {},
+    "old_values": {
+      "hs_code": "9999.99.3c7b4b09",
+      "product_name_ru": "DeleteTest товар 3c7b4b09",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "841b2019-7481-59cb-953d-eee834de155c"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:09:15.537152+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "b57bc13d-f248-55ac-87f3-fc1cc79f07c0",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.9d238b4c",
+      "product_name_ru": "УникальныйТовар_9d238b4c",
+      "product_name_en": "",
+      "duty_rate_percent": 7.5,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "b57bc13d-f248-55ac-87f3-fc1cc79f07c0"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:15.841151+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "bdf7182a-fd86-5139-801e-3a1bd04c0025",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law create-201",
+      "article_number": "Article create-201",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "bdf7182a-fd86-5139-801e-3a1bd04c0025"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:16.530651+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law get-200",
+      "article_number": "Article get-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:17.043151+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:17.093151+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {
+      "title": "Updated Admin Test Law"
+    },
+    "old_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    },
+    "new_values": {
+      "document_title": "Updated Admin Test Law",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:17.598154+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:17.630152+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:09:18.104151+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-0",
+      "article_number": "Article list-0",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:18.160152+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "522147e9-6854-5c7c-a793-8d4fa57a562b",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-1",
+      "article_number": "Article list-1",
+      "content_quote": "VAT rate applicable to imported goods for commercial resale purposes.",
+      "content_hash": "ce975d5fb428a60d164217f83b3ab43d5dd439ac85b47ce90bc689572a6b9ee6",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "522147e9-6854-5c7c-a793-8d4fa57a562b"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:18.219152+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "1bc30afc-fe50-59b8-aea8-069a69895b96",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-2",
+      "article_number": "Article list-2",
+      "content_quote": "Excise duty calculation methodology for tobacco products and alcohol.",
+      "content_hash": "ce60d394e0250f472828aad3b86857de88814a89c8f34b8eeba6ec34ac54d811",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "1bc30afc-fe50-59b8-aea8-069a69895b96"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:18.242151+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:09:18.622151+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "hs_code_directory",
+    "changes": {
+      "collection": "hs_codes"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:09:18.963652+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz,hs_code_directory",
+    "changes": {
+      "collection": "all"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:09:19.313151+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:09:58.195249+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "e656b46b-5d41-54dd-81a8-5d2e017e1ccf",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.10f11a77",
+      "product_name_ru": "Тестовый товар 10f11a77",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "e656b46b-5d41-54dd-81a8-5d2e017e1ccf"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:58.260747+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "dd4ccf9c-41c8-575d-95ef-125b929c15e7",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.cf23e720",
+      "product_name_ru": "Дубль товар cf23e720",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "dd4ccf9c-41c8-575d-95ef-125b929c15e7"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:58.334748+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "126d449b-e863-5cdb-a2e0-e2330b72a87f",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.5be40ed1",
+      "product_name_ru": "GetTest товар 5be40ed1",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "126d449b-e863-5cdb-a2e0-e2330b72a87f"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:58.427247+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "3bdc977f-620e-5139-88df-bac7932e1792",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.3b1980c1",
+      "product_name_ru": "UpdateTest товар 3b1980c1",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "3bdc977f-620e-5139-88df-bac7932e1792"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:58.477247+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "hs_code",
+    "entity_id": "3bdc977f-620e-5139-88df-bac7932e1792",
+    "changes": {
+      "product_name_ru": "Обновленный товар 3b1980c1",
+      "duty_rate": 10.0
+    },
+    "old_values": {
+      "hs_code": "9999.99.3b1980c1",
+      "product_name_ru": "UpdateTest товар 3b1980c1",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "3bdc977f-620e-5139-88df-bac7932e1792"
+    },
+    "new_values": {
+      "hs_code": "9999.99.3b1980c1",
+      "product_name_ru": "Обновленный товар 3b1980c1",
+      "product_name_en": "",
+      "duty_rate_percent": 10.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "3bdc977f-620e-5139-88df-bac7932e1792"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:58.548251+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "191dc3ba-f8f6-5b07-9a1a-b1700baec33a",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.61bd88ea",
+      "product_name_ru": "DeleteTest товар 61bd88ea",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "191dc3ba-f8f6-5b07-9a1a-b1700baec33a"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:58.567749+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "hs_code",
+    "entity_id": "191dc3ba-f8f6-5b07-9a1a-b1700baec33a",
+    "changes": {},
+    "old_values": {
+      "hs_code": "9999.99.61bd88ea",
+      "product_name_ru": "DeleteTest товар 61bd88ea",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "191dc3ba-f8f6-5b07-9a1a-b1700baec33a"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:09:58.908248+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "bdf7182a-fd86-5139-801e-3a1bd04c0025",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law create-201",
+      "article_number": "Article create-201",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "bdf7182a-fd86-5139-801e-3a1bd04c0025"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:09:59.610748+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law get-200",
+      "article_number": "Article get-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:00.117748+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:00.160248+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {
+      "title": "Updated Admin Test Law"
+    },
+    "old_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    },
+    "new_values": {
+      "document_title": "Updated Admin Test Law",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:00.765247+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:00.784247+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:10:01.282748+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-0",
+      "article_number": "Article list-0",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:01.333747+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "522147e9-6854-5c7c-a793-8d4fa57a562b",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-1",
+      "article_number": "Article list-1",
+      "content_quote": "VAT rate applicable to imported goods for commercial resale purposes.",
+      "content_hash": "ce975d5fb428a60d164217f83b3ab43d5dd439ac85b47ce90bc689572a6b9ee6",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "522147e9-6854-5c7c-a793-8d4fa57a562b"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:01.389747+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "1bc30afc-fe50-59b8-aea8-069a69895b96",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-2",
+      "article_number": "Article list-2",
+      "content_quote": "Excise duty calculation methodology for tobacco products and alcohol.",
+      "content_hash": "ce60d394e0250f472828aad3b86857de88814a89c8f34b8eeba6ec34ac54d811",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "1bc30afc-fe50-59b8-aea8-069a69895b96"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:01.411246+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:10:01.803747+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "hs_code_directory",
+    "changes": {
+      "collection": "hs_codes"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:10:02.125246+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz,hs_code_directory",
+    "changes": {
+      "collection": "all"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:10:02.468247+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:10:43.518338+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "951b0997-fbf6-5236-bd6e-424486b5447f",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.1074a010",
+      "product_name_ru": "Тестовый товар 1074a010",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "951b0997-fbf6-5236-bd6e-424486b5447f"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:43.579335+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "1ba142ad-27aa-56c5-b1e4-9c6ac7027bec",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.ce512685",
+      "product_name_ru": "Дубль товар ce512685",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "1ba142ad-27aa-56c5-b1e4-9c6ac7027bec"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:43.634837+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "fa108414-c3fd-540c-b535-3110f61dd0ee",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.cfe82ca6",
+      "product_name_ru": "GetTest товар cfe82ca6",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "fa108414-c3fd-540c-b535-3110f61dd0ee"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:43.695336+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "417982d4-2bc3-59d7-a567-6394c1c91234",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.603fee8b",
+      "product_name_ru": "UpdateTest товар 603fee8b",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "417982d4-2bc3-59d7-a567-6394c1c91234"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:43.744336+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "hs_code",
+    "entity_id": "417982d4-2bc3-59d7-a567-6394c1c91234",
+    "changes": {
+      "product_name_ru": "Обновленный товар 603fee8b",
+      "duty_rate": 10.0
+    },
+    "old_values": {
+      "hs_code": "9999.99.603fee8b",
+      "product_name_ru": "UpdateTest товар 603fee8b",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "417982d4-2bc3-59d7-a567-6394c1c91234"
+    },
+    "new_values": {
+      "hs_code": "9999.99.603fee8b",
+      "product_name_ru": "Обновленный товар 603fee8b",
+      "product_name_en": "",
+      "duty_rate_percent": 10.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "417982d4-2bc3-59d7-a567-6394c1c91234"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:43.796836+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "3b0f7345-9f6f-5580-ae85-d3834edbfaad",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.222b9f14",
+      "product_name_ru": "DeleteTest товар 222b9f14",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "3b0f7345-9f6f-5580-ae85-d3834edbfaad"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:43.817836+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "hs_code",
+    "entity_id": "3b0f7345-9f6f-5580-ae85-d3834edbfaad",
+    "changes": {},
+    "old_values": {
+      "hs_code": "9999.99.222b9f14",
+      "product_name_ru": "DeleteTest товар 222b9f14",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "3b0f7345-9f6f-5580-ae85-d3834edbfaad"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:10:43.885837+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "b60e90d1-a556-5ad9-9ab6-f0a0313fe095",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.b9bec21c",
+      "product_name_ru": "УникальныйТовар_b9bec21c",
+      "product_name_en": "",
+      "duty_rate_percent": 7.5,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "b60e90d1-a556-5ad9-9ab6-f0a0313fe095"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:44.184837+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "bdf7182a-fd86-5139-801e-3a1bd04c0025",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law create-201",
+      "article_number": "Article create-201",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "bdf7182a-fd86-5139-801e-3a1bd04c0025"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:44.888836+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law get-200",
+      "article_number": "Article get-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:45.399336+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:45.451837+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {
+      "title": "Updated Admin Test Law"
+    },
+    "old_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    },
+    "new_values": {
+      "document_title": "Updated Admin Test Law",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:46.049335+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:46.070835+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:10:46.588843+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-0",
+      "article_number": "Article list-0",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:46.647342+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "522147e9-6854-5c7c-a793-8d4fa57a562b",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-1",
+      "article_number": "Article list-1",
+      "content_quote": "VAT rate applicable to imported goods for commercial resale purposes.",
+      "content_hash": "ce975d5fb428a60d164217f83b3ab43d5dd439ac85b47ce90bc689572a6b9ee6",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "522147e9-6854-5c7c-a793-8d4fa57a562b"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:46.705844+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "1bc30afc-fe50-59b8-aea8-069a69895b96",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-2",
+      "article_number": "Article list-2",
+      "content_quote": "Excise duty calculation methodology for tobacco products and alcohol.",
+      "content_hash": "ce60d394e0250f472828aad3b86857de88814a89c8f34b8eeba6ec34ac54d811",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "1bc30afc-fe50-59b8-aea8-069a69895b96"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:10:46.730342+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:10:47.109843+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "hs_code_directory",
+    "changes": {
+      "collection": "hs_codes"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:10:47.437346+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz,hs_code_directory",
+    "changes": {
+      "collection": "all"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:10:47.795844+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:11:32.016419+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "db148bd5-17cd-5a92-a06f-8e57d90022bb",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.a7c4be51",
+      "product_name_ru": "Тестовый товар a7c4be51",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "db148bd5-17cd-5a92-a06f-8e57d90022bb"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:11:32.069922+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "5dc1e6a9-498a-5c93-80a6-8c589666d91c",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.35990293",
+      "product_name_ru": "Дубль товар 35990293",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "5dc1e6a9-498a-5c93-80a6-8c589666d91c"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:11:32.138421+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "fe12ab92-e38b-51ef-a6a0-35b32355af34",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.fee053be",
+      "product_name_ru": "GetTest товар fee053be",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "fe12ab92-e38b-51ef-a6a0-35b32355af34"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:11:32.205424+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "2368d4f0-25aa-5cf6-baef-181200fcaa53",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.8e45ea9e",
+      "product_name_ru": "UpdateTest товар 8e45ea9e",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "2368d4f0-25aa-5cf6-baef-181200fcaa53"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:11:32.266919+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "hs_code",
+    "entity_id": "2368d4f0-25aa-5cf6-baef-181200fcaa53",
+    "changes": {
+      "product_name_ru": "Обновленный товар 8e45ea9e",
+      "duty_rate": 10.0
+    },
+    "old_values": {
+      "hs_code": "9999.99.8e45ea9e",
+      "product_name_ru": "UpdateTest товар 8e45ea9e",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "2368d4f0-25aa-5cf6-baef-181200fcaa53"
+    },
+    "new_values": {
+      "hs_code": "9999.99.8e45ea9e",
+      "product_name_ru": "Обновленный товар 8e45ea9e",
+      "product_name_en": "",
+      "duty_rate_percent": 10.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "2368d4f0-25aa-5cf6-baef-181200fcaa53"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:11:32.321420+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "7c50adee-e901-5f0d-a388-53e800022a3b",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.eb7677b8",
+      "product_name_ru": "DeleteTest товар eb7677b8",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "7c50adee-e901-5f0d-a388-53e800022a3b"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:11:32.350421+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "hs_code",
+    "entity_id": "7c50adee-e901-5f0d-a388-53e800022a3b",
+    "changes": {},
+    "old_values": {
+      "hs_code": "9999.99.eb7677b8",
+      "product_name_ru": "DeleteTest товар eb7677b8",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "7c50adee-e901-5f0d-a388-53e800022a3b"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:11:32.440920+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "79d3ec22-2a95-5856-8ddc-6616893f827c",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.d2313cc5",
+      "product_name_ru": "УникальныйТовар_d2313cc5",
+      "product_name_en": "",
+      "duty_rate_percent": 7.5,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "79d3ec22-2a95-5856-8ddc-6616893f827c"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:11:32.724921+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "bdf7182a-fd86-5139-801e-3a1bd04c0025",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law create-201",
+      "article_number": "Article create-201",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "bdf7182a-fd86-5139-801e-3a1bd04c0025"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:11:33.428921+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law get-200",
+      "article_number": "Article get-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:11:33.947424+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:11:33.999920+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {
+      "title": "Updated Admin Test Law"
+    },
+    "old_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    },
+    "new_values": {
+      "document_title": "Updated Admin Test Law",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:11:34.527921+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:11:34.548420+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:11:35.022940+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-0",
+      "article_number": "Article list-0",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:11:35.081438+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "522147e9-6854-5c7c-a793-8d4fa57a562b",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-1",
+      "article_number": "Article list-1",
+      "content_quote": "VAT rate applicable to imported goods for commercial resale purposes.",
+      "content_hash": "ce975d5fb428a60d164217f83b3ab43d5dd439ac85b47ce90bc689572a6b9ee6",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "522147e9-6854-5c7c-a793-8d4fa57a562b"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:11:35.141436+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "1bc30afc-fe50-59b8-aea8-069a69895b96",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-2",
+      "article_number": "Article list-2",
+      "content_quote": "Excise duty calculation methodology for tobacco products and alcohol.",
+      "content_hash": "ce60d394e0250f472828aad3b86857de88814a89c8f34b8eeba6ec34ac54d811",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "1bc30afc-fe50-59b8-aea8-069a69895b96"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:11:35.165936+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:11:35.563936+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "hs_code_directory",
+    "changes": {
+      "collection": "hs_codes"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:11:35.958435+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz,hs_code_directory",
+    "changes": {
+      "collection": "all"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:11:36.313936+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:20:40.007093+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "3",
+    "changes": {
+      "old_value": 0.16,
+      "new_value": 0.17,
+      "effective_date": "2026-05-31"
+    },
+    "old_values": {
+      "value": 0.16,
+      "effective_date": "2026-05-31"
+    },
+    "new_values": {
+      "value": 0.17,
+      "effective_date": "2026-05-31"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:20:40.033593+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "4",
+    "changes": {
+      "old_value": 0.17,
+      "new_value": 0.18,
+      "effective_date": "2026-05-31"
+    },
+    "old_values": {
+      "value": 0.17,
+      "effective_date": "2026-05-31"
+    },
+    "new_values": {
+      "value": 0.18,
+      "effective_date": "2026-05-31"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:20:40.049093+00:00",
+    "actor": "admin",
+    "action": "cancel_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "4",
+    "changes": {},
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:20:40.072592+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "5",
+    "changes": {
+      "old_value": 0.17,
+      "new_value": 0.19,
+      "effective_date": "2027-05-30"
+    },
+    "old_values": {
+      "value": 0.17,
+      "effective_date": "2027-05-30"
+    },
+    "new_values": {
+      "value": 0.19,
+      "effective_date": "2027-05-30"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:20:40.088594+00:00",
+    "actor": "admin",
+    "action": "delete_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "5",
+    "changes": {},
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:21:30.161140+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "6",
+    "changes": {
+      "old_value": 0.17,
+      "new_value": 0.17,
+      "effective_date": "2026-05-31"
+    },
+    "old_values": {
+      "value": 0.17,
+      "effective_date": "2026-05-31"
+    },
+    "new_values": {
+      "value": 0.17,
+      "effective_date": "2026-05-31"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:21:30.182639+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "7",
+    "changes": {
+      "old_value": 0.17,
+      "new_value": 0.18,
+      "effective_date": "2026-05-31"
+    },
+    "old_values": {
+      "value": 0.17,
+      "effective_date": "2026-05-31"
+    },
+    "new_values": {
+      "value": 0.18,
+      "effective_date": "2026-05-31"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:21:30.201639+00:00",
+    "actor": "admin",
+    "action": "cancel_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "7",
+    "changes": {},
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:21:30.225641+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "8",
+    "changes": {
+      "old_value": 0.17,
+      "new_value": 0.19,
+      "effective_date": "2027-05-30"
+    },
+    "old_values": {
+      "value": 0.17,
+      "effective_date": "2027-05-30"
+    },
+    "new_values": {
+      "value": 0.19,
+      "effective_date": "2027-05-30"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:21:30.243141+00:00",
+    "actor": "admin",
+    "action": "delete_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "8",
+    "changes": {},
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:23:09.647601+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "9",
+    "changes": {
+      "old_value": 0.17,
+      "new_value": 0.17,
+      "effective_date": "2026-05-31"
+    },
+    "old_values": {
+      "value": 0.17,
+      "effective_date": "2026-05-31"
+    },
+    "new_values": {
+      "value": 0.17,
+      "effective_date": "2026-05-31"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:09.670100+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "10",
+    "changes": {
+      "old_value": 0.17,
+      "new_value": 0.18,
+      "effective_date": "2026-05-31"
+    },
+    "old_values": {
+      "value": 0.17,
+      "effective_date": "2026-05-31"
+    },
+    "new_values": {
+      "value": 0.18,
+      "effective_date": "2026-05-31"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:09.689101+00:00",
+    "actor": "admin",
+    "action": "cancel_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "10",
+    "changes": {},
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:23:09.718100+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "11",
+    "changes": {
+      "old_value": 0.17,
+      "new_value": 0.19,
+      "effective_date": "2027-05-30"
+    },
+    "old_values": {
+      "value": 0.17,
+      "effective_date": "2027-05-30"
+    },
+    "new_values": {
+      "value": 0.19,
+      "effective_date": "2027-05-30"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:09.737600+00:00",
+    "actor": "admin",
+    "action": "delete_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "11",
+    "changes": {},
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:23:22.925291+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "57b9a61f-4ecd-5126-94e2-9faf04a71921",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.921a590b",
+      "product_name_ru": "Тестовый товар 921a590b",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "57b9a61f-4ecd-5126-94e2-9faf04a71921"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:22.968794+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "423adde6-89c7-551f-816b-b56351dc4358",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.75ca29a7",
+      "product_name_ru": "Дубль товар 75ca29a7",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "423adde6-89c7-551f-816b-b56351dc4358"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:23.025790+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "516f76ea-4613-5829-9b73-6f78c99db67e",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.9eabe072",
+      "product_name_ru": "GetTest товар 9eabe072",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "516f76ea-4613-5829-9b73-6f78c99db67e"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:23.084791+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "4be9c8d4-4b48-5733-b61c-c0c8f8fb27ce",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.5f2ed48b",
+      "product_name_ru": "UpdateTest товар 5f2ed48b",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "4be9c8d4-4b48-5733-b61c-c0c8f8fb27ce"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:23.135790+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "hs_code",
+    "entity_id": "4be9c8d4-4b48-5733-b61c-c0c8f8fb27ce",
+    "changes": {
+      "product_name_ru": "Обновленный товар 5f2ed48b",
+      "duty_rate": 10.0
+    },
+    "old_values": {
+      "hs_code": "9999.99.5f2ed48b",
+      "product_name_ru": "UpdateTest товар 5f2ed48b",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "4be9c8d4-4b48-5733-b61c-c0c8f8fb27ce"
+    },
+    "new_values": {
+      "hs_code": "9999.99.5f2ed48b",
+      "product_name_ru": "Обновленный товар 5f2ed48b",
+      "product_name_en": "",
+      "duty_rate_percent": 10.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "4be9c8d4-4b48-5733-b61c-c0c8f8fb27ce"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:23.190290+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "0aee0dd8-6838-5ce2-a0c0-8e5607d2a3d0",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.73fbf59b",
+      "product_name_ru": "DeleteTest товар 73fbf59b",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "0aee0dd8-6838-5ce2-a0c0-8e5607d2a3d0"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:23.214291+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "hs_code",
+    "entity_id": "0aee0dd8-6838-5ce2-a0c0-8e5607d2a3d0",
+    "changes": {},
+    "old_values": {
+      "hs_code": "9999.99.73fbf59b",
+      "product_name_ru": "DeleteTest товар 73fbf59b",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "0aee0dd8-6838-5ce2-a0c0-8e5607d2a3d0"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:23:23.284290+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "143da447-6579-5d9d-b7a0-f5403cbd8149",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.310a807c",
+      "product_name_ru": "УникальныйТовар_310a807c",
+      "product_name_en": "",
+      "duty_rate_percent": 7.5,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "143da447-6579-5d9d-b7a0-f5403cbd8149"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:23.572292+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "bdf7182a-fd86-5139-801e-3a1bd04c0025",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law create-201",
+      "article_number": "Article create-201",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "bdf7182a-fd86-5139-801e-3a1bd04c0025"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:24.266294+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law get-200",
+      "article_number": "Article get-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:24.727793+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:24.784291+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {
+      "title": "Updated Admin Test Law"
+    },
+    "old_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    },
+    "new_values": {
+      "document_title": "Updated Admin Test Law",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:25.297789+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:25.327291+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:23:25.798791+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-0",
+      "article_number": "Article list-0",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:25.859791+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "522147e9-6854-5c7c-a793-8d4fa57a562b",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-1",
+      "article_number": "Article list-1",
+      "content_quote": "VAT rate applicable to imported goods for commercial resale purposes.",
+      "content_hash": "ce975d5fb428a60d164217f83b3ab43d5dd439ac85b47ce90bc689572a6b9ee6",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "522147e9-6854-5c7c-a793-8d4fa57a562b"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:25.928791+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "1bc30afc-fe50-59b8-aea8-069a69895b96",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-2",
+      "article_number": "Article list-2",
+      "content_quote": "Excise duty calculation methodology for tobacco products and alcohol.",
+      "content_hash": "ce60d394e0250f472828aad3b86857de88814a89c8f34b8eeba6ec34ac54d811",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "1bc30afc-fe50-59b8-aea8-069a69895b96"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:23:25.956791+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:23:26.344292+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "hs_code_directory",
+    "changes": {
+      "collection": "hs_codes"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:23:26.657789+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz,hs_code_directory",
+    "changes": {
+      "collection": "all"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:23:27.026292+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:26:39.086814+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "12",
+    "changes": {
+      "old_value": 0.17,
+      "new_value": 0.17,
+      "effective_date": "2026-05-31"
+    },
+    "old_values": {
+      "value": 0.17,
+      "effective_date": "2026-05-31"
+    },
+    "new_values": {
+      "value": 0.17,
+      "effective_date": "2026-05-31"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:26:39.112816+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "13",
+    "changes": {
+      "old_value": 0.17,
+      "new_value": 0.18,
+      "effective_date": "2026-05-31"
+    },
+    "old_values": {
+      "value": 0.17,
+      "effective_date": "2026-05-31"
+    },
+    "new_values": {
+      "value": 0.18,
+      "effective_date": "2026-05-31"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:26:39.131814+00:00",
+    "actor": "admin",
+    "action": "cancel_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "13",
+    "changes": {},
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T00:26:39.155317+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "14",
+    "changes": {
+      "old_value": 0.17,
+      "new_value": 0.19,
+      "effective_date": "2027-05-30"
+    },
+    "old_values": {
+      "value": 0.17,
+      "effective_date": "2027-05-30"
+    },
+    "new_values": {
+      "value": 0.19,
+      "effective_date": "2027-05-30"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T00:26:39.172316+00:00",
+    "actor": "admin",
+    "action": "delete_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "14",
+    "changes": {},
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T01:12:15.641968+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "15",
+    "changes": {
+      "old_value": 0.17,
+      "new_value": 0.17,
+      "effective_date": "2026-05-31"
+    },
+    "old_values": {
+      "value": 0.17,
+      "effective_date": "2026-05-31"
+    },
+    "new_values": {
+      "value": 0.17,
+      "effective_date": "2026-05-31"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:15.666967+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "16",
+    "changes": {
+      "old_value": 0.17,
+      "new_value": 0.18,
+      "effective_date": "2026-05-31"
+    },
+    "old_values": {
+      "value": 0.17,
+      "effective_date": "2026-05-31"
+    },
+    "new_values": {
+      "value": 0.18,
+      "effective_date": "2026-05-31"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:15.689967+00:00",
+    "actor": "admin",
+    "action": "cancel_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "16",
+    "changes": {},
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T01:12:15.807968+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "17",
+    "changes": {
+      "old_value": 0.17,
+      "new_value": 0.19,
+      "effective_date": "2027-05-30"
+    },
+    "old_values": {
+      "value": 0.17,
+      "effective_date": "2027-05-30"
+    },
+    "new_values": {
+      "value": 0.19,
+      "effective_date": "2027-05-30"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:15.823468+00:00",
+    "actor": "admin",
+    "action": "delete_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "17",
+    "changes": {},
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T01:12:29.628557+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "18ea46c2-cf41-57cf-9cbb-f9b89d612d3f",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.5022731b",
+      "product_name_ru": "Тестовый товар 5022731b",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "18ea46c2-cf41-57cf-9cbb-f9b89d612d3f"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:29.678057+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "3606ea10-fe5b-5817-a83a-dc2065db561b",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.1c578264",
+      "product_name_ru": "Дубль товар 1c578264",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "3606ea10-fe5b-5817-a83a-dc2065db561b"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:29.735058+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "0178a9ad-5015-5835-8da9-9f2b96f7be9a",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.fce2b000",
+      "product_name_ru": "GetTest товар fce2b000",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "0178a9ad-5015-5835-8da9-9f2b96f7be9a"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:29.805057+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "ea786671-98a0-5328-8cbf-a634ec03721b",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.a4b273e2",
+      "product_name_ru": "UpdateTest товар a4b273e2",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "ea786671-98a0-5328-8cbf-a634ec03721b"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:29.853558+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "hs_code",
+    "entity_id": "ea786671-98a0-5328-8cbf-a634ec03721b",
+    "changes": {
+      "product_name_ru": "Обновленный товар a4b273e2",
+      "duty_rate": 10.0
+    },
+    "old_values": {
+      "hs_code": "9999.99.a4b273e2",
+      "product_name_ru": "UpdateTest товар a4b273e2",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "ea786671-98a0-5328-8cbf-a634ec03721b"
+    },
+    "new_values": {
+      "hs_code": "9999.99.a4b273e2",
+      "product_name_ru": "Обновленный товар a4b273e2",
+      "product_name_en": "",
+      "duty_rate_percent": 10.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "ea786671-98a0-5328-8cbf-a634ec03721b"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:29.919558+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "8f1a2cc8-db33-5cdb-afe9-651eab5d0174",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.8c64f218",
+      "product_name_ru": "DeleteTest товар 8c64f218",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "8f1a2cc8-db33-5cdb-afe9-651eab5d0174"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:29.944558+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "hs_code",
+    "entity_id": "8f1a2cc8-db33-5cdb-afe9-651eab5d0174",
+    "changes": {},
+    "old_values": {
+      "hs_code": "9999.99.8c64f218",
+      "product_name_ru": "DeleteTest товар 8c64f218",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "8f1a2cc8-db33-5cdb-afe9-651eab5d0174"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T01:12:30.024557+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "bb57e1c2-a503-566f-85c0-8a556a211ec2",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.e8279908",
+      "product_name_ru": "УникальныйТовар_e8279908",
+      "product_name_en": "",
+      "duty_rate_percent": 7.5,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "bb57e1c2-a503-566f-85c0-8a556a211ec2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:30.316056+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "bdf7182a-fd86-5139-801e-3a1bd04c0025",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law create-201",
+      "article_number": "Article create-201",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "bdf7182a-fd86-5139-801e-3a1bd04c0025"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:31.019057+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law get-200",
+      "article_number": "Article get-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:31.679557+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:31.736059+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {
+      "title": "Updated Admin Test Law"
+    },
+    "old_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    },
+    "new_values": {
+      "document_title": "Updated Admin Test Law",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:32.258557+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:32.280557+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T01:12:32.767557+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-0",
+      "article_number": "Article list-0",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:32.824057+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "522147e9-6854-5c7c-a793-8d4fa57a562b",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-1",
+      "article_number": "Article list-1",
+      "content_quote": "VAT rate applicable to imported goods for commercial resale purposes.",
+      "content_hash": "ce975d5fb428a60d164217f83b3ab43d5dd439ac85b47ce90bc689572a6b9ee6",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "522147e9-6854-5c7c-a793-8d4fa57a562b"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:32.888557+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "1bc30afc-fe50-59b8-aea8-069a69895b96",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-2",
+      "article_number": "Article list-2",
+      "content_quote": "Excise duty calculation methodology for tobacco products and alcohol.",
+      "content_hash": "ce60d394e0250f472828aad3b86857de88814a89c8f34b8eeba6ec34ac54d811",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "1bc30afc-fe50-59b8-aea8-069a69895b96"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:12:32.913057+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T01:12:33.314560+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "hs_code_directory",
+    "changes": {
+      "collection": "hs_codes"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T01:12:33.650056+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz,hs_code_directory",
+    "changes": {
+      "collection": "all"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T01:12:34.003557+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T01:21:05.339481+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "18",
+    "changes": {
+      "old_value": 0.17,
+      "new_value": 0.17,
+      "effective_date": "2026-05-31"
+    },
+    "old_values": {
+      "value": 0.17,
+      "effective_date": "2026-05-31"
+    },
+    "new_values": {
+      "value": 0.17,
+      "effective_date": "2026-05-31"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:05.367980+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "19",
+    "changes": {
+      "old_value": 0.17,
+      "new_value": 0.18,
+      "effective_date": "2026-05-31"
+    },
+    "old_values": {
+      "value": 0.17,
+      "effective_date": "2026-05-31"
+    },
+    "new_values": {
+      "value": 0.18,
+      "effective_date": "2026-05-31"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:05.385980+00:00",
+    "actor": "admin",
+    "action": "cancel_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "19",
+    "changes": {},
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T01:21:05.410482+00:00",
+    "actor": "admin",
+    "action": "update_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "20",
+    "changes": {
+      "old_value": 0.17,
+      "new_value": 0.19,
+      "effective_date": "2027-05-30"
+    },
+    "old_values": {
+      "value": 0.17,
+      "effective_date": "2027-05-30"
+    },
+    "new_values": {
+      "value": 0.19,
+      "effective_date": "2027-05-30"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:05.428482+00:00",
+    "actor": "admin",
+    "action": "delete_rate",
+    "entity_type": "config:import_vat",
+    "entity_id": "20",
+    "changes": {},
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T01:21:18.792134+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "a6ea5424-e0a6-56eb-871c-c8ab0c319fc4",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.3bd74351",
+      "product_name_ru": "Тестовый товар 3bd74351",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "a6ea5424-e0a6-56eb-871c-c8ab0c319fc4"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:18.846135+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "190f207a-31ba-5df7-8758-173d6a30811c",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.94e4cbbc",
+      "product_name_ru": "Дубль товар 94e4cbbc",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "190f207a-31ba-5df7-8758-173d6a30811c"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:18.905134+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "614d1a6f-adf2-5f54-b284-40bd8a869d1d",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.359b86d6",
+      "product_name_ru": "GetTest товар 359b86d6",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "614d1a6f-adf2-5f54-b284-40bd8a869d1d"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:18.969135+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "c2d3efce-4ef9-5559-a815-b4dd626306c9",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.ab64044c",
+      "product_name_ru": "UpdateTest товар ab64044c",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "c2d3efce-4ef9-5559-a815-b4dd626306c9"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:19.017634+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "hs_code",
+    "entity_id": "c2d3efce-4ef9-5559-a815-b4dd626306c9",
+    "changes": {
+      "product_name_ru": "Обновленный товар ab64044c",
+      "duty_rate": 10.0
+    },
+    "old_values": {
+      "hs_code": "9999.99.ab64044c",
+      "product_name_ru": "UpdateTest товар ab64044c",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "c2d3efce-4ef9-5559-a815-b4dd626306c9"
+    },
+    "new_values": {
+      "hs_code": "9999.99.ab64044c",
+      "product_name_ru": "Обновленный товар ab64044c",
+      "product_name_en": "",
+      "duty_rate_percent": 10.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "c2d3efce-4ef9-5559-a815-b4dd626306c9"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:19.073135+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "7771c280-2680-51d6-9776-af123cf972cd",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.a0e5a8c8",
+      "product_name_ru": "DeleteTest товар a0e5a8c8",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "7771c280-2680-51d6-9776-af123cf972cd"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:19.097633+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "hs_code",
+    "entity_id": "7771c280-2680-51d6-9776-af123cf972cd",
+    "changes": {},
+    "old_values": {
+      "hs_code": "9999.99.a0e5a8c8",
+      "product_name_ru": "DeleteTest товар a0e5a8c8",
+      "product_name_en": "",
+      "duty_rate_percent": 5.0,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "7771c280-2680-51d6-9776-af123cf972cd"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T01:21:19.176135+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "hs_code",
+    "entity_id": "f0e3fe6e-961b-5a83-935b-eef60503f3f8",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "hs_code": "9999.99.6fc60d67",
+      "product_name_ru": "УникальныйТовар_6fc60d67",
+      "product_name_en": "",
+      "duty_rate_percent": 7.5,
+      "excise_rate_percent": 0.0,
+      "is_subject_to_recycling_fee": false,
+      "section": "",
+      "group": "",
+      "keywords": "",
+      "id": "f0e3fe6e-961b-5a83-935b-eef60503f3f8"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:19.457134+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "bdf7182a-fd86-5139-801e-3a1bd04c0025",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law create-201",
+      "article_number": "Article create-201",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "bdf7182a-fd86-5139-801e-3a1bd04c0025"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:20.145634+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law get-200",
+      "article_number": "Article get-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "b8804601-d940-59a4-9bb4-0ca18b2c25ee"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:20.630408+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:20.680908+00:00",
+    "actor": "admin",
+    "action": "update",
+    "entity_type": "law",
+    "entity_id": "db39c021-fc7e-50f7-b663-0f183dece2e2",
+    "changes": {
+      "title": "Updated Admin Test Law"
+    },
+    "old_values": {
+      "document_title": "Admin Test Law upd-200",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    },
+    "new_values": {
+      "document_title": "Updated Admin Test Law",
+      "article_number": "Article upd-200",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "db39c021-fc7e-50f7-b663-0f183dece2e2"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:21.211410+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:21.234410+00:00",
+    "actor": "admin",
+    "action": "delete",
+    "entity_type": "law",
+    "entity_id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508",
+    "changes": {},
+    "old_values": {
+      "document_title": "Admin Test Law del-204",
+      "article_number": "Article del-204",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8ae4ea6a-b9c5-546d-b5d5-929e8ebce508"
+    },
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T01:21:21.716124+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-0",
+      "article_number": "Article list-0",
+      "content_quote": "Definition of customs territory and border controls for the EAEU union.",
+      "content_hash": "e63d0a0cb162c756d489e8725adf52c2dc0de5b99ad35b65fbcb7c717450facc",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "8d1f1a2e-530a-5c6e-bc0e-fc10fd8936de"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:21.773625+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "522147e9-6854-5c7c-a793-8d4fa57a562b",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-1",
+      "article_number": "Article list-1",
+      "content_quote": "VAT rate applicable to imported goods for commercial resale purposes.",
+      "content_hash": "ce975d5fb428a60d164217f83b3ab43d5dd439ac85b47ce90bc689572a6b9ee6",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "522147e9-6854-5c7c-a793-8d4fa57a562b"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:21.834624+00:00",
+    "actor": "admin",
+    "action": "create",
+    "entity_type": "law",
+    "entity_id": "1bc30afc-fe50-59b8-aea8-069a69895b96",
+    "changes": {},
+    "old_values": null,
+    "new_values": {
+      "document_title": "Admin Test Law list-2",
+      "article_number": "Article list-2",
+      "content_quote": "Excise duty calculation methodology for tobacco products and alcohol.",
+      "content_hash": "ce60d394e0250f472828aad3b86857de88814a89c8f34b8eeba6ec34ac54d811",
+      "tags": [],
+      "keywords": "test, admin",
+      "id": "1bc30afc-fe50-59b8-aea8-069a69895b96"
+    }
+  },
+  {
+    "timestamp": "2026-05-30T01:21:21.858123+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T01:21:22.261122+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "hs_code_directory",
+    "changes": {
+      "collection": "hs_codes"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T01:21:22.603624+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz,hs_code_directory",
+    "changes": {
+      "collection": "all"
+    },
+    "old_values": null,
+    "new_values": null
+  },
+  {
+    "timestamp": "2026-05-30T01:21:22.968123+00:00",
+    "actor": "admin",
+    "action": "reindex",
+    "entity_type": "collection",
+    "entity_id": "legal_regulations_kz",
+    "changes": {
+      "collection": "laws"
+    },
+    "old_values": null,
+    "new_values": null
+  }
+]

@@ -39,12 +39,20 @@ class ChatMessage(BaseModel):
 
 class OrchestrateRequest(BaseModel):
     text: str = Field(..., description="User message")
-    session_id: Optional[str] = Field(None, description="Optional session identifier (reserved for v2)")
-    history: Optional[List[ChatMessage]] = Field(None, description="Conversational history for multi-turn routing")
+    session_id: Optional[str] = Field(
+        None, description="Optional session identifier (reserved for v2)"
+    )
+    history: Optional[List[ChatMessage]] = Field(
+        None, description="Conversational history for multi-turn routing"
+    )
 
 
 class OrchestrateResponse(BaseModel):
     intent: IntentType = Field(..., description="Detected intent")
     message: str = Field(..., description="Response text to show the user")
-    pipeline_results: Optional[dict] = Field(None, description="Structured results from the invoked pipeline")
-    chain_warning: Optional[str] = Field(None, description="Warning if a chained step partially failed")
+    pipeline_results: Optional[dict] = Field(
+        None, description="Structured results from the invoked pipeline"
+    )
+    chain_warning: Optional[str] = Field(
+        None, description="Warning if a chained step partially failed"
+    )

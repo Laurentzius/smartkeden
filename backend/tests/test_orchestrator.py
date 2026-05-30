@@ -1,8 +1,12 @@
 import json
 import pytest
 from app.core.orchestrator.models import IntentType, IntentClassification
-from app.core.orchestrator.router import IntentClassifier
-from app.core.orchestrator.profile_extractor import ProfileExtractionResult, CustomsProfileAccumulator
+from app.core.orchestrator.intent_classifier import IntentClassifier
+import app.core.orchestrator.workflow_nodes as _wn
+from app.core.orchestrator.profile_extractor import (
+    ProfileExtractionResult,
+    CustomsProfileAccumulator,
+)
 
 
 # ═══════════════════════════════════════════════════════════════════════════
@@ -82,11 +86,14 @@ async def test_orchestrator_endpoint_health(monkeypatch):
     from fastapi.testclient import TestClient
     from app.main import app
     from app.core.local_embeddings import LocalEmbeddingModel
+
     monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
 
     # Force IntentClassifier to reliably return greeting for "Привет!"
     async def _mock_classify_greeting(text: str):
-        return IntentClassification(intent=IntentType.greeting, confidence=0.95, reasoning="Mock")
+        return IntentClassification(
+            intent=IntentType.greeting, confidence=0.95, reasoning="Mock"
+        )
 
     monkeypatch.setattr(IntentClassifier, "classify", _mock_classify_greeting)
 
@@ -102,11 +109,13 @@ async def test_orchestrator_empty_message():
     """Empty messages should return 422 (FastAPI validation: missing required Form field)."""
     from fastapi.testclient import TestClient
     from app.main import app
+
     client = TestClient(app)
     response = client.post("/api/orchestrate", data={"text": ""})
     assert response.status_code == 422
     data = response.json()
     assert "detail" in data
+
 
 @pytest.mark.asyncio
 async def test_orchestrator_multi_turn_flow(monkeypatch):
@@ -116,38 +125,53 @@ async def test_orchestrator_multi_turn_flow(monkeypatch):
 
     # Force mock embedding (zero vector) to avoid loading the ~390 MB sentence-transformer model
     from app.core.local_embeddings import LocalEmbeddingModel
+
     monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
 
     # Mock IntentClassifier for deterministic legal routing
     async def _mock_classify_legal(text: str):
-        return IntentClassification(intent=IntentType.question_about_law, confidence=0.9, reasoning="Mock")
+        return IntentClassification(
+            intent=IntentType.question_about_law, confidence=0.9, reasoning="Mock"
+        )
+
     monkeypatch.setattr(IntentClassifier, "classify", _mock_classify_legal)
- 
+
     # Mock LegalRAGService to avoid Qdrant/Gemini dependency
     from app.core.rag.service import LegalRAGService, LegalRAGResponse
+
     async def _mock_legal(query, history=None):
         return LegalRAGResponse(
             query=query,
             answer_synthesis="Согласно статье 422 Налогового кодекса РК, ставка НДС на импорт составляет 12%.",
             supporting_laws=[],
         )
-    monkeypatch.setattr(LegalRAGService, "query_legal_base", _mock_legal)
+
+    _mock_rag_svc = type("", (), {})()
+    _mock_rag_svc.query_legal_base = _mock_legal
+    monkeypatch.setattr(_wn, "legal_rag_service", _mock_rag_svc)
 
     client = TestClient(app)
 
     # Turn 1: legal question without history
-    resp1 = client.post("/api/orchestrate", data={"text": "Какая ставка НДС на импорт?"})
+    resp1 = client.post(
+        "/api/orchestrate", data={"text": "Какая ставка НДС на импорт?"}
+    )
     assert resp1.status_code == 200
     data1 = resp1.json()
     assert len(data1["message"]) > 0
     # Turn 2: follow-up with history containing the previous Q&A
-    resp2 = client.post("/api/orchestrate", data={
-        "text": "А какие документы нужны для этого?",
-        "history": json.dumps([
-            {"role": "user", "content": "Какая ставка НДС на импорт?"},
-            {"role": "assistant", "content": data1["message"]}
-        ])
-    })
+    resp2 = client.post(
+        "/api/orchestrate",
+        data={
+            "text": "А какие документы нужны для этого?",
+            "history": json.dumps(
+                [
+                    {"role": "user", "content": "Какая ставка НДС на импорт?"},
+                    {"role": "assistant", "content": data1["message"]},
+                ]
+            ),
+        },
+    )
     data2 = resp2.json()
     assert len(data2["message"]) > 0
 
@@ -158,6 +182,7 @@ async def test_orchestrator_calculation_context_chaining(monkeypatch):
     from fastapi.testclient import TestClient
     from app.main import app
     from app.core.local_embeddings import LocalEmbeddingModel
+
     monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
 
     # Mock ProfileExtractor to return deterministic extraction results
@@ -182,13 +207,16 @@ async def test_orchestrator_calculation_context_chaining(monkeypatch):
 
     history = [
         {"role": "user", "content": "Определи код ТН ВЭД для телефона"},
-        {"role": "assistant", "content": "Рекомендуемый код: 8543709000. Пошлина 10.0%. Требуется утильсбор ♻."}
+        {
+            "role": "assistant",
+            "content": "Рекомендуемый код: 8543709000. Пошлина 10.0%. Требуется утильсбор ♻.",
+        },
     ]
 
-    resp = client.post("/api/orchestrate", data={
-        "text": "Посчитай пошлину для $5000",
-        "history": json.dumps(history)
-    })
+    resp = client.post(
+        "/api/orchestrate",
+        data={"text": "Посчитай пошлину для $5000", "history": json.dumps(history)},
+    )
 
     assert resp.status_code == 200
     data = resp.json()
@@ -224,15 +252,20 @@ async def test_adk_coordination_rag(monkeypatch):
     from fastapi.testclient import TestClient
     from app.main import app
     from app.core.local_embeddings import LocalEmbeddingModel
+
     monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
 
     # Mock IntentClassifier for deterministic legal routing
     async def _mock_classify(text: str):
-        return IntentClassification(intent=IntentType.question_about_law, confidence=0.9, reasoning="Mock")
+        return IntentClassification(
+            intent=IntentType.question_about_law, confidence=0.9, reasoning="Mock"
+        )
+
     monkeypatch.setattr(IntentClassifier, "classify", _mock_classify)
- 
+
     # Mock LegalRAGService to avoid Qdrant/Gemini dependency
     from app.core.rag.service import LegalRAGService, LegalRAGResponse, LegalChunk
+
     mock_law = LegalChunk(
         document_title="Таможенный кодекс РК",
         article_number="Статья 104",
@@ -247,12 +280,12 @@ async def test_adk_coordination_rag(monkeypatch):
             supporting_laws=[mock_law],
         )
 
-    monkeypatch.setattr(LegalRAGService, "query_legal_base", _mock_query_legal_base)
+    _mock_rag_svc = type("", (), {})()
+    _mock_rag_svc.query_legal_base = _mock_query_legal_base
+    monkeypatch.setattr(_wn, "legal_rag_service", _mock_rag_svc)
 
     client = TestClient(app)
-    resp = client.post("/api/orchestrate", data={
-        "text": "Какая ставка НДС на импорт?"
-    })
+    resp = client.post("/api/orchestrate", data={"text": "Какая ставка НДС на импорт?"})
     assert resp.status_code == 200
     data = resp.json()
     assert data["intent"] == "question_about_law"
@@ -272,15 +305,24 @@ async def test_adk_coordination_hs(monkeypatch):
     from fastapi.testclient import TestClient
     from app.main import app
     from app.core.local_embeddings import LocalEmbeddingModel
+
     monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
 
     # Mock IntentClassifier for deterministic HS routing
     async def _mock_classify_hs(text: str):
-        return IntentClassification(intent=IntentType.product_description, confidence=0.9, reasoning="Mock")
+        return IntentClassification(
+            intent=IntentType.product_description, confidence=0.9, reasoning="Mock"
+        )
+
     monkeypatch.setattr(IntentClassifier, "classify", _mock_classify_hs)
- 
+
     # Mock HSCodeClassifier to avoid Qdrant/Gemini dependency
-    from app.core.hs_classifier.classifier import HSCodeClassifier, HSClassificationResponse, HSCodeCandidate
+    from app.core.hs_classifier.classifier import (
+        HSCodeClassifier,
+        HSClassificationResponse,
+        HSCodeCandidate,
+    )
+
     mock_candidate = HSCodeCandidate(
         hs_code="8543709000",
         product_name_ru="Телефон",
@@ -290,19 +332,23 @@ async def test_adk_coordination_hs(monkeypatch):
         reasoning="Подходит под описание",
     )
 
-    async def _mock_classify(description, image_bytes=None, image_mime_type="image/jpeg"):
+    async def _mock_classify(
+        description, image_bytes=None, image_mime_type="image/jpeg"
+    ):
         return HSClassificationResponse(
             product_description=description,
             candidates=[mock_candidate],
             qdrant_backed=False,
         )
 
-    monkeypatch.setattr(HSCodeClassifier, "classify", _mock_classify)
+    _mock_hs_clf = type("", (), {})()
+    _mock_hs_clf.classify = _mock_classify
+    monkeypatch.setattr(_wn, "hs_classifier", _mock_hs_clf)
 
     client = TestClient(app)
-    resp = client.post("/api/orchestrate", data={
-        "text": "Найди код ТН ВЭД для телефона"
-    })
+    resp = client.post(
+        "/api/orchestrate", data={"text": "Найди код ТН ВЭД для телефона"}
+    )
     assert resp.status_code == 200
     data = resp.json()
     assert data["intent"] == "product_description"
@@ -321,18 +367,28 @@ async def test_adk_coordination_hs(monkeypatch):
 @pytest.mark.asyncio
 async def test_adk_chained_workflow(monkeypatch):
     """Coordinated workflow correctly executes HS Classifier node and cascades to Calculator node."""
+
     # Mock IntentClassifier to route as product_description (triggers HS -> chain -> calc)
     async def _mock_classify_hs(text: str):
-        return IntentClassification(intent=IntentType.product_description, confidence=0.9, reasoning="Mock")
+        return IntentClassification(
+            intent=IntentType.product_description, confidence=0.9, reasoning="Mock"
+        )
+
     monkeypatch.setattr(IntentClassifier, "classify", _mock_classify_hs)
- 
+
     from fastapi.testclient import TestClient
     from app.main import app
     from app.core.local_embeddings import LocalEmbeddingModel
+
     monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
 
     # Mock HSCodeClassifier
-    from app.core.hs_classifier.classifier import HSCodeClassifier, HSClassificationResponse, HSCodeCandidate
+    from app.core.hs_classifier.classifier import (
+        HSCodeClassifier,
+        HSClassificationResponse,
+        HSCodeCandidate,
+    )
+
     mock_candidate = HSCodeCandidate(
         hs_code="8517130000",
         product_name_ru="Смартфон",
@@ -342,14 +398,18 @@ async def test_adk_chained_workflow(monkeypatch):
         reasoning="Мобильный телефон",
     )
 
-    async def _mock_classify(description, image_bytes=None, image_mime_type="image/jpeg"):
+    async def _mock_classify(
+        description, image_bytes=None, image_mime_type="image/jpeg"
+    ):
         return HSClassificationResponse(
             product_description=description,
             candidates=[mock_candidate],
             qdrant_backed=False,
         )
 
-    monkeypatch.setattr(HSCodeClassifier, "classify", _mock_classify)
+    _mock_hs_clf = type("", (), {})()
+    _mock_hs_clf.classify = _mock_classify
+    monkeypatch.setattr(_wn, "hs_classifier", _mock_hs_clf)
 
     # Mock ProfileExtractor (synchronous — ProfileExtractor.extract is not async)
     from app.core.orchestrator.profile_extractor import ProfileExtractor
@@ -370,9 +430,10 @@ async def test_adk_chained_workflow(monkeypatch):
     monkeypatch.setattr(ProfileExtractor, "extract", _mock_extract)
 
     client = TestClient(app)
-    resp = client.post("/api/orchestrate", data={
-        "text": "Определи код и посчитай пошлину для смартфона за $12500"
-    })
+    resp = client.post(
+        "/api/orchestrate",
+        data={"text": "Определи код и посчитай пошлину для смартфона за $12500"},
+    )
     assert resp.status_code == 200
     data = resp.json()
     # The chained workflow should produce a calculation result
@@ -397,13 +458,17 @@ async def test_adk_session_history_mapping(monkeypatch):
     from fastapi.testclient import TestClient
     from app.main import app
     from app.core.local_embeddings import LocalEmbeddingModel
+
     monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
 
     # Mock IntentClassifier for deterministic legal routing
     async def _mock_classify_legal(text: str):
-        return IntentClassification(intent=IntentType.question_about_law, confidence=0.9, reasoning="Mock")
+        return IntentClassification(
+            intent=IntentType.question_about_law, confidence=0.9, reasoning="Mock"
+        )
+
     monkeypatch.setattr(IntentClassifier, "classify", _mock_classify_legal)
- 
+
     # Mock LegalRAGService to verify history is forwarded
     from app.core.rag.service import LegalRAGService, LegalRAGResponse
 
@@ -417,7 +482,9 @@ async def test_adk_session_history_mapping(monkeypatch):
             supporting_laws=[],
         )
 
-    monkeypatch.setattr(LegalRAGService, "query_legal_base", _mock_query_legal_base)
+    _mock_rag_svc = type("", (), {})()
+    _mock_rag_svc.query_legal_base = _mock_query_legal_base
+    monkeypatch.setattr(_wn, "legal_rag_service", _mock_rag_svc)
 
     client = TestClient(app)
     history_payload = [
@@ -425,10 +492,13 @@ async def test_adk_session_history_mapping(monkeypatch):
         {"role": "assistant", "content": "Ставка НДС составляет 12%"},
     ]
 
-    resp = client.post("/api/orchestrate", data={
-        "text": "А какие документы нужны?",
-        "history": json.dumps(history_payload),
-    })
+    resp = client.post(
+        "/api/orchestrate",
+        data={
+            "text": "А какие документы нужны?",
+            "history": json.dumps(history_payload),
+        },
+    )
 
     assert resp.status_code == 200
     # Verify the workflow passed history to the service
@@ -446,12 +516,16 @@ async def test_adk_error_handling(monkeypatch):
     from fastapi.testclient import TestClient
     from app.main import app
     from app.core.local_embeddings import LocalEmbeddingModel
+
     monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
+
     # Mock IntentClassifier for deterministic legal routing
     async def _mock_classify_legal(text: str):
-        return IntentClassification(intent=IntentType.question_about_law, confidence=0.9, reasoning="Mock")
+        return IntentClassification(
+            intent=IntentType.question_about_law, confidence=0.9, reasoning="Mock"
+        )
+
     monkeypatch.setattr(IntentClassifier, "classify", _mock_classify_legal)
- 
 
     # Force the legal_rag_node to raise by making the service throw
     from app.core.rag.service import LegalRAGService
@@ -459,14 +533,16 @@ async def test_adk_error_handling(monkeypatch):
     async def _mock_error(query, history=None):
         raise RuntimeError("Simulated RAG service failure")
 
-    monkeypatch.setattr(LegalRAGService, "query_legal_base", _mock_error)
+    _mock_rag_svc = type("", (), {})()
+    _mock_rag_svc.query_legal_base = _mock_error
+    monkeypatch.setattr(_wn, "legal_rag_service", _mock_rag_svc)
 
     client = TestClient(app)
 
     # A legal question that the fallback classifier will route to question_about_law
-    resp = client.post("/api/orchestrate", data={
-        "text": "Какая ставка таможенной пошлины?"
-    })
+    resp = client.post(
+        "/api/orchestrate", data={"text": "Какая ставка таможенной пошлины?"}
+    )
     assert resp.status_code == 200
     data = resp.json()
     # The exception in legal_rag_node is caught by the endpoint handler.
@@ -477,6 +553,8 @@ async def test_adk_error_handling(monkeypatch):
     assert data["intent"] in ("unclear", "question_about_law")
     # Error details are NOT leaked to the user
     assert "Simulated" not in data.get("message", "")
+
+
 def test_intent_fallback_empty_and_gibberish():
     """Fallback classifier should classify empty and meaningless strings as unclear."""
     empty_result = IntentClassifier._fallback_classify("")
@@ -512,10 +590,13 @@ def test_fallback_classify_edge_keywords():
     # Document upload keywords
     doc_upload = IntentClassifier._fallback_classify("хочу загрузить текст закона")
     assert doc_upload.intent == IntentType.document_upload
+
+
 async def test_orchestrator_whitespace_only_message():
     """Whitespace-only text should return 400."""
     from fastapi.testclient import TestClient
     from app.main import app
+
     client = TestClient(app)
     response = client.post("/api/orchestrate", data={"text": "   \n\t  "})
     assert response.status_code == 400
@@ -527,17 +608,20 @@ async def test_orchestrator_corrupted_history(monkeypatch):
     from fastapi.testclient import TestClient
     from app.main import app
     from app.core.local_embeddings import LocalEmbeddingModel
+
     monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
 
     async def _mock_classify(text: str):
-        return IntentClassification(intent=IntentType.greeting, confidence=0.9, reasoning="Mock")
+        return IntentClassification(
+            intent=IntentType.greeting, confidence=0.9, reasoning="Mock"
+        )
+
     monkeypatch.setattr(IntentClassifier, "classify", _mock_classify)
 
     client = TestClient(app)
-    response = client.post("/api/orchestrate", data={
-        "text": "Привет!",
-        "history": "not valid json {{{"
-    })
+    response = client.post(
+        "/api/orchestrate", data={"text": "Привет!", "history": "not valid json {{{"}
+    )
     assert response.status_code == 200
     data = response.json()
     assert len(data["message"]) > 0
@@ -548,6 +632,7 @@ async def test_orchestrator_missing_text_field():
     """Missing text field should return 422 (FastAPI validation)."""
     from fastapi.testclient import TestClient
     from app.main import app
+
     client = TestClient(app)
     response = client.post("/api/orchestrate", data={})
     assert response.status_code == 422
@@ -559,10 +644,14 @@ async def test_orchestrator_very_long_text(monkeypatch):
     from fastapi.testclient import TestClient
     from app.main import app
     from app.core.local_embeddings import LocalEmbeddingModel
+
     monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
 
     async def _mock_classify(text: str):
-        return IntentClassification(intent=IntentType.unclear, confidence=0.5, reasoning="Mock")
+        return IntentClassification(
+            intent=IntentType.unclear, confidence=0.5, reasoning="Mock"
+        )
+
     monkeypatch.setattr(IntentClassifier, "classify", _mock_classify)
 
     client = TestClient(app)
@@ -579,6 +668,7 @@ async def test_orchestrator_very_long_text(monkeypatch):
 
 from app.core.orchestrator.profile_extractor import ProfileExtractor
 
+
 def test_profile_extractor_fallback_no_data():
     """Fallback extraction with no parsable data should identify all missing fields."""
     result = ProfileExtractor._fallback_extraction("Привет! Как дела?", history=None)
@@ -590,7 +680,9 @@ def test_profile_extractor_fallback_no_data():
 
 def test_profile_extractor_fallback_10digit_confusion():
     """Fallback should NOT confuse a 10-digit number with a price."""
-    result = ProfileExtractor._fallback_extraction("Код ТН ВЭД 1234567890", history=None)
+    result = ProfileExtractor._fallback_extraction(
+        "Код ТН ВЭД 1234567890", history=None
+    )
     assert result.accumulated_profile.hs_code == "1234567890"
     # 10-digit code should NOT be parsed as invoice_price
     assert result.accumulated_profile.invoice_price is None
@@ -599,15 +691,17 @@ def test_profile_extractor_fallback_10digit_confusion():
 
 def test_profile_extractor_fallback_invalid_price_format():
     """Fallback should handle price formats with commas or words."""
-    result = ProfileExtractor._fallback_extraction("Цена пять тысяч долларов", history=None)
+    result = ProfileExtractor._fallback_extraction(
+        "Цена пять тысяч долларов", history=None
+    )
     assert result.accumulated_profile.invoice_price is None
     assert "invoice_price" in result.missing_fields
-
 
 
 def test_profile_extractor_fallback_multiple_history_turns():
     """Fallback should accumulate data across multiple history turns."""
     from app.core.orchestrator.models import ChatMessage
+
     # Order matters: reversed iteration processes latest messages first
     history = [
         ChatMessage(role="user", content="ставка пошлины 15%"),

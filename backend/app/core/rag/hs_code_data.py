@@ -21,7 +21,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "I",
         "group": 1,
-        "reasoning_notes": "Живые животные; лошади племенные — пониженная ставка как племенной материал"
+        "reasoning_notes": "Живые животные; лошади племенные — пониженная ставка как племенной материал",
     },
     {
         "hs_code": "0102291000",
@@ -32,7 +32,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "I",
         "group": 1,
-        "reasoning_notes": "Живые животные; КРС на убой — базовая ставка 5% для сельхозживотных"
+        "reasoning_notes": "Живые животные; КРС на убой — базовая ставка 5% для сельхозживотных",
     },
     {
         "hs_code": "0105111100",
@@ -43,7 +43,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "I",
         "group": 1,
-        "reasoning_notes": "Живые животные; племенная птица — нулевая ставка для племенного материала"
+        "reasoning_notes": "Живые животные; племенная птица — нулевая ставка для племенного материала",
     },
     {
         "hs_code": "0201300000",
@@ -54,7 +54,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "I",
         "group": 2,
-        "reasoning_notes": "Мясо и субпродукты; говядина свежая — защитная пошлина для поддержки местных производителей"
+        "reasoning_notes": "Мясо и субпродукты; говядина свежая — защитная пошлина для поддержки местных производителей",
     },
     {
         "hs_code": "0202300000",
@@ -65,7 +65,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "I",
         "group": 2,
-        "reasoning_notes": "Мясо и субпродукты; говядина замороженная — идентичная ставка свежей"
+        "reasoning_notes": "Мясо и субпродукты; говядина замороженная — идентичная ставка свежей",
     },
     {
         "hs_code": "0207129000",
@@ -76,7 +76,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "I",
         "group": 2,
-        "reasoning_notes": "Мясо и субпродукты; мясо птицы — высокая защитная пошлина для защиты птицеводства РК"
+        "reasoning_notes": "Мясо и субпродукты; мясо птицы — высокая защитная пошлина для защиты птицеводства РК",
     },
     {
         "hs_code": "0302120000",
@@ -87,7 +87,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "I",
         "group": 3,
-        "reasoning_notes": "Рыба и ракообразные; лосось свежий — умеренная ставка для морепродуктов"
+        "reasoning_notes": "Рыба и ракообразные; лосось свежий — умеренная ставка для морепродуктов",
     },
     {
         "hs_code": "0306141000",
@@ -98,7 +98,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "I",
         "group": 3,
-        "reasoning_notes": "Рыба и ракообразные; краб мороженый — ставка для деликатесной продукции"
+        "reasoning_notes": "Рыба и ракообразные; краб мороженый — ставка для деликатесной продукции",
     },
     {
         "hs_code": "0402100000",
@@ -109,7 +109,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "I",
         "group": 4,
-        "reasoning_notes": "Молочная продукция; сухое молоко — умеренная ставка для социально значимых товаров"
+        "reasoning_notes": "Молочная продукция; сухое молоко — умеренная ставка для социально значимых товаров",
     },
     # =====================================================================
     # SECTION II — Vegetable products (Groups 06–14)
@@ -123,7 +123,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "II",
         "group": 6,
-        "reasoning_notes": "Живые растения; посадочный материал — пониженная ставка"
+        "reasoning_notes": "Живые растения; посадочный материал — пониженная ставка",
     },
     {
         "hs_code": "0701900000",
@@ -134,7 +134,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "II",
         "group": 7,
-        "reasoning_notes": "Овощи; картофель продовольственный — сезонная пошлина для защиты урожая РК"
+        "reasoning_notes": "Овощи; картофель продовольственный — сезонная пошлина для защиты урожая РК",
     },
     {
         "hs_code": "0702000000",
@@ -145,7 +145,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "II",
         "group": 7,
-        "reasoning_notes": "Овощи; томаты — сезонная ставка 10% вне сезона местного производства"
+        "reasoning_notes": "Овощи; томаты — сезонная ставка 10% вне сезона местного производства",
     },
     {
         "hs_code": "0703100000",
@@ -156,7 +156,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "II",
         "group": 7,
-        "reasoning_notes": "Овощи; лук — низкая ставка как базовый продукт питания"
+        "reasoning_notes": "Овощи; лук — низкая ставка как базовый продукт питания",
     },
     {
         "hs_code": "0808101000",
@@ -167,7 +167,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "II",
         "group": 8,
-        "reasoning_notes": "Фрукты; яблоки — умеренная сезонная пошлина"
+        "reasoning_notes": "Фрукты; яблоки — умеренная сезонная пошлина",
     },
     {
         "hs_code": "0806101000",
@@ -178,7 +178,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "II",
         "group": 8,
-        "reasoning_notes": "Фрукты; виноград — низкая ставка для импортных сортов"
+        "reasoning_notes": "Фрукты; виноград — низкая ставка для импортных сортов",
     },
     {
         "hs_code": "0901110000",
@@ -189,7 +189,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "II",
         "group": 9,
-        "reasoning_notes": "Кофе, чай; зеленый кофе — нулевая/низкая ставка для необработанного сырья"
+        "reasoning_notes": "Кофе, чай; зеленый кофе — нулевая/низкая ставка для необработанного сырья",
     },
     {
         "hs_code": "0902300000",
@@ -200,7 +200,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "II",
         "group": 9,
-        "reasoning_notes": "Кофе, чай; чай фасованный — умеренная ставка для готовой продукции"
+        "reasoning_notes": "Кофе, чай; чай фасованный — умеренная ставка для готовой продукции",
     },
     # =====================================================================
     # SECTION IV — Prepared foodstuffs; beverages, spirits, vinegar; tobacco (Groups 16–24)
@@ -214,7 +214,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IV",
         "group": 16,
-        "reasoning_notes": "Продукты из мяса; колбасы — повышенная ставка для готовых мясных изделий"
+        "reasoning_notes": "Продукты из мяса; колбасы — повышенная ставка для готовых мясных изделий",
     },
     {
         "hs_code": "1701991000",
@@ -225,7 +225,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IV",
         "group": 17,
-        "reasoning_notes": "Сахар; сахар белый — защитная пошлина для поддержки свекловодства РК"
+        "reasoning_notes": "Сахар; сахар белый — защитная пошлина для поддержки свекловодства РК",
     },
     {
         "hs_code": "1806320000",
@@ -236,7 +236,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IV",
         "group": 18,
-        "reasoning_notes": "Какао и продукты из него; шоколад — умеренная ставка для кондитерских изделий"
+        "reasoning_notes": "Какао и продукты из него; шоколад — умеренная ставка для кондитерских изделий",
     },
     {
         "hs_code": "1905310000",
@@ -247,7 +247,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IV",
         "group": 19,
-        "reasoning_notes": "Мучные кондитерские изделия; печенье — ставка для готовых продуктов питания"
+        "reasoning_notes": "Мучные кондитерские изделия; печенье — ставка для готовых продуктов питания",
     },
     {
         "hs_code": "2005202000",
@@ -258,7 +258,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IV",
         "group": 20,
-        "reasoning_notes": "Продукты переработки овощей; чипсы — умеренная ставка"
+        "reasoning_notes": "Продукты переработки овощей; чипсы — умеренная ставка",
     },
     {
         "hs_code": "2106909809",
@@ -269,7 +269,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IV",
         "group": 21,
-        "reasoning_notes": "Пищевые продукты; БАДы — средняя ставка"
+        "reasoning_notes": "Пищевые продукты; БАДы — средняя ставка",
     },
     {
         "hs_code": "2202100000",
@@ -280,7 +280,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IV",
         "group": 22,
-        "reasoning_notes": "Напитки; сладкие воды — ставка 12% + акциз на сахаросодержащие напитки (НК РК 2026)"
+        "reasoning_notes": "Напитки; сладкие воды — ставка 12% + акциз на сахаросодержащие напитки (НК РК 2026)",
     },
     {
         "hs_code": "2203000000",
@@ -291,7 +291,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IV",
         "group": 22,
-        "reasoning_notes": "Напитки; пиво — низкая ввозная пошлина, высокий акциз как подакцизный товар"
+        "reasoning_notes": "Напитки; пиво — низкая ввозная пошлина, высокий акциз как подакцизный товар",
     },
     {
         "hs_code": "2204210000",
@@ -302,7 +302,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IV",
         "group": 22,
-        "reasoning_notes": "Напитки; вино — высокая пошлина + акциз на алкогольную продукцию"
+        "reasoning_notes": "Напитки; вино — высокая пошлина + акциз на алкогольную продукцию",
     },
     {
         "hs_code": "2208600000",
@@ -313,7 +313,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IV",
         "group": 22,
-        "reasoning_notes": "Крепкий алкоголь; водка — высокая пошлина + максимальный акциз"
+        "reasoning_notes": "Крепкий алкоголь; водка — высокая пошлина + максимальный акциз",
     },
     {
         "hs_code": "2402200000",
@@ -324,7 +324,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IV",
         "group": 24,
-        "reasoning_notes": "Табак; сигареты — высокая пошлина + комбинированный акциз (специфический + адвалорный)"
+        "reasoning_notes": "Табак; сигареты — высокая пошлина + комбинированный акциз (специфический + адвалорный)",
     },
     # =====================================================================
     # SECTION V — Mineral products (Groups 25–27)
@@ -338,7 +338,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "V",
         "group": 25,
-        "reasoning_notes": "Соль; соль пищевая — низкая ставка для социально значимого товара"
+        "reasoning_notes": "Соль; соль пищевая — низкая ставка для социально значимого товара",
     },
     {
         "hs_code": "2523100000",
@@ -349,7 +349,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "V",
         "group": 25,
-        "reasoning_notes": "Цемент; клинкер — низкая ставка для строительного сырья"
+        "reasoning_notes": "Цемент; клинкер — низкая ставка для строительного сырья",
     },
     {
         "hs_code": "2709000000",
@@ -360,7 +360,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "V",
         "group": 27,
-        "reasoning_notes": "Нефть и нефтепродукты; сырая нефть — нулевая ставка (стратегический экспортный товар РК)"
+        "reasoning_notes": "Нефть и нефтепродукты; сырая нефть — нулевая ставка (стратегический экспортный товар РК)",
     },
     {
         "hs_code": "2710122500",
@@ -371,7 +371,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "V",
         "group": 27,
-        "reasoning_notes": "Нефтепродукты; бензин — нулевая ввозная пошлина в рамках ЕАЭС, акциз при импорте в РК"
+        "reasoning_notes": "Нефтепродукты; бензин — нулевая ввозная пошлина в рамках ЕАЭС, акциз при импорте в РК",
     },
     {
         "hs_code": "2710194200",
@@ -382,7 +382,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "V",
         "group": 27,
-        "reasoning_notes": "Нефтепродукты; дизель — нулевая ввозная пошлина, акциз при импорте"
+        "reasoning_notes": "Нефтепродукты; дизель — нулевая ввозная пошлина, акциз при импорте",
     },
     {
         "hs_code": "2711210000",
@@ -393,7 +393,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "V",
         "group": 27,
-        "reasoning_notes": "Газ природный — нулевая ставка (стратегический товар)"
+        "reasoning_notes": "Газ природный — нулевая ставка (стратегический товар)",
     },
     # =====================================================================
     # SECTION VI — Products of the chemical and allied industries (Groups 28–38)
@@ -407,7 +407,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VI",
         "group": 28,
-        "reasoning_notes": "Продукты неорганической химии; кормовые фосфаты — низкая ставка для сельхозсырья"
+        "reasoning_notes": "Продукты неорганической химии; кормовые фосфаты — низкая ставка для сельхозсырья",
     },
     {
         "hs_code": "2847000000",
@@ -418,7 +418,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VI",
         "group": 28,
-        "reasoning_notes": "Неорганические химикаты; перекись водорода — стандартная ставка"
+        "reasoning_notes": "Неорганические химикаты; перекись водорода — стандартная ставка",
     },
     {
         "hs_code": "3002300000",
@@ -429,7 +429,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VI",
         "group": 30,
-        "reasoning_notes": "Фармацевтика; вакцины для животных — нулевая ставка для ветеринарных препаратов"
+        "reasoning_notes": "Фармацевтика; вакцины для животных — нулевая ставка для ветеринарных препаратов",
     },
     {
         "hs_code": "3004900000",
@@ -440,7 +440,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VI",
         "group": 30,
-        "reasoning_notes": "Фармацевтика; готовые лекарства — льготная ставка 5% для социально значимых медикаментов"
+        "reasoning_notes": "Фармацевтика; готовые лекарства — льготная ставка 5% для социально значимых медикаментов",
     },
     {
         "hs_code": "3105200000",
@@ -451,7 +451,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VI",
         "group": 31,
-        "reasoning_notes": "Удобрения; NPK — низкая ставка для сельскохозяйственного сырья"
+        "reasoning_notes": "Удобрения; NPK — низкая ставка для сельскохозяйственного сырья",
     },
     {
         "hs_code": "3204160000",
@@ -462,7 +462,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VI",
         "group": 32,
-        "reasoning_notes": "Красители; реактивные красители — стандартная ставка для химической продукции"
+        "reasoning_notes": "Красители; реактивные красители — стандартная ставка для химической продукции",
     },
     {
         "hs_code": "3303001000",
@@ -473,7 +473,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VI",
         "group": 33,
-        "reasoning_notes": "Парфюмерия; духи — умеренная ставка для готовой парфюмерной продукции"
+        "reasoning_notes": "Парфюмерия; духи — умеренная ставка для готовой парфюмерной продукции",
     },
     {
         "hs_code": "3304990000",
@@ -484,7 +484,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VI",
         "group": 33,
-        "reasoning_notes": "Косметика; средства ухода — умеренная ставка"
+        "reasoning_notes": "Косметика; средства ухода — умеренная ставка",
     },
     {
         "hs_code": "3401110000",
@@ -495,7 +495,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VI",
         "group": 34,
-        "reasoning_notes": "Моющие средства; мыло туалетное — умеренная ставка"
+        "reasoning_notes": "Моющие средства; мыло туалетное — умеренная ставка",
     },
     {
         "hs_code": "3808910000",
@@ -506,7 +506,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VI",
         "group": 38,
-        "reasoning_notes": "Средства защиты растений; инсектициды — низкая ставка для агрохимии"
+        "reasoning_notes": "Средства защиты растений; инсектициды — низкая ставка для агрохимии",
     },
     # =====================================================================
     # SECTION VII — Plastics and articles thereof; rubber and articles thereof (Groups 39–40)
@@ -520,7 +520,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VII",
         "group": 39,
-        "reasoning_notes": "Пластмассы; полиэтилен высокой плотности — сырьевая ставка"
+        "reasoning_notes": "Пластмассы; полиэтилен высокой плотности — сырьевая ставка",
     },
     {
         "hs_code": "3916200000",
@@ -531,7 +531,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VII",
         "group": 39,
-        "reasoning_notes": "Пластмассы; ПВХ-профили — средняя ставка для строительных материалов"
+        "reasoning_notes": "Пластмассы; ПВХ-профили — средняя ставка для строительных материалов",
     },
     {
         "hs_code": "3920100400",
@@ -542,7 +542,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VII",
         "group": 39,
-        "reasoning_notes": "Пластмассы; полиэтиленовая пленка — низкая ставка для упаковочных материалов"
+        "reasoning_notes": "Пластмассы; полиэтиленовая пленка — низкая ставка для упаковочных материалов",
     },
     {
         "hs_code": "3926900000",
@@ -553,7 +553,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VII",
         "group": 39,
-        "reasoning_notes": "Пластмассы; прочие изделия — универсальная ставка"
+        "reasoning_notes": "Пластмассы; прочие изделия — универсальная ставка",
     },
     {
         "hs_code": "4011201000",
@@ -564,7 +564,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": True,
         "section": "VII",
         "group": 40,
-        "reasoning_notes": "Резина; шины грузовые — пошлина 10% + утилизационный сбор"
+        "reasoning_notes": "Резина; шины грузовые — пошлина 10% + утилизационный сбор",
     },
     {
         "hs_code": "4016999000",
@@ -575,7 +575,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VII",
         "group": 40,
-        "reasoning_notes": "Резина; технические изделия — умеренная ставка"
+        "reasoning_notes": "Резина; технические изделия — умеренная ставка",
     },
     # =====================================================================
     # SECTION VIII — Raw hides, skins, leather, furskins (Groups 41–43)
@@ -589,7 +589,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VIII",
         "group": 41,
-        "reasoning_notes": "Кожевенное сырье; кожа КРС — умеренная ставка"
+        "reasoning_notes": "Кожевенное сырье; кожа КРС — умеренная ставка",
     },
     {
         "hs_code": "4202210000",
@@ -600,7 +600,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VIII",
         "group": 42,
-        "reasoning_notes": "Изделия из кожи; сумки — повышенная ставка для готовых кожгалантерейных изделий"
+        "reasoning_notes": "Изделия из кожи; сумки — повышенная ставка для готовых кожгалантерейных изделий",
     },
     {
         "hs_code": "4203100000",
@@ -611,7 +611,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VIII",
         "group": 42,
-        "reasoning_notes": "Изделия из кожи; одежда — ставка 12%"
+        "reasoning_notes": "Изделия из кожи; одежда — ставка 12%",
     },
     {
         "hs_code": "4302199500",
@@ -622,7 +622,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "VIII",
         "group": 43,
-        "reasoning_notes": "Мех; шкурки выделанные — умеренная ставка для мехового сырья"
+        "reasoning_notes": "Мех; шкурки выделанные — умеренная ставка для мехового сырья",
     },
     # =====================================================================
     # SECTION IX — Wood and articles of wood; wood charcoal; cork; straw (Groups 44–49)
@@ -636,7 +636,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IX",
         "group": 44,
-        "reasoning_notes": "Древесина; пиломатериалы хвойные — низкая ставка для лесоматериалов"
+        "reasoning_notes": "Древесина; пиломатериалы хвойные — низкая ставка для лесоматериалов",
     },
     {
         "hs_code": "4407950000",
@@ -647,7 +647,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IX",
         "group": 44,
-        "reasoning_notes": "Древесина; ясень — низкая ставка для ценных пород"
+        "reasoning_notes": "Древесина; ясень — низкая ставка для ценных пород",
     },
     {
         "hs_code": "4410113000",
@@ -658,7 +658,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IX",
         "group": 44,
-        "reasoning_notes": "Древесные плиты; ДСП — средняя ставка"
+        "reasoning_notes": "Древесные плиты; ДСП — средняя ставка",
     },
     {
         "hs_code": "4412100000",
@@ -669,7 +669,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IX",
         "group": 44,
-        "reasoning_notes": "Древесные плиты; фанера — умеренная ставка"
+        "reasoning_notes": "Древесные плиты; фанера — умеренная ставка",
     },
     {
         "hs_code": "4801000000",
@@ -680,7 +680,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IX",
         "group": 48,
-        "reasoning_notes": "Бумага; газетная — нулевая ставка для СМИ и полиграфии"
+        "reasoning_notes": "Бумага; газетная — нулевая ставка для СМИ и полиграфии",
     },
     {
         "hs_code": "4802551000",
@@ -691,7 +691,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IX",
         "group": 48,
-        "reasoning_notes": "Бумага; офисная А4 — низкая ставка"
+        "reasoning_notes": "Бумага; офисная А4 — низкая ставка",
     },
     {
         "hs_code": "4901990000",
@@ -702,7 +702,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "IX",
         "group": 49,
-        "reasoning_notes": "Печатная продукция; книги — нулевая ставка для образовательной литературы"
+        "reasoning_notes": "Печатная продукция; книги — нулевая ставка для образовательной литературы",
     },
     # =====================================================================
     # SECTION X — Textiles and textile articles (Groups 50–63)
@@ -716,7 +716,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "X",
         "group": 52,
-        "reasoning_notes": "Хлопок; сырец — нулевая ставка для текстильного сырья"
+        "reasoning_notes": "Хлопок; сырец — нулевая ставка для текстильного сырья",
     },
     {
         "hs_code": "5209420000",
@@ -727,7 +727,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "X",
         "group": 52,
-        "reasoning_notes": "Ткани хлопчатобумажные; деним — повышенная ставка для готовых текстильных материалов"
+        "reasoning_notes": "Ткани хлопчатобумажные; деним — повышенная ставка для готовых текстильных материалов",
     },
     {
         "hs_code": "5515110000",
@@ -738,7 +738,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "X",
         "group": 55,
-        "reasoning_notes": "Ткани из синтетических волокон — стандартная ставка"
+        "reasoning_notes": "Ткани из синтетических волокон — стандартная ставка",
     },
     {
         "hs_code": "6109100000",
@@ -749,7 +749,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "X",
         "group": 61,
-        "reasoning_notes": "Одежда трикотажная; футболки — ставка 12% для готовых швейных изделий"
+        "reasoning_notes": "Одежда трикотажная; футболки — ставка 12% для готовых швейных изделий",
     },
     {
         "hs_code": "6109902000",
@@ -760,7 +760,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "X",
         "group": 61,
-        "reasoning_notes": "Одежда трикотажная; ставка 12%"
+        "reasoning_notes": "Одежда трикотажная; ставка 12%",
     },
     {
         "hs_code": "6110209100",
@@ -771,7 +771,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "X",
         "group": 61,
-        "reasoning_notes": "Одежда трикотажная; свитера — 12%"
+        "reasoning_notes": "Одежда трикотажная; свитера — 12%",
     },
     {
         "hs_code": "6203423100",
@@ -782,7 +782,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "X",
         "group": 62,
-        "reasoning_notes": "Одежда текстильная; брюки — 12%"
+        "reasoning_notes": "Одежда текстильная; брюки — 12%",
     },
     {
         "hs_code": "6302100000",
@@ -793,7 +793,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "X",
         "group": 63,
-        "reasoning_notes": "Текстильные изделия; постельное белье — ставка 12%"
+        "reasoning_notes": "Текстильные изделия; постельное белье — ставка 12%",
     },
     # =====================================================================
     # SECTION XI — Footwear, headgear, umbrellas (Groups 64–67)
@@ -807,7 +807,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XI",
         "group": 64,
-        "reasoning_notes": "Обувь; спортивная — ставка 10%"
+        "reasoning_notes": "Обувь; спортивная — ставка 10%",
     },
     {
         "hs_code": "6403999100",
@@ -818,7 +818,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XI",
         "group": 64,
-        "reasoning_notes": "Обувь; кожаная — повышенная ставка 12%"
+        "reasoning_notes": "Обувь; кожаная — повышенная ставка 12%",
     },
     {
         "hs_code": "6404190000",
@@ -829,7 +829,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XI",
         "group": 64,
-        "reasoning_notes": "Обувь; текстильная — ставка 12%"
+        "reasoning_notes": "Обувь; текстильная — ставка 12%",
     },
     {
         "hs_code": "6504000000",
@@ -840,7 +840,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XI",
         "group": 65,
-        "reasoning_notes": "Головные уборы; плетеные — ставка 12%"
+        "reasoning_notes": "Головные уборы; плетеные — ставка 12%",
     },
     # =====================================================================
     # SECTION XIII — Articles of stone, plaster, cement, asbestos; ceramic products;
@@ -855,7 +855,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XIII",
         "group": 68,
-        "reasoning_notes": "Камень; мрамор — средняя ставка для строительного камня"
+        "reasoning_notes": "Камень; мрамор — средняя ставка для строительного камня",
     },
     {
         "hs_code": "6810110000",
@@ -866,7 +866,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XIII",
         "group": 68,
-        "reasoning_notes": "Бетонные изделия; блоки — низкая ставка для стройматериалов"
+        "reasoning_notes": "Бетонные изделия; блоки — низкая ставка для стройматериалов",
     },
     {
         "hs_code": "6901000000",
@@ -877,7 +877,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XIII",
         "group": 69,
-        "reasoning_notes": "Керамика; кирпич — средняя ставка"
+        "reasoning_notes": "Керамика; кирпич — средняя ставка",
     },
     {
         "hs_code": "6908900000",
@@ -888,7 +888,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XIII",
         "group": 69,
-        "reasoning_notes": "Керамика; плитка — умеренная ставка"
+        "reasoning_notes": "Керамика; плитка — умеренная ставка",
     },
     {
         "hs_code": "7005290000",
@@ -899,7 +899,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XIII",
         "group": 70,
-        "reasoning_notes": "Стекло; листовое — средняя ставка для строительного стекла"
+        "reasoning_notes": "Стекло; листовое — средняя ставка для строительного стекла",
     },
     {
         "hs_code": "7010900000",
@@ -910,7 +910,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XIII",
         "group": 70,
-        "reasoning_notes": "Стекло; бутылки — умеренная ставка"
+        "reasoning_notes": "Стекло; бутылки — умеренная ставка",
     },
     # =====================================================================
     # SECTION XIV — Natural or cultured pearls, precious stones, precious metals (Group 71)
@@ -924,7 +924,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XIV",
         "group": 71,
-        "reasoning_notes": "Драгоценные камни; алмазы необработанные — нулевая ставка"
+        "reasoning_notes": "Драгоценные камни; алмазы необработанные — нулевая ставка",
     },
     {
         "hs_code": "7102390000",
@@ -935,7 +935,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XIV",
         "group": 71,
-        "reasoning_notes": "Драгоценные камни; бриллианты — нулевая ставка"
+        "reasoning_notes": "Драгоценные камни; бриллианты — нулевая ставка",
     },
     {
         "hs_code": "7103990000",
@@ -946,7 +946,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XIV",
         "group": 71,
-        "reasoning_notes": "Драгоценные камни; прочие — нулевая ставка для драгоценностей"
+        "reasoning_notes": "Драгоценные камни; прочие — нулевая ставка для драгоценностей",
     },
     {
         "hs_code": "7113190000",
@@ -957,7 +957,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XIV",
         "group": 71,
-        "reasoning_notes": "Ювелирка; золото — умеренная ставка для готовых изделий"
+        "reasoning_notes": "Ювелирка; золото — умеренная ставка для готовых изделий",
     },
     # =====================================================================
     # SECTION XV — Base metals and articles of base metals (Groups 72–83)
@@ -971,7 +971,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XV",
         "group": 72,
-        "reasoning_notes": "Черные металлы; лом стали — нулевая ставка для вторичного сырья"
+        "reasoning_notes": "Черные металлы; лом стали — нулевая ставка для вторичного сырья",
     },
     {
         "hs_code": "7208512000",
@@ -982,7 +982,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XV",
         "group": 72,
-        "reasoning_notes": "Черные металлы; толстолистовой прокат — низкая ставка"
+        "reasoning_notes": "Черные металлы; толстолистовой прокат — низкая ставка",
     },
     {
         "hs_code": "7210490000",
@@ -993,7 +993,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XV",
         "group": 72,
-        "reasoning_notes": "Черные металлы; оцинковка — средняя ставка"
+        "reasoning_notes": "Черные металлы; оцинковка — средняя ставка",
     },
     {
         "hs_code": "7310210000",
@@ -1004,7 +1004,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XV",
         "group": 73,
-        "reasoning_notes": "Изделия из черных металлов; банки — умеренная ставка"
+        "reasoning_notes": "Изделия из черных металлов; банки — умеренная ставка",
     },
     {
         "hs_code": "7403110000",
@@ -1015,7 +1015,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XV",
         "group": 74,
-        "reasoning_notes": "Медь; катоды — низкая ставка для цветных металлов"
+        "reasoning_notes": "Медь; катоды — низкая ставка для цветных металлов",
     },
     {
         "hs_code": "7601100000",
@@ -1026,7 +1026,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XV",
         "group": 76,
-        "reasoning_notes": "Алюминий; первичный — средняя ставка"
+        "reasoning_notes": "Алюминий; первичный — средняя ставка",
     },
     {
         "hs_code": "7606119000",
@@ -1037,7 +1037,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XV",
         "group": 76,
-        "reasoning_notes": "Алюминий; листы — средняя ставка"
+        "reasoning_notes": "Алюминий; листы — средняя ставка",
     },
     {
         "hs_code": "8204110000",
@@ -1048,7 +1048,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XV",
         "group": 82,
-        "reasoning_notes": "Инструменты ручные; ключи — низкая ставка"
+        "reasoning_notes": "Инструменты ручные; ключи — низкая ставка",
     },
     {
         "hs_code": "8301200000",
@@ -1059,7 +1059,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XV",
         "group": 83,
-        "reasoning_notes": "Металлоизделия; замки автомобильные — низкая ставка"
+        "reasoning_notes": "Металлоизделия; замки автомобильные — низкая ставка",
     },
     # =====================================================================
     # SECTION XVI — Machinery and mechanical appliances; electrical equipment (Groups 84–85)
@@ -1073,7 +1073,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVI",
         "group": 84,
-        "reasoning_notes": "Двигатели; дизельные — низкая ставка для промышленного оборудования"
+        "reasoning_notes": "Двигатели; дизельные — низкая ставка для промышленного оборудования",
     },
     {
         "hs_code": "8414510000",
@@ -1084,7 +1084,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVI",
         "group": 84,
-        "reasoning_notes": "Вентиляторы — средняя ставка для бытовой техники"
+        "reasoning_notes": "Вентиляторы — средняя ставка для бытовой техники",
     },
     {
         "hs_code": "8418100000",
@@ -1095,7 +1095,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": True,
         "section": "XVI",
         "group": 84,
-        "reasoning_notes": "Бытовая техника; холодильники — ставка 10% + утильсбор"
+        "reasoning_notes": "Бытовая техника; холодильники — ставка 10% + утильсбор",
     },
     {
         "hs_code": "8418108000",
@@ -1106,7 +1106,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVI",
         "group": 84,
-        "reasoning_notes": "Оборудование промышленное; холодильники — низкая ставка"
+        "reasoning_notes": "Оборудование промышленное; холодильники — низкая ставка",
     },
     {
         "hs_code": "8421210000",
@@ -1117,7 +1117,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVI",
         "group": 84,
-        "reasoning_notes": "Фильтры; оборудование водоподготовки — нулевая ставка для экологического оборудования"
+        "reasoning_notes": "Фильтры; оборудование водоподготовки — нулевая ставка для экологического оборудования",
     },
     {
         "hs_code": "8443310000",
@@ -1128,7 +1128,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": True,
         "section": "XVI",
         "group": 84,
-        "reasoning_notes": "Офисная техника; МФУ — нулевая ставка для IT-оборудования + утильсбор"
+        "reasoning_notes": "Офисная техника; МФУ — нулевая ставка для IT-оборудования + утильсбор",
     },
     {
         "hs_code": "8471490000",
@@ -1139,7 +1139,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": True,
         "section": "XVI",
         "group": 84,
-        "reasoning_notes": "IT-оборудование; компьютеры — нулевая ставка + утильсбор"
+        "reasoning_notes": "IT-оборудование; компьютеры — нулевая ставка + утильсбор",
     },
     {
         "hs_code": "8471606000",
@@ -1150,7 +1150,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVI",
         "group": 84,
-        "reasoning_notes": "IT-периферия; клавиатуры — нулевая ставка"
+        "reasoning_notes": "IT-периферия; клавиатуры — нулевая ставка",
     },
     {
         "hs_code": "8471700000",
@@ -1161,7 +1161,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVI",
         "group": 84,
-        "reasoning_notes": "IT-оборудование; накопители — нулевая ставка"
+        "reasoning_notes": "IT-оборудование; накопители — нулевая ставка",
     },
     {
         "hs_code": "8517120000",
@@ -1172,7 +1172,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": True,
         "section": "XVI",
         "group": 85,
-        "reasoning_notes": "Электроника; смартфоны — нулевая ставка для IT-устройств + утильсбор"
+        "reasoning_notes": "Электроника; смартфоны — нулевая ставка для IT-устройств + утильсбор",
     },
     {
         "hs_code": "8518210000",
@@ -1183,7 +1183,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVI",
         "group": 85,
-        "reasoning_notes": "Аудиотехника; колонки — средняя ставка"
+        "reasoning_notes": "Аудиотехника; колонки — средняя ставка",
     },
     {
         "hs_code": "8523520000",
@@ -1194,7 +1194,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVI",
         "group": 85,
-        "reasoning_notes": "Электроника; смарт-карты — нулевая ставка"
+        "reasoning_notes": "Электроника; смарт-карты — нулевая ставка",
     },
     {
         "hs_code": "8528711000",
@@ -1205,7 +1205,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": True,
         "section": "XVI",
         "group": 85,
-        "reasoning_notes": "Электроника; ТВ-приставки — ставка 10% + утильсбор"
+        "reasoning_notes": "Электроника; ТВ-приставки — ставка 10% + утильсбор",
     },
     {
         "hs_code": "8537101000",
@@ -1216,7 +1216,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVI",
         "group": 85,
-        "reasoning_notes": "Электротехника; панели управления — низкая ставка"
+        "reasoning_notes": "Электротехника; панели управления — низкая ставка",
     },
     {
         "hs_code": "8542310000",
@@ -1227,7 +1227,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVI",
         "group": 85,
-        "reasoning_notes": "Электроника; процессоры — нулевая ставка для электронных компонентов"
+        "reasoning_notes": "Электроника; процессоры — нулевая ставка для электронных компонентов",
     },
     # =====================================================================
     # SECTION XVII — Vehicles, aircraft, vessels (Groups 86–89)
@@ -1241,7 +1241,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVII",
         "group": 86,
-        "reasoning_notes": "Железнодорожный транспорт; вагоны — низкая ставка"
+        "reasoning_notes": "Железнодорожный транспорт; вагоны — низкая ставка",
     },
     {
         "hs_code": "8701200000",
@@ -1252,7 +1252,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": True,
         "section": "XVII",
         "group": 87,
-        "reasoning_notes": "Автотранспорт; седельные тягачи — 15% + утильсбор"
+        "reasoning_notes": "Автотранспорт; седельные тягачи — 15% + утильсбор",
     },
     {
         "hs_code": "8703235000",
@@ -1263,7 +1263,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": True,
         "section": "XVII",
         "group": 87,
-        "reasoning_notes": "Автомобили; ДВС 1500-3000 см³ — пошлина 15% + акциз при импорте + утильсбор"
+        "reasoning_notes": "Автомобили; ДВС 1500-3000 см³ — пошлина 15% + акциз при импорте + утильсбор",
     },
     {
         "hs_code": "8703321900",
@@ -1274,7 +1274,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": True,
         "section": "XVII",
         "group": 87,
-        "reasoning_notes": "Автомобили дизельные — пошлина 15% + акциз + утильсбор"
+        "reasoning_notes": "Автомобили дизельные — пошлина 15% + акциз + утильсбор",
     },
     {
         "hs_code": "8703800000",
@@ -1285,7 +1285,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": True,
         "section": "XVII",
         "group": 87,
-        "reasoning_notes": "Электромобили — нулевая пошлина (стимулирование зеленого транспорта), утильсбор взимается"
+        "reasoning_notes": "Электромобили — нулевая пошлина (стимулирование зеленого транспорта), утильсбор взимается",
     },
     {
         "hs_code": "8704210000",
@@ -1296,7 +1296,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": True,
         "section": "XVII",
         "group": 87,
-        "reasoning_notes": "Грузовики; малый тоннаж — 15% + утильсбор"
+        "reasoning_notes": "Грузовики; малый тоннаж — 15% + утильсбор",
     },
     {
         "hs_code": "8708290000",
@@ -1307,7 +1307,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVII",
         "group": 87,
-        "reasoning_notes": "Автозапчасти; кузовные детали — ставка 10%"
+        "reasoning_notes": "Автозапчасти; кузовные детали — ставка 10%",
     },
     {
         "hs_code": "8711201000",
@@ -1318,7 +1318,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": True,
         "section": "XVII",
         "group": 87,
-        "reasoning_notes": "Мотоциклы; средний объем — 10% + утильсбор"
+        "reasoning_notes": "Мотоциклы; средний объем — 10% + утильсбор",
     },
     {
         "hs_code": "8711500000",
@@ -1329,7 +1329,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": True,
         "section": "XVII",
         "group": 87,
-        "reasoning_notes": "Мотоциклы; большой объем — пошлина 10% + акциз на роскошь + утильсбор"
+        "reasoning_notes": "Мотоциклы; большой объем — пошлина 10% + акциз на роскошь + утильсбор",
     },
     {
         "hs_code": "8802400000",
@@ -1340,7 +1340,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVII",
         "group": 88,
-        "reasoning_notes": "Воздушный транспорт; самолеты — нулевая ставка для гражданской авиации"
+        "reasoning_notes": "Воздушный транспорт; самолеты — нулевая ставка для гражданской авиации",
     },
     # =====================================================================
     # SECTION XVIII — Optical, photographic, medical, measuring, musical instruments (Groups 90–92)
@@ -1354,7 +1354,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVIII",
         "group": 90,
-        "reasoning_notes": "Медизделия; шприцы — нулевая ставка для медицинских товаров"
+        "reasoning_notes": "Медизделия; шприцы — нулевая ставка для медицинских товаров",
     },
     {
         "hs_code": "9018390000",
@@ -1365,7 +1365,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVIII",
         "group": 90,
-        "reasoning_notes": "Медизделия; инструменты — нулевая ставка"
+        "reasoning_notes": "Медизделия; инструменты — нулевая ставка",
     },
     {
         "hs_code": "9018900000",
@@ -1376,7 +1376,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVIII",
         "group": 90,
-        "reasoning_notes": "Медицинское оборудование; аппараты — нулевая ставка"
+        "reasoning_notes": "Медицинское оборудование; аппараты — нулевая ставка",
     },
     {
         "hs_code": "9021101000",
@@ -1387,7 +1387,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVIII",
         "group": 90,
-        "reasoning_notes": "Ортопедия; аппараты — нулевая ставка для медизделий"
+        "reasoning_notes": "Ортопедия; аппараты — нулевая ставка для медизделий",
     },
     {
         "hs_code": "9023000000",
@@ -1398,7 +1398,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVIII",
         "group": 90,
-        "reasoning_notes": "Учебное оборудование — нулевая ставка"
+        "reasoning_notes": "Учебное оборудование — нулевая ставка",
     },
     {
         "hs_code": "9027890000",
@@ -1409,7 +1409,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVIII",
         "group": 90,
-        "reasoning_notes": "Лабораторное оборудование; анализаторы — нулевая ставка"
+        "reasoning_notes": "Лабораторное оборудование; анализаторы — нулевая ставка",
     },
     {
         "hs_code": "9030320000",
@@ -1420,7 +1420,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XVIII",
         "group": 90,
-        "reasoning_notes": "Измерительные приборы; мультиметры — нулевая ставка"
+        "reasoning_notes": "Измерительные приборы; мультиметры — нулевая ставка",
     },
     # =====================================================================
     # SECTION XX — Miscellaneous manufactured articles (Groups 94–96)
@@ -1434,7 +1434,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XX",
         "group": 94,
-        "reasoning_notes": "Мебель; кресла офисные — ставка 12%"
+        "reasoning_notes": "Мебель; кресла офисные — ставка 12%",
     },
     {
         "hs_code": "9401610000",
@@ -1445,7 +1445,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XX",
         "group": 94,
-        "reasoning_notes": "Мебель; сиденья — повышенная ставка 15%"
+        "reasoning_notes": "Мебель; сиденья — повышенная ставка 15%",
     },
     {
         "hs_code": "9403300000",
@@ -1456,7 +1456,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XX",
         "group": 94,
-        "reasoning_notes": "Мебель офисная — ставка 12%"
+        "reasoning_notes": "Мебель офисная — ставка 12%",
     },
     {
         "hs_code": "9403500000",
@@ -1467,7 +1467,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XX",
         "group": 94,
-        "reasoning_notes": "Мебель; спальни — ставка 12%"
+        "reasoning_notes": "Мебель; спальни — ставка 12%",
     },
     {
         "hs_code": "9404291000",
@@ -1478,7 +1478,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XX",
         "group": 94,
-        "reasoning_notes": "Мебель; матрасы — ставка 10%"
+        "reasoning_notes": "Мебель; матрасы — ставка 10%",
     },
     {
         "hs_code": "9506910000",
@@ -1489,7 +1489,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XX",
         "group": 95,
-        "reasoning_notes": "Спорттовары; фитнес-оборудование — низкая ставка"
+        "reasoning_notes": "Спорттовары; фитнес-оборудование — низкая ставка",
     },
     {
         "hs_code": "9507200000",
@@ -1500,7 +1500,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XX",
         "group": 95,
-        "reasoning_notes": "Рыболовные принадлежности — низкая ставка"
+        "reasoning_notes": "Рыболовные принадлежности — низкая ставка",
     },
     {
         "hs_code": "9602000000",
@@ -1511,7 +1511,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XX",
         "group": 96,
-        "reasoning_notes": "Разные готовые изделия — низкая ставка"
+        "reasoning_notes": "Разные готовые изделия — низкая ставка",
     },
     {
         "hs_code": "9603210000",
@@ -1522,7 +1522,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XX",
         "group": 96,
-        "reasoning_notes": "Щетки; зубные — умеренная ставка"
+        "reasoning_notes": "Щетки; зубные — умеренная ставка",
     },
     {
         "hs_code": "9619000000",
@@ -1533,7 +1533,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XX",
         "group": 96,
-        "reasoning_notes": "Гигиенические изделия; подгузники — низкая ставка для социально значимых товаров"
+        "reasoning_notes": "Гигиенические изделия; подгузники — низкая ставка для социально значимых товаров",
     },
     {
         "hs_code": "9617000000",
@@ -1544,7 +1544,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XX",
         "group": 96,
-        "reasoning_notes": "Термосы — умеренная ставка"
+        "reasoning_notes": "Термосы — умеренная ставка",
     },
     # =====================================================================
     # SECTION XXI — Works of art, collectors' pieces and antiques (Group 97)
@@ -1558,7 +1558,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XXI",
         "group": 97,
-        "reasoning_notes": "Произведения искусства; картины — нулевая ставка для культурных ценностей"
+        "reasoning_notes": "Произведения искусства; картины — нулевая ставка для культурных ценностей",
     },
     {
         "hs_code": "9706000000",
@@ -1569,7 +1569,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XXI",
         "group": 97,
-        "reasoning_notes": "Антиквариат — нулевая ставка для культурных ценностей"
+        "reasoning_notes": "Антиквариат — нулевая ставка для культурных ценностей",
     },
     {
         "hs_code": "9705000000",
@@ -1580,7 +1580,7 @@ HS_CODE_SEED_ENTRIES = [
         "is_subject_to_recycling_fee": False,
         "section": "XXI",
         "group": 97,
-        "reasoning_notes": "Коллекционные предметы — нулевая ставка"
+        "reasoning_notes": "Коллекционные предметы — нулевая ставка",
     },
 ]
 
@@ -1599,7 +1599,7 @@ NK_RK_2026_ARTICLES = [
             "уплачивается в соответствии с таможенным законодательством Евразийского экономического союза."
         ),
         "tags": ["TAX_CODE", "VAT", "GENERAL_PROVISIONS", "IMPORT_VAT"],
-        "keywords": "НДС 16%, налог на добавленную стоимость, импорт, ставка НДС 2026"
+        "keywords": "НДС 16%, налог на добавленную стоимость, импорт, ставка НДС 2026",
     },
     {
         "document_title": "Налоговый кодекс Республики Казахстан 2026 года",
@@ -1613,7 +1613,7 @@ NK_RK_2026_ARTICLES = [
             "расчетного показателя (МРП). Добровольная постановка возможна при обороте от 30 000 МРП."
         ),
         "tags": ["TAX_CODE", "VAT", "REGISTRATION", "NDS_THRESHOLD"],
-        "keywords": "регистрация НДС, порог постановки, МРП, оборот, плательщики НДС"
+        "keywords": "регистрация НДС, порог постановки, МРП, оборот, плательщики НДС",
     },
     {
         "document_title": "Налоговый кодекс Республики Казахстан 2026 года",
@@ -1627,7 +1627,7 @@ NK_RK_2026_ARTICLES = [
             "товара."
         ),
         "tags": ["TAX_CODE", "EXCISE", "EXCISE_RATES", "ALCOHOL", "TOBACCO"],
-        "keywords": "акциз, повышение акцизов 10%, подакцизные товары, алкоголь, табак, нефтепродукты"
+        "keywords": "акциз, повышение акцизов 10%, подакцизные товары, алкоголь, табак, нефтепродукты",
     },
     {
         "document_title": "Налоговый кодекс Республики Казахстан 2026 года",
@@ -1640,7 +1640,7 @@ NK_RK_2026_ARTICLES = [
             "транспортного средства в уполномоченных органах."
         ),
         "tags": ["TAX_CODE", "LUXURY_TAX", "VEHICLES", "NEW_TAX_2026"],
-        "keywords": "налог на роскошь, дорогие автомобили, транспортные средства, 15000 МРП, порог стоимости"
+        "keywords": "налог на роскошь, дорогие автомобили, транспортные средства, 15000 МРП, порог стоимости",
     },
     {
         "document_title": "Налоговый кодекс Республики Казахстан 2026 года",
@@ -1653,7 +1653,7 @@ NK_RK_2026_ARTICLES = [
             "энергетические напитки, ввозимые в качестве образцов для сертификации."
         ),
         "tags": ["TAX_CODE", "EXCISE", "ENERGY_DRINKS", "NEW_EXCISE"],
-        "keywords": "энергетические напитки, акциз энергетики, тонизирующие напитки, кофеин, импорт"
+        "keywords": "энергетические напитки, акциз энергетики, тонизирующие напитки, кофеин, импорт",
     },
     {
         "document_title": "Налоговый кодекс Республики Казахстан 2026 года",
@@ -1666,7 +1666,7 @@ NK_RK_2026_ARTICLES = [
             "установленном законодательством Республики Казахстан."
         ),
         "tags": ["TAX_CODE", "VAT", "MEDICINES", "LOWERED_VAT"],
-        "keywords": "НДС 5%, лекарства, медизделия, льготная ставка, медицинские товары"
+        "keywords": "НДС 5%, лекарства, медизделия, льготная ставка, медицинские товары",
     },
     {
         "document_title": "Экологический кодекс Республики Казахстан и Налоговый кодекс РК 2026",
@@ -1680,7 +1680,7 @@ NK_RK_2026_ARTICLES = [
             "С 2026 года базовая ставка повышается на 15 процентов."
         ),
         "tags": ["ECO_CODE", "RECYCLING_FEE", "UTILIZATION", "ENVIRONMENT"],
-        "keywords": "утилизационный сбор, утильсбор, импортеры, транспорт, шины, электроника, повышение 2026"
+        "keywords": "утилизационный сбор, утильсбор, импортеры, транспорт, шины, электроника, повышение 2026",
     },
     {
         "document_title": "Кодекс Республики Казахстан О таможенном регулировании",
@@ -1693,7 +1693,7 @@ NK_RK_2026_ARTICLES = [
             "официальной ставки рефинансирования Национального Банка Республики Казахстан."
         ),
         "tags": ["CUSTOMS_CODE", "OVERPAYMENT", "REFUND", "CUSTOMS_PAYMENTS"],
-        "keywords": "излишняя уплата, возврат пошлин, таможенные платежи, срок возврата, проценты"
+        "keywords": "излишняя уплата, возврат пошлин, таможенные платежи, срок возврата, проценты",
     },
     {
         "document_title": "Налоговый кодекс Республики Казахстан 2026 года",
@@ -1707,7 +1707,7 @@ NK_RK_2026_ARTICLES = [
             "выпущены таможенными органами."
         ),
         "tags": ["TAX_CODE", "VAT", "VAT_DEDUCTION", "IMPORT_DEDUCTION"],
-        "keywords": "зачет НДС, налоговый вычет, НДС на импорт, выпуск товаров, таможенное оформление"
+        "keywords": "зачет НДС, налоговый вычет, НДС на импорт, выпуск товаров, таможенное оформление",
     },
     {
         "document_title": "Налоговый кодекс Республики Казахстан 2026 года",
@@ -1721,7 +1721,7 @@ NK_RK_2026_ARTICLES = [
             "указанного лимита взимается пошлина в размере 15 процентов от суммы превышения."
         ),
         "tags": ["TAX_CODE", "IMPORT_DUTY", "INDIVIDUALS", "DUTY_FREE_LIMIT"],
-        "keywords": "физические лица, беспошлинный лимит, 200 евро, 31 кг, интернет-покупки, пошлина 15%"
+        "keywords": "физические лица, беспошлинный лимит, 200 евро, 31 кг, интернет-покупки, пошлина 15%",
     },
     {
         "document_title": "Налоговый кодекс Республики Казахстан 2026 года",
@@ -1735,6 +1735,6 @@ NK_RK_2026_ARTICLES = [
             "в упрощенном порядке через портал электронного правительства."
         ),
         "tags": ["TAX_CODE", "VAT", "DIGITAL_SERVICES", "GOOGLE_TAX"],
-        "keywords": "Google Tax, налог на цифровые услуги, иностранные компании, электронные услуги, стриминг"
+        "keywords": "Google Tax, налог на цифровые услуги, иностранные компании, электронные услуги, стриминг",
     },
 ]

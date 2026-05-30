@@ -7,12 +7,13 @@ into a single run.
 Usage:
     PYTHONPATH=backend .venv/Scripts/python backend/scripts/reindex_all.py [--skip-tkeaes]
 """
+
 import logging
 import sys
 import argparse
 import time
 
-sys.path.insert(0, 'backend')
+sys.path.insert(0, "backend")
 
 from app.core.rag.indexer import LegalRAGIndexer, SEED_LAW_BLOCKS
 from app.core.rag.hs_code_data import HS_CODE_SEED_ENTRIES, NK_RK_2026_ARTICLES
@@ -23,7 +24,7 @@ from app.core.rag.reference_data import REFERENCE_ENTRIES
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s [%(levelname)s] %(message)s',
+    format="%(asctime)s [%(levelname)s] %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -43,10 +44,12 @@ def rebuild_legal_collection(skip_tkeaes: bool = False):
     if not skip_tkeaes:
         logger.info("\n[1/5] Indexing TK EAEUS text blocks...")
         try:
-            with open('backend/app/core/rag/data/tkeaes.txt', 'r', encoding='utf-8') as f:
+            with open(
+                "backend/app/core/rag/data/tkeaes.txt", "r", encoding="utf-8"
+            ) as f:
                 raw_text = f.read()
             blocks = LegalRAGIndexer.parse_legal_text_to_blocks(
-                raw_text, 'Таможенный кодекс Евразийского экономического союза'
+                raw_text, "Таможенный кодекс Евразийского экономического союза"
             )
             count = LegalRAGIndexer.index_blocks(blocks)
             logger.info(f"  -> Indexed {count} TK EAEUS blocks")
@@ -58,7 +61,9 @@ def rebuild_legal_collection(skip_tkeaes: bool = False):
         logger.info("\n[1/5] Skipping TK EAEUS (--skip-tkeaes)")
 
     # 2. NK RK 2026 original articles
-    logger.info(f"\n[2/5] Indexing {len(NK_RK_2026_ARTICLES)} original НК РК 2026 articles...")
+    logger.info(
+        f"\n[2/5] Indexing {len(NK_RK_2026_ARTICLES)} original НК РК 2026 articles..."
+    )
     try:
         count = LegalRAGIndexer.index_blocks(NK_RK_2026_ARTICLES)
         logger.info(f"  -> Indexed {count} original NK RK articles")
@@ -68,7 +73,9 @@ def rebuild_legal_collection(skip_tkeaes: bool = False):
         raise
 
     # 3. NK RK 2026 extra articles
-    logger.info(f"\n[3/5] Indexing {len(NK_EXTRA_ARTICLES)} extra НК РК 2026 articles...")
+    logger.info(
+        f"\n[3/5] Indexing {len(NK_EXTRA_ARTICLES)} extra НК РК 2026 articles..."
+    )
     try:
         count = LegalRAGIndexer.index_blocks(NK_EXTRA_ARTICLES)
         logger.info(f"  -> Indexed {count} extra NK RK articles")
@@ -147,11 +154,12 @@ def rebuild_hs_collection():
 
 def main():
     parser = argparse.ArgumentParser(
-        description='Reindex all knowledge base data into Qdrant'
+        description="Reindex all knowledge base data into Qdrant"
     )
     parser.add_argument(
-        '--skip-tkeaes', action='store_true',
-        help='Skip TK EAEUS text re-indexing (use if already indexed)'
+        "--skip-tkeaes",
+        action="store_true",
+        help="Skip TK EAEUS text re-indexing (use if already indexed)",
     )
     args = parser.parse_args()
 
@@ -179,5 +187,5 @@ def main():
     logger.info("=" * 60)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()

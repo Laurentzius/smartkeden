@@ -2,11 +2,19 @@ import pytest
 import asyncio
 from app.core.rag.indexer import LegalRAGIndexer
 from app.core.rag.service import LegalRAGService
+from app.core.rag.seams import QdrantVectorStorageAdapter, LocalEmbeddingModelAdapter
+from app.core.llm.generator import get_generator
 
+_local_legal_rag = LegalRAGService(
+    vector_storage=LegalRAGIndexer._vector_storage,
+    embedding_model=LegalRAGIndexer._embedding_model,
+    text_generator=get_generator(),
+)
 
 # ---------------------------------------------------------------------------
 # Local deduplication tests (replaces Blockify Distill)
 # ---------------------------------------------------------------------------
+
 
 def test_deduplicate_blocks_local_two_identical_same_article():
     """2 identical blocks with same article_number → merged into 1 block."""
@@ -210,6 +218,7 @@ def test_deduplicate_blocks_local_deterministic():
 # Blockify)
 # ---------------------------------------------------------------------------
 
+
 def test_index_blocks_deterministic_uuids():
     """index_blocks should use deterministic UUIDv5 point IDs based on
     document_title + article_number, so re-indexing the same blocks
@@ -272,11 +281,15 @@ def test_parse_and_index_document_with_local_fallback():
     dedup, producing indexable blocks."""
     LegalRAGIndexer.setup_collection(force_recreate=True)
 
-    raw_text = "Статья 500. Таможенные пошлины. Пошлины уплачиваются плательщиками в бюджет."
+    raw_text = (
+        "Статья 500. Таможенные пошлины. Пошлины уплачиваются плательщиками в бюджет."
+    )
     indexed_count = LegalRAGIndexer.parse_and_index_document(raw_text, "Кодекс РК")
     assert indexed_count == 1
 
     # Verify the indexed content is searchable
-    res = asyncio.run(LegalRAGService.query_legal_base("Расскажи про таможенные пошлины"))
+    res = asyncio.run(
+        _local_legal_rag.query_legal_base("Расскажи про таможенные пошлины")
+    )
     assert res is not None
     assert any("500" in chunk.article_number for chunk in res.supporting_laws)

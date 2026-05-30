@@ -1,26 +1,53 @@
 import logging
 from typing import List, Optional
 from pydantic import BaseModel, Field
-from app.core.vertex_client import GeminiVertexClient
+from app.core.llm.generator import get_generator
 from app.core.orchestrator.models import ChatMessage
 
 logger = logging.getLogger(__name__)
 
 
 class CustomsProfileAccumulator(BaseModel):
-    invoice_price: Optional[float] = Field(None, description="Invoice price / value of goods (числовое значение стоимости)")
-    currency: Optional[str] = Field(None, description="Three-letter currency code in uppercase (e.g. USD, EUR, RUB, KZT)")
-    transport_to_border: Optional[float] = Field(None, description="Transport cost to the RK/EAEU border in KZT (стоимость доставки до границы)")
-    duty_rate_percent: Optional[float] = Field(None, description="Customs duty rate in percent (ставка пошлины, например 10.0 для 10%)")
-    weight_kg: Optional[float] = Field(None, description="Gross or net weight of goods in kilograms (вес товара в кг)")
-    hs_code: Optional[str] = Field(None, description="10-digit customs HS Code / ТН ВЭД (10 цифр)")
-    is_subject_to_recycling_fee: Optional[bool] = Field(None, description="Whether the product is subject to recycling fee / утильсбор (true/false)")
+    invoice_price: Optional[float] = Field(
+        None, description="Invoice price / value of goods (числовое значение стоимости)"
+    )
+    currency: Optional[str] = Field(
+        None,
+        description="Three-letter currency code in uppercase (e.g. USD, EUR, RUB, KZT)",
+    )
+    transport_to_border: Optional[float] = Field(
+        None,
+        description="Transport cost to the RK/EAEU border in KZT (стоимость доставки до границы)",
+    )
+    duty_rate_percent: Optional[float] = Field(
+        None,
+        description="Customs duty rate in percent (ставка пошлины, например 10.0 для 10%)",
+    )
+    weight_kg: Optional[float] = Field(
+        None, description="Gross or net weight of goods in kilograms (вес товара в кг)"
+    )
+    hs_code: Optional[str] = Field(
+        None, description="10-digit customs HS Code / ТН ВЭД (10 цифр)"
+    )
+    is_subject_to_recycling_fee: Optional[bool] = Field(
+        None,
+        description="Whether the product is subject to recycling fee / утильсбор (true/false)",
+    )
 
 
 class ProfileExtractionResult(BaseModel):
-    accumulated_profile: CustomsProfileAccumulator = Field(..., description="The currently accumulated parameters after analyzing the conversation")
-    missing_fields: List[str] = Field(..., description="List of required parameters that are still missing (choose from: ['invoice_price', 'currency', 'duty_rate_percent'])")
-    next_question: str = Field(..., description="A polite, helpful conversational response in Russian (RU) asking the user to provide the next missing field, or summarizing the status if all are present.")
+    accumulated_profile: CustomsProfileAccumulator = Field(
+        ...,
+        description="The currently accumulated parameters after analyzing the conversation",
+    )
+    missing_fields: List[str] = Field(
+        ...,
+        description="List of required parameters that are still missing (choose from: ['invoice_price', 'currency', 'duty_rate_percent'])",
+    )
+    next_question: str = Field(
+        ...,
+        description="A polite, helpful conversational response in Russian (RU) asking the user to provide the next missing field, or summarizing the status if all are present.",
+    )
 
 
 class ProfileExtractor:
@@ -30,7 +57,9 @@ class ProfileExtractor:
     """
 
     @classmethod
-    def extract(cls, history: Optional[List[ChatMessage]], current_text: str) -> ProfileExtractionResult:
+    def extract(
+        cls, history: Optional[List[ChatMessage]], current_text: str
+    ) -> ProfileExtractionResult:
         """
         Processes the conversation history and the current user input to extract
         and update the accumulated customs profile parameters.
@@ -41,7 +70,7 @@ class ProfileExtractor:
             for msg in history:
                 role_label = "Пользователь" if msg.role == "user" else "Ассистент"
                 transcript_lines.append(f"{role_label}: {msg.content}")
-        
+
         # Add the current text as the latest message if it's not already at the end of the history
         transcript_lines.append(f"Пользователь: {current_text}")
         transcript = "\n".join(transcript_lines)
@@ -77,10 +106,11 @@ class ProfileExtractor:
         """
 
         try:
-            logger.info("Calling Gemini Vertex Client for structured profile extraction")
-            result = GeminiVertexClient.generate_structured_content(
-                prompt=prompt,
-                response_schema=ProfileExtractionResult
+            logger.info(
+                "Calling Gemini Vertex Client for structured profile extraction"
+            )
+            result = get_generator().generate_structured(
+                prompt=prompt, response_schema=ProfileExtractionResult
             )
             return result
         except Exception as e:
@@ -89,29 +119,36 @@ class ProfileExtractor:
             return cls._fallback_extraction(current_text, history)
 
     @classmethod
-    def _fallback_extraction(cls, text: str, history: Optional[List[ChatMessage]]) -> ProfileExtractionResult:
+    def _fallback_extraction(
+        cls, text: str, history: Optional[List[ChatMessage]]
+    ) -> ProfileExtractionResult:
         """
         Regex-based fallback extraction if LLM fails or is unavailable.
         """
         import re
+
         profile = CustomsProfileAccumulator()
-        
+
         # Simple extraction from history and text
         all_messages = []
         if history:
             all_messages.extend([m.content for m in history])
         all_messages.append(text)
-        
+
         # Reverse messages so we process the most recent ones first
         for msg_content in reversed(all_messages):
             # 1. Price & Currency (exclude 10-digit codes)
             if profile.invoice_price is None:
-                price_matches = re.finditer(r'(?:[\$\s]*)(\d+(?:\.\d+)?)(?:\s*)(USD|\$|EUR|€|RUB|руб|KZT|тг|тенге)?', msg_content, re.IGNORECASE)
+                price_matches = re.finditer(
+                    r"(?:[\$\s]*)(\d+(?:\.\d+)?)(?:\s*)(USD|\$|EUR|€|RUB|руб|KZT|тг|тенге)?",
+                    msg_content,
+                    re.IGNORECASE,
+                )
                 for pm in price_matches:
                     val_str = pm.group(1)
                     if len(val_str) == 10:
                         continue
-                    
+
                     profile.invoice_price = float(val_str)
                     curr_symbol = pm.group(2)
                     if curr_symbol:
@@ -130,13 +167,15 @@ class ProfileExtractor:
 
             # 2. HS Code
             if profile.hs_code is None:
-                hs_match = re.search(r'\b(\d{10})\b', msg_content)
+                hs_match = re.search(r"\b(\d{10})\b", msg_content)
                 if hs_match:
                     profile.hs_code = hs_match.group(1)
 
             # 3. Duty Rate
             if profile.duty_rate_percent is None:
-                rate_match = re.search(r'пошлин[аы]\s*(\d+(?:\.\d+)?)%', msg_content, re.IGNORECASE)
+                rate_match = re.search(
+                    r"пошлин[аы]\s*(\d+(?:\.\d+)?)%", msg_content, re.IGNORECASE
+                )
                 if rate_match:
                     profile.duty_rate_percent = float(rate_match.group(1))
 
@@ -165,7 +204,5 @@ class ProfileExtractor:
             q = "Все обязательные параметры собраны. Выполняю расчёт."
 
         return ProfileExtractionResult(
-            accumulated_profile=profile,
-            missing_fields=missing,
-            next_question=q
+            accumulated_profile=profile, missing_fields=missing, next_question=q
         )

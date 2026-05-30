@@ -65,7 +65,11 @@ class ConfigLoader:
             if not isinstance(entries, list):
                 continue
             for entry in entries:
-                if not isinstance(entry, dict) or "keywords" not in entry or "response" not in entry:
+                if (
+                    not isinstance(entry, dict)
+                    or "keywords" not in entry
+                    or "response" not in entry
+                ):
                     continue
                 keywords = entry["keywords"]
                 response = entry["response"]
@@ -89,14 +93,20 @@ class ConfigLoader:
                 "system_prompt": "Classify the user's customs-related message into exactly one intent.",
                 "examples": [
                     ["Какая ставка НДС на импорт в Казахстан?", "question_about_law"],
-                    ["Что говорит кодекс о таможенной стоимости?", "question_about_law"],
+                    [
+                        "Что говорит кодекс о таможенной стоимости?",
+                        "question_about_law",
+                    ],
                     ["классифицируй детскую игрушку Lego", "product_description"],
                     ["определи код ТН ВЭД для ноутбука", "product_description"],
-                    ["посчитай пошлину на товар 9503008900 из Китая", "calculation_request"],
+                    [
+                        "посчитай пошлину на товар 9503008900 из Китая",
+                        "calculation_request",
+                    ],
                     ["сколько будет растаможка iPhone 15 Pro", "calculation_request"],
                     ["загрузи новый закон о торговле", "document_upload"],
                     ["привет!", "greeting"],
                     ["здравствуйте", "greeting"],
-                ]
+                ],
             }
         return data

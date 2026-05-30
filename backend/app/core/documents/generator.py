@@ -5,6 +5,7 @@ from pydantic import BaseModel, Field
 
 logger = logging.getLogger(__name__)
 
+
 class InvoiceItemSchema(BaseModel):
     name: str = Field(..., description="Description of the goods")
     hs_code: str = Field(..., description="10-digit HS code (ТН ВЭД)")
@@ -12,11 +13,13 @@ class InvoiceItemSchema(BaseModel):
     unit: str = Field("pcs", description="Unit of measurement (pcs, kg, meters, etc.)")
     price: float = Field(..., description="Unit price in transaction currency")
 
+
 class CustomsInvoiceSchema(BaseModel):
     seller_name: str = Field(..., description="Name of the selling company (Vendor)")
     buyer_name: str = Field(..., description="Name of the buying company (Importer)")
     incoterms: str = Field("FCA Shenzhen", description="Incoterms delivery condition")
     items: List[InvoiceItemSchema] = Field(..., description="List of invoiced goods")
+
 
 class SupplyAgreementSchema(BaseModel):
     contract_no: str = Field(..., description="Unique agreement contract number")
@@ -25,6 +28,7 @@ class SupplyAgreementSchema(BaseModel):
     buyer_name: str = Field(..., description="Buying company name")
     incoterms: str = Field("DDP Almaty", description="Incoterms delivery condition")
 
+
 class DocumentGenerator:
     """
     Generates formal trade documents:
@@ -32,9 +36,11 @@ class DocumentGenerator:
     - Supply Agreements / Договоры поставки (Word / .docx)
     - Analytical party tables and Customs Declarations summaries (PDF)
     """
-    
+
     @staticmethod
-    def generate_invoice_excel(data: Union[CustomsInvoiceSchema, Dict[str, Any]], output_path: str) -> str:
+    def generate_invoice_excel(
+        data: Union[CustomsInvoiceSchema, Dict[str, Any]], output_path: str
+    ) -> str:
         """
         Generates a standard commercial invoice in Excel (.xlsx) format using CustomsInvoiceSchema.
         """
@@ -48,14 +54,14 @@ class DocumentGenerator:
                         hs_code=item.get("hs_code", "8543709000"),
                         qty=float(item.get("qty", 100)),
                         unit=item.get("unit", "pcs"),
-                        price=float(item.get("price", 10.0))
+                        price=float(item.get("price", 10.0)),
                     )
                 )
             schema = CustomsInvoiceSchema(
                 seller_name=data.get("seller_name", "Vendor Inc."),
                 buyer_name=data.get("buyer_name", "Kazakhstan Importer LLP"),
                 incoterms=data.get("incoterms", "FCA Shenzhen"),
-                items=resolved_items
+                items=resolved_items,
             )
         else:
             schema = data
@@ -64,6 +70,7 @@ class DocumentGenerator:
         try:
             import openpyxl
             from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+
             wb = openpyxl.Workbook()
             ws = wb.active
             ws.title = "Commercial Invoice"
@@ -75,18 +82,35 @@ class DocumentGenerator:
             font_header = Font(name="Calibri", size=10, bold=True, color="FFFFFF")
             font_data = Font(name="Calibri", size=10, bold=False)
             font_total = Font(name="Calibri", size=10, bold=True)
-            font_small_italic = Font(name="Calibri", size=8, italic=True, color="595959")
-            fill_header = PatternFill(start_color="1F4E78", end_color="1F4E78", fill_type="solid")
-            fill_zebra = PatternFill(start_color="F2F5F8", end_color="F2F5F8", fill_type="solid")
-            fill_total = PatternFill(start_color="E9EEF4", end_color="E9EEF4", fill_type="solid")
-            align_center = Alignment(horizontal="center", vertical="center", wrap_text=True)
+            font_small_italic = Font(
+                name="Calibri", size=8, italic=True, color="595959"
+            )
+            fill_header = PatternFill(
+                start_color="1F4E78", end_color="1F4E78", fill_type="solid"
+            )
+            fill_zebra = PatternFill(
+                start_color="F2F5F8", end_color="F2F5F8", fill_type="solid"
+            )
+            fill_total = PatternFill(
+                start_color="E9EEF4", end_color="E9EEF4", fill_type="solid"
+            )
+            align_center = Alignment(
+                horizontal="center", vertical="center", wrap_text=True
+            )
             align_left = Alignment(horizontal="left", vertical="center", wrap_text=True)
             align_right = Alignment(horizontal="right", vertical="center")
             border_thin = Side(border_style="thin", color="D9D9D9")
             border_medium = Side(border_style="medium", color="1F4E78")
             border_double = Side(border_style="double", color="1F4E78")
-            box_border = Border(left=border_thin, right=border_thin, top=border_thin, bottom=border_thin)
-            header_border = Border(left=border_thin, right=border_thin, top=border_medium, bottom=border_medium)
+            box_border = Border(
+                left=border_thin, right=border_thin, top=border_thin, bottom=border_thin
+            )
+            header_border = Border(
+                left=border_thin,
+                right=border_thin,
+                top=border_medium,
+                bottom=border_medium,
+            )
             total_border = Border(top=border_thin, bottom=border_double)
             # --- Page Header (Title & Metadata) ---
             ws.merge_cells("A1:G1")
@@ -112,26 +136,34 @@ class DocumentGenerator:
             ws.merge_cells("A3:C3")
             ws["A3"] = "SELLER / ПРОДАВЕЦ"
             ws["A3"].font = font_section
-            ws["A3"].fill = PatternFill(start_color="E9EEF4", end_color="E9EEF4", fill_type="solid")
+            ws["A3"].fill = PatternFill(
+                start_color="E9EEF4", end_color="E9EEF4", fill_type="solid"
+            )
             ws.merge_cells("A4:C4")
             ws["A4"] = schema.seller_name
             ws["A4"].font = font_total
             ws["A4"].alignment = align_left
             ws.merge_cells("A5:C6")
-            ws["A5"] = "Industrial District, Nanshan, Shenzhen, Guangdong, China\nTax ID: 91440300MA5EXXXX"
+            ws["A5"] = (
+                "Industrial District, Nanshan, Shenzhen, Guangdong, China\nTax ID: 91440300MA5EXXXX"
+            )
             ws["A5"].font = font_data
             ws["A5"].alignment = align_left
             # Buyer block
             ws.merge_cells("A8:C8")
             ws["A8"] = "BUYER / ПОКУПАТЕЛЬ"
             ws["A8"].font = font_section
-            ws["A8"].fill = PatternFill(start_color="E9EEF4", end_color="E9EEF4", fill_type="solid")
+            ws["A8"].fill = PatternFill(
+                start_color="E9EEF4", end_color="E9EEF4", fill_type="solid"
+            )
             ws.merge_cells("A9:C9")
             ws["A9"] = schema.buyer_name
             ws["A9"].font = font_total
             ws["A9"].alignment = align_left
             ws.merge_cells("A10:C11")
-            ws["A10"] = "Республика Казахстан, г. Алматы, Медеуский р-н, пр. Достык, 120\nБИН: 120440056123, Тел: +7 (727) 333-22-11"
+            ws["A10"] = (
+                "Республика Казахстан, г. Алматы, Медеуский р-н, пр. Достык, 120\nБИН: 120440056123, Тел: +7 (727) 333-22-11"
+            )
             ws["A10"].font = font_data
             ws["A10"].alignment = align_left
             # Delivery & Origin info on the right
@@ -145,7 +177,11 @@ class DocumentGenerator:
             ws["F9"].font = font_data
             ws["E10"] = "Currency / Валюта:"
             ws["E10"].font = font_total
-            ws["F10"] = data.get("items", [{}])[0].get("currency", "USD") if isinstance(data, dict) else "USD"
+            ws["F10"] = (
+                data.get("items", [{}])[0].get("currency", "USD")
+                if isinstance(data, dict)
+                else "USD"
+            )
             ws["F10"].font = font_data
             # --- Table Headers (Row 13) ---
             headers = [
@@ -155,7 +191,7 @@ class DocumentGenerator:
                 "Qty\nКол-во",
                 "Unit\nЕд.",
                 "Unit Price\nЦена за ед.",
-                "Total Amount\nСумма"
+                "Total Amount\nСумма",
             ]
             ws.row_dimensions[13].height = 28
             for col_idx, h in enumerate(headers, 1):
@@ -185,7 +221,7 @@ class DocumentGenerator:
                 c4.font = font_data
                 c4.alignment = align_center
                 c4.border = box_border
-                c4.number_format = '#,##0.00'
+                c4.number_format = "#,##0.00"
                 c5 = ws.cell(row=row_idx, column=5, value=item.unit)
                 c5.font = font_data
                 c5.alignment = align_center
@@ -194,14 +230,14 @@ class DocumentGenerator:
                 c6.font = font_data
                 c6.alignment = align_right
                 c6.border = box_border
-                c6.number_format = '#,##0.00'
+                c6.number_format = "#,##0.00"
                 amt = item.qty * item.price
                 total_sum += amt
                 c7 = ws.cell(row=row_idx, column=7, value=amt)
                 c7.font = font_data
                 c7.alignment = align_right
                 c7.border = box_border
-                c7.number_format = '#,##0.00'
+                c7.number_format = "#,##0.00"
                 # Zebra striping
                 if idx % 2 == 0:
                     for col_c in range(1, 8):
@@ -209,41 +245,65 @@ class DocumentGenerator:
                 row_idx += 1
             # --- Total Row ---
             ws.row_dimensions[row_idx].height = 24
-            ws.merge_cells(start_row=row_idx, start_column=1, end_row=row_idx, end_column=6)
-            total_label_cell = ws.cell(row=row_idx, column=1, value="TOTAL AMOUNT / ИТОГО К ОПЛАТЕ:")
+            ws.merge_cells(
+                start_row=row_idx, start_column=1, end_row=row_idx, end_column=6
+            )
+            total_label_cell = ws.cell(
+                row=row_idx, column=1, value="TOTAL AMOUNT / ИТОГО К ОПЛАТЕ:"
+            )
             total_label_cell.font = font_total
-            total_label_cell.alignment = Alignment(horizontal="right", vertical="center")
+            total_label_cell.alignment = Alignment(
+                horizontal="right", vertical="center"
+            )
             # Apply borders & fills to merged total label cells
             for col_c in range(1, 7):
-                ws.cell(row=row_idx, column=col_c).border = Border(top=border_thin, bottom=border_thin)
+                ws.cell(row=row_idx, column=col_c).border = Border(
+                    top=border_thin, bottom=border_thin
+                )
                 ws.cell(row=row_idx, column=col_c).fill = fill_total
             total_val_cell = ws.cell(row=row_idx, column=7, value=total_sum)
             total_val_cell.font = font_total
             total_val_cell.fill = fill_total
             total_val_cell.alignment = align_right
             total_val_cell.border = total_border
-            total_val_cell.number_format = '#,##0.00'
+            total_val_cell.number_format = "#,##0.00"
             # --- Signatures Block ---
             row_idx += 3
-            ws.merge_cells(start_row=row_idx, start_column=1, end_row=row_idx, end_column=3)
-            ws.cell(row=row_idx, column=1, value="For Seller / От имени Продавца:").font = font_total
-            ws.merge_cells(start_row=row_idx, start_column=5, end_row=row_idx, end_column=7)
-            ws.cell(row=row_idx, column=5, value="For Buyer / От имени Покупателя:").font = font_total
+            ws.merge_cells(
+                start_row=row_idx, start_column=1, end_row=row_idx, end_column=3
+            )
+            ws.cell(
+                row=row_idx, column=1, value="For Seller / От имени Продавца:"
+            ).font = font_total
+            ws.merge_cells(
+                start_row=row_idx, start_column=5, end_row=row_idx, end_column=7
+            )
+            ws.cell(
+                row=row_idx, column=5, value="For Buyer / От имени Покупателя:"
+            ).font = font_total
             row_idx += 2
-            ws.cell(row=row_idx, column=1, value="___________________________________").font = font_data
-            ws.cell(row=row_idx, column=5, value="___________________________________").font = font_data
+            ws.cell(
+                row=row_idx, column=1, value="___________________________________"
+            ).font = font_data
+            ws.cell(
+                row=row_idx, column=5, value="___________________________________"
+            ).font = font_data
             row_idx += 1
-            ws.cell(row=row_idx, column=1, value="Signature (Подпись) / L.S. (М.П.)").font = font_small_italic
-            ws.cell(row=row_idx, column=5, value="Signature (Подпись) / L.S. (М.П.)").font = font_small_italic
+            ws.cell(
+                row=row_idx, column=1, value="Signature (Подпись) / L.S. (М.П.)"
+            ).font = font_small_italic
+            ws.cell(
+                row=row_idx, column=5, value="Signature (Подпись) / L.S. (М.П.)"
+            ).font = font_small_italic
             # --- Column Width Adjustments ---
             column_widths = {
-                "A": 6,   # No
+                "A": 6,  # No
                 "B": 42,  # Description
                 "C": 15,  # HS Code
                 "D": 10,  # Qty
-                "E": 8,   # Unit
+                "E": 8,  # Unit
                 "F": 15,  # Price
-                "G": 18   # Total Amount
+                "G": 18,  # Total Amount
             }
             for col, width in column_widths.items():
                 ws.column_dimensions[col].width = width
@@ -257,8 +317,11 @@ class DocumentGenerator:
             with open(output_path, "w", encoding="utf-8") as f:
                 f.write(f"Invoice Schema: {schema.model_dump_json()}")
             return output_path
+
     @staticmethod
-    def generate_contract_word(data: Union[SupplyAgreementSchema, Dict[str, Any]], output_path: str) -> str:
+    def generate_contract_word(
+        data: Union[SupplyAgreementSchema, Dict[str, Any]], output_path: str
+    ) -> str:
         """
         Generates a standard foreign trade supply agreement in Word (.docx) format using SupplyAgreementSchema.
         """
@@ -268,7 +331,7 @@ class DocumentGenerator:
                 contract_date=data.get("contract_date", "27 мая 2026 г."),
                 seller_name=data.get("seller_name", "Vendor Inc."),
                 buyer_name=data.get("buyer_name", "Kazakhstan Importer LLP"),
-                incoterms=data.get("incoterms", "DDP Almaty")
+                incoterms=data.get("incoterms", "DDP Almaty"),
             )
         else:
             schema = data
@@ -277,20 +340,20 @@ class DocumentGenerator:
         try:
             import docx
             from docx import Document
-            
+
             doc = docx.Document()
             doc.add_heading("ДОГОВОР ПОСТАВКИ № " + schema.contract_no, level=1)
-            
+
             p = doc.add_paragraph()
             p.add_run("г. Алматы\t\t\t\t\tДата: ").bold = True
             p.add_run(schema.contract_date)
-            
+
             doc.add_heading("1. ПРЕДМЕТ ДОГОВОРА", level=2)
             doc.add_paragraph(
                 f"Продавец обязуется поставить, а Покупатель принять и оплатить товар в соответствии "
                 f"со спецификациями к настоящему договору на условиях {schema.incoterms}."
             )
-            
+
             os.makedirs(os.path.dirname(output_path), exist_ok=True)
             doc.save(output_path)
             return output_path

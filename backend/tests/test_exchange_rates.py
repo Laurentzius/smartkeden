@@ -2,6 +2,7 @@ import pytest
 from unittest.mock import patch, MagicMock
 from urllib.error import URLError
 from app.services.exchange_rates import NBKExchangeRatesService
+
 MOCK_XML_DATA = """<?xml version="1.0" encoding="utf-8"?>
 <rates>
   <item>
@@ -26,6 +27,8 @@ MOCK_XML_DATA = """<?xml version="1.0" encoding="utf-8"?>
   </item>
 </rates>
 """.encode("utf-8")
+
+
 def test_nbk_exchange_rates_fetching_mocked():
     # Force cache clear
     NBKExchangeRatesService._cache = {}
@@ -48,12 +51,16 @@ def test_nbk_exchange_rates_fetching_mocked():
         # Check individual fetch
         usd_rate = NBKExchangeRatesService.get_rate("USD")
         assert usd_rate == 460.0
+
+
 def test_nbk_exchange_rates_failure_fallback():
     # Force cache clear
     NBKExchangeRatesService._cache = {}
     NBKExchangeRatesService._cache_date = None
     # Mock urlopen to raise an exception
-    with patch("urllib.request.urlopen", side_effect=URLError("Network connection failed")):
+    with patch(
+        "urllib.request.urlopen", side_effect=URLError("Network connection failed")
+    ):
         # Act: should not crash, but fallback to hardcoded minimal values
         rates = NBKExchangeRatesService.fetch_rates()
         # Assert fallback rates are active and reasonable

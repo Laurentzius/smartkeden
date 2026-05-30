@@ -76,6 +76,27 @@ flowchart LR
         SA_Admin[Admin Panel]
     end
 
+    subgraph KnowledgeMgmt["Knowledge Management API"]
+        KM_Auth[Admin API Key Auth]
+        KM_CRUD[CRUD Laws & HS Codes]
+        KM_Embed[Generate Embeddings]
+        KM_Reindex[Bulk Reindex Operations]
+        KM_Audit[Audit Logging]
+    end
+
+    subgraph ConfigService["Configuration Service"]
+        CS_Rates[Rate Versioning & Lookup]
+        CS_Admin[Admin Rate API]
+        CS_Audit[Rate Change Audit]
+    end
+
+    subgraph RulesEngine["Classification Rules Engine"]
+        RE_Rules[Dynamic Rules Database]
+        RE_Apply[Rules Application Engine]
+        RE_Attributes[Structured Attribute Extraction]
+        RE_Admin[Admin Rules API]
+    end
+
     subgraph VectorDB["Qdrant Vector DB"]
         Q_Legal[(legal_regulations_kz)]
         Q_HS[(hs_code_directory)]
@@ -105,6 +126,23 @@ flowchart LR
     ING_Store --> Q_Legal
     RAG_Retrieve --> Q_Legal
     HS_Vector --> Q_HS
+    
+    %% Knowledge Management API Connections
+    KM_Embed --> Q_Legal
+    KM_Embed --> Q_HS
+    KM_Reindex --> Q_Legal
+    KM_Reindex --> Q_HS
+
+    %% Configuration Service Connections
+    CS_Rates -- "get_rate(vat, date)" --> Calc_Math
+    CS_Rates -- "get_rate(mci, year)" --> Calc_Math
+    CS_Rates -- "get_rate(vat)" --> RAG_Synth
+
+    %% Classification Rules Engine Connections
+    RE_Attributes -- "extracted_attributes" --> RE_Apply
+    RE_Rules -- "active_rules" --> RE_Apply
+    RE_Apply -- "refined_candidates" --> HS_Select
+    HS_Vision -- "vision_data" --> RE_Attributes
 
     %% Workspace Integration
     WS_Input --> WS_Extract
@@ -219,6 +257,32 @@ flowchart LR
 * **Payload:** `{ calculation_id }`
 * **Consumer:** ReportService fetches full calculation data from history, builds HTML, renders PDF via WeasyPrint.
 
+### 16. Knowledge Management API → Qdrant (Data Dependency)
+* **Trigger Event:** Admin creates/updates/deletes legal document or HS code via admin API.
+* **Payload:** `{ collection: "legal_regulations_kz" | "hs_code_directory", operation: "upsert" | "delete", document: {...} }`
+* **Consumer:** Qdrant vector database updated with new embeddings. Existing RAG and HS classification flows automatically use updated data on next query.
+* **Note:** This is a data dependency, not an event boundary. No direct flow-to-flow communication occurs.
+
+### 17. Configuration Service → Customs Calculation Flow (Data Dependency)
+* **Trigger Event:** Calculation Engine requests rate for specific date via `config_service.get_rate("import_vat", declaration_date)`.
+* **Payload:** `{ rate_type: "import_vat", effective_date: "2026-05-30" }`
+* **Consumer:** Configuration Service returns versioned rate value (e.g., `0.16` for 2026). Calculation Engine uses this rate instead of hardcoded defaults.
+* **Fallback:** If Config Service unavailable, Calculation Engine falls back to `business_rules.py` defaults.
+* **Note:** This is a synchronous data dependency, not an event boundary.
+
+### 18. Configuration Service → Legal RAG Flow (Data Dependency)
+* **Trigger Event:** RAG Service queries current rates for citation in legal responses.
+* **Payload:** `{ rate_type: "import_vat" }`
+* **Consumer:** RAG Service includes accurate rate in synthesized legal advice (e.g., "Согласно НК РК, ставка НДС на импорт составляет 16%").
+* **Note:** This is a synchronous data dependency, not an event boundary.
+
+### 19. Classification Rules Engine → HS Code Classification Flow (Data Dependency)
+* **Trigger Event:** HS Classifier extracts product attributes and applies classification rules.
+* **Payload:** `{ product_description, image_bytes, extracted_attributes }`
+* **Consumer:** Rules Engine returns refined HS code candidates based on dynamic rules (e.g., "материал: натуральный мех >50% → группа 4303 вместо 9503").
+* **Clarifying Questions:** If required attributes missing, Rules Engine returns questions for user (e.g., "Из какого материала сделана игрушка?").
+* **Note:** This is a synchronous data dependency integrated into HS Classifier workflow.
+
 ---
 
 ## Implementation Trace & Flow Map
@@ -238,4 +302,7 @@ flowchart LR
 * **Document Parsing & OCR:** `backend/app/services/parser/` → Flow Document: `flows/integrations/document_parsing_flow.md`
 * **Risk Audit:** `backend/app/services/risk_audit/` → Flow Document: `flows/features/risk_audit_flow.md`
 * **Report Export (PDF):** `backend/app/services/report/` → Flow Document: `flows/features/report_export_flow.md`
+* **Knowledge Management API:** `backend/app/api/admin.py` + `backend/app/core/admin/` → Flow Document: `flows/features/knowledge-management-api.md`
+* **Configuration Service:** `backend/app/core/config_service.py` + `backend/app/api/admin_config.py` → Flow Document: `flows/features/configuration-service-flow.md`
+* **Classification Rules Engine:** `backend/app/core/classification/rules_engine.py` + `backend/app/api/admin_rules.py` → Flow Document: `flows/features/classification-rules-engine-flow.md`
 * **Behavior Tests:** `backend/tests/` → Covered globally in target traces.

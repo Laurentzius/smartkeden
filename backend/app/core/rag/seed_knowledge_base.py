@@ -30,7 +30,7 @@ def seed_additional_hs_codes(entries: List[Dict[str, Any]]) -> int:
     Index additional HS code entries into the hs_code_directory collection.
     Uses the same pattern as LegalRAGIndexer.seed_hs_code_directory().
     """
-    client = LegalRAGIndexer.get_client()
+    # Use the indexer's vector storage seam for upserting
     LegalRAGIndexer.setup_hs_code_collection()
 
     points: List[PointStruct] = []
@@ -62,7 +62,8 @@ def seed_additional_hs_codes(entries: List[Dict[str, Any]]) -> int:
     logger.info(f"Upserting {len(points)} additional HS code points into Qdrant "
                 f"collection: {LegalRAGIndexer.HS_CODE_COLLECTION_NAME}")
     if points:
-        client.upsert(
+    if points:
+        LegalRAGIndexer._vector_storage.upsert_points(
             collection_name=LegalRAGIndexer.HS_CODE_COLLECTION_NAME,
             points=points,
         )

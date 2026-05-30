@@ -1,0 +1,57 @@
+[
+  {
+    "hs_code": "9503008900",
+    "product_name_ru": "Игрушки детские прочие",
+    "product_name_en": "Other children's toys",
+    "duty_rate_percent": 5.0,
+    "excise_rate_percent": 0.0,
+    "is_subject_to_recycling_fee": false,
+    "section": "XX",
+    "group": 95,
+    "reasoning_notes": "Разные промышленные товары; игрушки, игры и спортивный инвентарь"
+  },
+  {
+    "hs_code": "8471300000",
+    "product_name_ru": "Портативные цифровые вычислительные машины",
+    "product_name_en": "Portable digital computers",
+    "duty_rate_percent": 0.0,
+    "excise_rate_percent": 0.0,
+    "is_subject_to_recycling_fee": true,
+    "section": "XVI",
+    "group": 84,
+    "reasoning_notes": "Машины, оборудование и механизмы; электротехническое оборудование"
+  },
+  {
+    "hs_code": "6204623900",
+    "product_name_ru": "Брюки женские текстильные (хлопок)",
+    "product_name_en": "Women's trousers cotton",
+    "duty_rate_percent": 12.0,
+    "excise_rate_percent": 0.0,
+    "is_subject_to_recycling_fee": false,
+    "section": "XI",
+    "group": 62,
+    "reasoning_notes": "Текстильные материалы и текстильные изделия; одежда и принадлежности"
+  },
+  {
+    "hs_code": "8703231981",
+    "product_name_ru": "Автомобили легковые с ДВС 1500-3000 см³",
+    "product_name_en": "Passenger cars ICE 1500-3000cc",
+    "duty_rate_percent": 15.0,
+    "excise_rate_percent": 0.0,
+    "is_subject_to_recycling_fee": true,
+    "section": "XVII",
+    "group": 87,
+    "reasoning_notes": "Средства наземного транспорта; автомобили, тракторы"
+  },
+  {
+    "hs_code": "4011100009",
+    "product_name_ru": "Шины пневматические для легковых автомобилей",
+    "product_name_en": "Passenger cars",
+    "duty_rate_percent": 10.0,
+    "excise_rate_percent": 0.0,
+    "is_subject_to_recycling_fee": true,
+    "section": "VII",
+    "group": 40,
+    "reasoning_notes": "Пластмассы и изделия из них; каучук и резиновые изделия"
+  }
+]

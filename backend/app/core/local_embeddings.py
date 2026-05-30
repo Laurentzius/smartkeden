@@ -29,6 +29,7 @@ class LocalEmbeddingModel:
         if cls._available is None:
             try:
                 from sentence_transformers import SentenceTransformer  # noqa: F401
+
                 cls._available = True
             except ImportError:
                 cls._available = False
@@ -42,7 +43,9 @@ class LocalEmbeddingModel:
         if cls._model is None:
             from sentence_transformers import SentenceTransformer
 
-            logger.info("Loading local embedding model: %s", settings.EMBEDDING_MODEL_NAME)
+            logger.info(
+                "Loading local embedding model: %s", settings.EMBEDDING_MODEL_NAME
+            )
             cls._model = SentenceTransformer(settings.EMBEDDING_MODEL_NAME)
             cls._model.max_seq_length = 512
         return cls._model

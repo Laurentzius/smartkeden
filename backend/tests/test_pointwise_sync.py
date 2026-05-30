@@ -27,13 +27,13 @@ def test_pointwise_delta_identical_doc():
         {
             "document_title": doc_title,
             "article_number": "Статья 1",
-            "content_quote": "Текст первого блока."
+            "content_quote": "Текст первого блока.",
         },
         {
             "document_title": doc_title,
             "article_number": "Статья 2",
-            "content_quote": "Текст второго блока."
-        }
+            "content_quote": "Текст второго блока.",
+        },
     ]
 
     # Initial Indexing
@@ -58,13 +58,13 @@ def test_pointwise_delta_delete_paragraph():
         {
             "document_title": doc_title,
             "article_number": "Статья 5",
-            "content_quote": "Определение экспорта."
+            "content_quote": "Определение экспорта.",
         },
         {
             "document_title": doc_title,
             "article_number": "Статья 6",
-            "content_quote": "Правила вывоза товаров."
-        }
+            "content_quote": "Правила вывоза товаров.",
+        },
     ]
 
     # First update
@@ -76,7 +76,7 @@ def test_pointwise_delta_delete_paragraph():
         {
             "document_title": doc_title,
             "article_number": "Статья 5",
-            "content_quote": "Определение экспорта."
+            "content_quote": "Определение экспорта.",
         }
     ]
 
@@ -95,7 +95,7 @@ def test_pointwise_delta_add_paragraph():
         {
             "document_title": doc_title,
             "article_number": "Статья 10",
-            "content_quote": "Основные понятия налога."
+            "content_quote": "Основные понятия налога.",
         }
     ]
 
@@ -108,18 +108,18 @@ def test_pointwise_delta_add_paragraph():
         {
             "document_title": doc_title,
             "article_number": "Статья 10",
-            "content_quote": "Основные понятия налога."
+            "content_quote": "Основные понятия налога.",
         },
         {
             "document_title": doc_title,
             "article_number": "Статья 11",
-            "content_quote": "Ставка налога 12 процентов."
+            "content_quote": "Ставка налога 12 процентов.",
         },
         {
             "document_title": doc_title,
             "article_number": "Статья 12",
-            "content_quote": "Сроки уплаты налога."
-        }
+            "content_quote": "Сроки уплаты налога.",
+        },
     ]
 
     res2 = LegalRAGIndexer.update_document_index(blocks_updated, doc_title)
