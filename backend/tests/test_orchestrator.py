@@ -1121,3 +1121,345 @@ async def test_questionnaire_exits_on_non_product_intent(monkeypatch):
     # pipeline_results should NOT have pending questionnaire
     qr2 = data2.get("pipeline_results") or {}
     assert qr2.get("questionnaire") is None
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  Agentic RAG Customs Guidance Tests
+#  (Section 10 of agentic_rag_customs_clearance_flow.md)
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+def test_customs_guidance_intent_in_enum():
+    """IntentType must include customs_guidance."""
+    assert hasattr(IntentType, "customs_guidance")
+    assert IntentType.customs_guidance.value == "customs_guidance"
+
+
+def test_fallback_classify_case_specific_customs():
+    """Case-specific import query routes to customs_guidance in fallback."""
+    result = IntentClassifier._fallback_classify(
+        "какие документы нужны для растаможки ноутбука из Китая?"
+    )
+    assert result.intent == IntentType.customs_guidance
+    assert result.confidence >= 0.7
+
+
+def test_fallback_classify_plain_legal_stays_legal():
+    """Plain legal question without case-specific goods stays question_about_law."""
+    result = IntentClassifier._fallback_classify(
+        "Какая ставка НДС на импорт в Казахстан?"
+    )
+    assert result.intent == IntentType.question_about_law
+
+
+def test_is_case_specific_customs_query_true():
+    """_is_case_specific_customs_query returns True for goods + clearance context."""
+    assert _wn._is_case_specific_customs_query(
+        "сколько будет растаможка ноутбука за 500 долларов"
+    )
+    assert _wn._is_case_specific_customs_query(
+        "какие ограничения на ввоз детских игрушек"
+    )
+    assert _wn._is_case_specific_customs_query(
+        "нужна ли лицензия на импорт медицинского оборудования"
+    )
+
+def test_is_case_specific_customs_query_false():
+    """_is_case_specific_customs_query returns False for plain legal/rate questions."""
+    assert not _wn._is_case_specific_customs_query(
+        "какая ставка НДС на импорт в Казахстан?"
+    )
+    assert not _wn._is_case_specific_customs_query(
+        "что говорит кодекс о таможенной стоимости"
+    )
+    assert not _wn._is_case_specific_customs_query("привет")
+    assert not _wn._is_case_specific_customs_query("")
+    assert not _wn._is_case_specific_customs_query(
+        "какой размер таможенного сбора"
+    )
+
+def test_extract_customs_facts_value_and_currency():
+    """_extract_customs_facts parses customs value and currency."""
+    facts = _wn._extract_customs_facts("растаможка ноутбука за 500 долларов из Китая")
+    assert facts["customs_value"] == 500.0
+    assert facts["currency"] == "USD"
+    assert facts["country_of_export"] == "CN"
+
+
+def test_extract_customs_facts_hs_code():
+    """_extract_customs_facts parses HS code from text."""
+    facts = _wn._extract_customs_facts("посчитай пошлину на товар 9503008900 из Китая")
+    assert facts["hs_code"] == "9503008900"
+    assert facts["country_of_export"] == "CN"
+
+
+def test_extract_customs_facts_euro():
+    """_extract_customs_facts parses EUR values."""
+    facts = _wn._extract_customs_facts("растаможка авто за 15000 евро из Германии")
+    assert facts["customs_value"] == 15000.0
+    assert facts["currency"] == "EUR"
+    assert facts["country_of_export"] == "DE"
+
+
+def test_extract_customs_facts_missing_fields():
+    """_extract_customs_facts returns None for missing fields."""
+    facts = _wn._extract_customs_facts("какие документы нужны для растаможки")
+    assert facts["customs_value"] is None
+    assert facts["currency"] is None
+    assert facts["hs_code"] is None
+
+
+def test_identify_missing_calc_fields():
+    """Missing customs_value/currency block calculation mode."""
+    facts = {"customs_value": None, "currency": None, "hs_code": None}
+    missing = _wn._identify_missing_fields(facts, ["calculate_payments"])
+    assert "customs_value" in missing
+    assert "currency" in missing
+
+
+def test_identify_missing_calc_fields_present():
+    """When fields are present, no missing calc fields reported."""
+    facts = {"customs_value": 500.0, "currency": "USD", "hs_code": "9503008900"}
+    missing = _wn._identify_missing_fields(facts, ["calculate_payments"])
+    assert "customs_value" not in missing
+    assert "currency" not in missing
+
+
+def test_classify_risk_critical_children_goods():
+    """Children's goods should escalate to CRITICAL risk."""
+    assert _wn._classify_risk("ввоз детских игрушек из Китая", []) == "CRITICAL"
+
+
+def test_classify_risk_critical_food():
+    """Food products should escalate to CRITICAL risk."""
+    assert _wn._classify_risk("импорт продуктов питания из Турции", []) == "CRITICAL"
+
+
+def test_classify_risk_critical_medicine():
+    """Medical equipment should escalate to CRITICAL risk."""
+    assert _wn._classify_risk("ввоз медицинского оборудования", []) == "CRITICAL"
+
+
+def test_classify_risk_critical_weapons():
+    """Weapons should escalate to CRITICAL risk."""
+    assert _wn._classify_risk("импорт оружия", []) == "CRITICAL"
+
+
+def test_classify_risk_low_ordinary():
+    """Ordinary goods should be LOW risk."""
+    assert _wn._classify_risk("ввоз текстиля из Китая", []) == "LOW"
+    assert _wn._classify_risk("растаможка мебели", []) == "LOW"
+
+
+def test_classify_risk_high_from_hs_chapter():
+    """HS code in high-risk chapter triggers HIGH risk."""
+    candidates = [{"hs_code": "2203000000", "product_name_ru": "Пиво"}]
+    assert _wn._classify_risk("пиво", candidates) == "HIGH"
+
+
+def test_determine_requested_modes_classification():
+    """Text asking for HS code triggers classify_goods mode."""
+    modes = _wn._determine_requested_modes("определи код тн вэд для ноутбука")
+    assert "classify_goods" in modes
+
+
+def test_determine_requested_modes_calculation():
+    """Text asking for payment triggers calculate_payments mode."""
+    modes = _wn._determine_requested_modes("сколько будет растаможка телефона")
+    assert "calculate_payments" in modes
+
+
+def test_determine_requested_modes_restrictions():
+    """Text about restrictions triggers check_restrictions mode."""
+    modes = _wn._determine_requested_modes("какие ограничения на ввоз лекарств")
+    assert "check_restrictions" in modes
+
+
+def test_determine_requested_modes_fallback_to_law():
+    """Unclear text falls back to answer_from_law mode."""
+    modes = _wn._determine_requested_modes("расскажи про таможню")
+    assert "answer_from_law" in modes
+
+
+def test_assemble_guidance_payload_basic():
+    """_assemble_guidance_payload returns valid dict with required fields."""
+    payload = _wn._assemble_guidance_payload(
+        intent="customs_guidance",
+        text="тест",
+        facts={"customs_value": 500.0, "currency": "USD"},
+        modes=["answer_from_law"],
+        missing=[],
+        hs_result=None,
+        calc_result=None,
+        rag_sources=None,
+        risk_level="LOW",
+    )
+    assert payload["answer_type"] == "customs_import_guidance"
+    assert "confidence" in payload
+    assert "risk_level" in payload
+    assert "needs_human_review" in payload
+    assert "missing_fields" in payload
+    assert "candidate_hs_codes" in payload
+    assert "estimated_payments" in payload
+    assert "critic_warnings" in payload
+
+
+def test_assemble_guidance_payload_missing_fields_triggers_review():
+    """Missing fields should set needs_human_review=True."""
+    payload = _wn._assemble_guidance_payload(
+        intent="customs_guidance",
+        text="тест",
+        facts={},
+        modes=["calculate_payments"],
+        missing=["customs_value", "currency"],
+        hs_result=None,
+        calc_result=None,
+        rag_sources=None,
+        risk_level="LOW",
+    )
+    assert payload["needs_human_review"] is True
+    assert payload["confidence"] == "low"
+    assert "customs_value" in payload["missing_fields"]
+
+
+def test_assemble_guidance_payload_critical_risk():
+    """CRITICAL risk should set needs_human_review=True and add warning."""
+    payload = _wn._assemble_guidance_payload(
+        intent="customs_guidance",
+        text="игрушки",
+        facts={},
+        modes=["answer_from_law"],
+        missing=[],
+        hs_result=None,
+        calc_result=None,
+        rag_sources=None,
+        risk_level="CRITICAL",
+    )
+    assert payload["needs_human_review"] is True
+    assert payload["risk_level"] == "CRITICAL"
+    assert any("Критическая" in w for w in payload["critic_warnings"])
+
+
+def test_assemble_guidance_payload_no_calc_without_fields():
+    """Missing calc fields → estimated_payments is None in payload."""
+    payload = _wn._assemble_guidance_payload(
+        intent="customs_guidance",
+        text="сколько растаможка",
+        facts={},
+        modes=["calculate_payments"],
+        missing=["customs_value", "currency", "hs_code_or_rate"],
+        hs_result=None,
+        calc_result=None,
+        rag_sources=None,
+        risk_level="LOW",
+    )
+    assert payload["estimated_payments"] is None
+    assert any("Расчет платежей невозможен" in w for w in payload["critic_warnings"])
+
+
+def test_assemble_guidance_payload_with_calc_result():
+    """When calc_result provided, it populates estimated_payments."""
+    calc_result = {
+        "customs_value_kzt": 250000.0,
+        "customs_fee_kzt": 20000.0,
+        "customs_duty_kzt": 30000.0,
+        "vat_base_kzt": 300000.0,
+        "import_vat_kzt": 48000.0,
+        "total_payments_kzt": 98000.0,
+    }
+    payload = _wn._assemble_guidance_payload(
+        intent="customs_guidance",
+        text="расчет",
+        facts={"customs_value": 500.0, "currency": "USD", "hs_code": "8471300000"},
+        modes=["calculate_payments"],
+        missing=[],
+        hs_result=None,
+        calc_result=calc_result,
+        rag_sources=None,
+        risk_level="LOW",
+    )
+    assert payload["estimated_payments"] is not None
+    assert payload["estimated_payments"]["total_payments_kzt"] == 98000.0
+
+
+@pytest.mark.asyncio
+async def test_customs_guidance_endpoint_routing(monkeypatch):
+    """Case-specific import query routes to customs_guidance intent with structured payload."""
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.core.local_embeddings import LocalEmbeddingModel
+    from app.core.admin.audit_logger import AuditLogger
+
+    def fail_audit(**kwargs):
+        raise RuntimeError("audit unavailable")
+
+    monkeypatch.setattr(AuditLogger, "log", fail_audit)
+
+    monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
+
+    # Force the fallback classifier (no Gemini) — detects case-specific query
+    client = TestClient(app)
+    resp = client.post(
+        "/api/orchestrate",
+        data={"text": "сколько будет растаможка ноутбука из Китая за 500 долларов"},
+    )
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["intent"] == "customs_guidance"
+    pr = data.get("pipeline_results") or {}
+    guidance = pr.get("customs_guidance")
+    assert guidance is not None, f"pipeline_results: {pr}"
+    assert guidance["answer_type"] == "customs_import_guidance"
+    assert "needs_human_review" in guidance
+
+
+@pytest.mark.asyncio
+async def test_plain_legal_question_stays_legal_rag(monkeypatch):
+    """Plain legal question without case-specific goods stays legal RAG path."""
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.core.local_embeddings import LocalEmbeddingModel
+
+    monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
+
+    client = TestClient(app)
+    resp = client.post(
+        "/api/orchestrate",
+        data={"text": "какая ставка НДС на импорт в Казахстан?"},
+    )
+    assert resp.status_code == 200
+    data = resp.json()
+    # Plain legal question should NOT become customs_guidance
+    assert data["intent"] != "customs_guidance"
+    assert data["intent"] in (
+        "question_about_law",
+        "unclear",
+        "greeting",
+        "calculation_request",
+        "product_description",
+    )
+
+
+def test_faq_keyword_does_not_swallow_case_specific():
+    """Broad FAQ keyword (таможенный сбор) should NOT prevent case-specific routing."""
+    # The query mentions a broad FAQ keyword AND specific goods → should be case-specific
+    assert _wn._is_case_specific_customs_query(
+        "какой таможенный сбор за растаможку ноутбука из Китая"
+    )
+
+
+def test_critical_goods_escalate_risk():
+    """All critical goods categories produce CRITICAL risk level."""
+    critical_queries = [
+        "ввоз детских игрушек",
+        "импорт продуктов питания",
+        "медицинское оборудование из Германии",
+        "химические реактивы для лаборатории",
+        "импорт оружия",
+        "перевозка живых животных",
+        "ввоз растений и семян",
+        "драгоценные металлы и ювелирные изделия",
+    ]
+    for query in critical_queries:
+        risk = _wn._classify_risk(query, [])
+        assert risk == "CRITICAL", f"Query '{query}' should be CRITICAL, got {risk}"

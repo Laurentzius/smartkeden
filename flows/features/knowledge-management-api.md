@@ -247,14 +247,14 @@ flowchart LR
 
 | Layer | Behavior | File | Status |
 |-------|----------|------|--------|
-| Unit | Schema validation | `tests/test_admin_schemas.py` | Pending |
-| Unit | Admin auth middleware | `tests/test_admin_auth.py` | Pending |
-| Unit | Audit logging | `tests/test_audit_logger.py` | Pending |
-| Integration | Create law document | `tests/test_admin_laws.py` | Pending |
-| Integration | Update HS code | `tests/test_admin_hs_codes.py` | Pending |
-| Integration | Delete document | `tests/test_admin_delete.py` | Pending |
-| Integration | Reindex operation | `tests/test_admin_reindex.py` | Pending |
-| E2E | Full CRUD workflow | `tests/test_admin_e2e.py` | Pending |
+| Unit | Schema validation | `backend/tests/test_admin_schemas.py` | **PASSED** |
+| Unit | Admin auth middleware | `backend/tests/test_admin_auth.py` | **PASSED** |
+| Unit | Audit logging | `backend/tests/test_audit_logger.py` | **PASSED** |
+| Integration | Create law document | `backend/tests/test_admin_laws.py` | **PASSED** |
+| Integration | Update HS code | `backend/tests/test_admin_hs_codes.py` | **PASSED** |
+| Integration | Delete document | `backend/tests/test_admin_laws.py` | **PASSED** |
+| Integration | Reindex operation | `backend/tests/test_admin_reindex.py` | **PASSED** |
+| E2E | Full CRUD workflow | `backend/tests/test_admin_laws.py` | **PASSED** |
 
 ## 11. Implementation Plan
 

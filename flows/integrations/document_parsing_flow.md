@@ -207,17 +207,17 @@ flowchart LR
 
 | Layer | Behavior | File | Status |
 | :--- | :--- | :--- | :--- |
-| Unit | Text-based PDF → Markdown → InvoiceData with items | `backend/tests/test_parser.py` | **TODO** |
-| Unit | XLSX with 3 rows → Markdown table → 3 InvoiceLine items | `backend/tests/test_parser.py` | **TODO** |
-| Unit | Scanned image → markitdown-ocr → Markdown → InvoiceData | `backend/tests/test_parser.py` | **TODO** |
-| Unit | DOCX → Markdown → InvoiceData (new format) | `backend/tests/test_parser.py` | **TODO** |
-| Unit | Upload encrypted PDF → 400 error | `backend/tests/test_parser.py` | **TODO** |
-| Unit | Upload unsupported format (.doc) → 400 | `backend/tests/test_parser.py` | **TODO** |
-| Unit | Upload >10MB → 413 Payload Too Large | `backend/tests/test_parser.py` | **TODO** |
-| Integration | Upload → extract → edit → confirm → workspace auto-fill | `backend/tests/test_parser.py` | **TODO** |
-| Integration | Multi-sheet Excel → sheet selector → correct data | `backend/tests/test_parser.py` | **TODO** |
-| Frontend | Upload area drag-and-drop works | `frontend/__tests__/workspace.test.tsx` | **TODO** |
-| Frontend | Review screen shows editable fields | `frontend/__tests__/workspace.test.tsx` | **TODO** |
+| Unit | Text-based PDF → Markdown → InvoiceData with items | `backend/tests/test_parser.py` | **PASSED** |
+| Unit | XLSX with rows → Markdown table → InvoiceLine items | `backend/tests/test_parser.py` | **PASSED** |
+| Unit | Scanned image → OCR adapter path → Markdown → InvoiceData | `backend/tests/test_parser.py` | **PASSED** |
+| Unit | DOCX → Markdown → InvoiceData | `backend/tests/test_parser.py` | **PASSED** |
+| Unit | Upload encrypted PDF → parse error response | `backend/tests/test_parser.py` | **PASSED** |
+| Unit | Upload unsupported format → validation error | `backend/tests/test_parser.py` | **PASSED** |
+| Unit | Upload >10MB → request rejected | `backend/tests/test_parser.py` | **PASSED** |
+| Integration | Upload → extract → structured result | `backend/tests/test_parser.py` | **PASSED** |
+| Integration | Multi-sheet Excel parsing behavior | `backend/tests/test_parser.py` | **PASSED** |
+| Frontend | Upload area drag-and-drop works | `frontend/__tests__/workspace.test.tsx` | **DEFERRED** |
+| Frontend | Review screen shows editable fields | `frontend/__tests__/workspace.test.tsx` | **DEFERRED** |
 
 ---
 

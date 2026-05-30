@@ -22,8 +22,8 @@ This document defines the behavioral flow, state representation, API integration
 * **In Scope:**
   - `CustomsProfileAccumulator` and `ProfileExtractionResult` Pydantic models.
   - `ProfileExtractor` service class in `backend/app/core/orchestrator/profile_extractor.py` to handle LLM structure parsing.
-  - Update `CustomsCalculationHandler` in `backend/app/core/orchestrator/router.py` to use `ProfileExtractor` for multi-turn extraction.
-  - Seamless calculation execution once enough inputs are collected (at least `invoice_price`, `currency`, `duty_rate_percent`).
+  - Update `calculator_node` in `backend/app/core/orchestrator/workflow_nodes.py` to use `ProfileExtractor` for multi-turn extraction.
+  - Seamless calculation execution once enough inputs are collected (at least `invoice_price`, `currency`, `duty_rate_percent`). When an HS code is present and duty rate is missing, `calculator_node` attempts to auto-populate the duty rate through the HS classifier.
 * **Out of Scope / Deferred:**
   - Complex database-backed user profile persistence (deferred to v2).
   - Multi-vehicle fleet logistics parameters (deferred to v2).
@@ -41,12 +41,15 @@ This document defines the behavioral flow, state representation, API integration
 ### Multi-Turn Extraction & Accumulation Flow
 ```mermaid
 flowchart TD
-  User[User Message] --> Hand[CustomsCalculationHandler]
-  Hand --> History[Retrieve Chat History]
+  User[User Message] --> Workflow[KedenCustomsWorkflow]
+  Workflow --> CalcNode[calculator_node]
+  CalcNode --> History[Retrieve Chat History from ctx.state]
   History --> LLM[Call Gemini Structured Output]
   LLM --> Extract[Extract CustomsProfileAccumulator & Missing Fields]
-  Extract --> Check{Is profile complete?}
-  
+  Extract --> HSLookup{HS code present and duty rate missing?}
+  HSLookup -->|Yes| Classifier[HS classifier duty-rate lookup]
+  HSLookup -->|No| Check{Is profile complete?}
+  Classifier --> Check
   Check -->|No| Ask[Return Next Question to User]
   Check -->|Yes - Complete| Calc[Execute Deterministic CustomsCalculator]
   Calc --> Response[Return Calculation Results + Accumulated Summary]
@@ -85,7 +88,7 @@ The profile extraction system supports the following actions:
 | Action / Trigger | Method / Class | Input Parameters | Output Payload | Fallback / Behavior |
 | :--- | :--- | :--- | :--- | :--- |
 | **Extract Profile** | `ProfileExtractor.extract(history, current_text)` | `List[ChatMessage]`, `str` | `ProfileExtractionResult` | Regex/Static extraction fallback |
-| **Run Dynamic Calculation** | `CustomsCalculationHandler.handle` | `str`, `List[ChatMessage]` | `OrchestrateResponse` | Returns generic help/prompt |
+| **Run Dynamic Calculation** | `calculator_node` | `ctx.state["user_text"]`, `ctx.state["history"]` | `OrchestrateResponse` | Returns generic help/prompt |
 
 ---
 
@@ -110,7 +113,7 @@ The profile extraction system supports the following actions:
 
 ## 9. Schemas Touched
 * `backend/app/core/orchestrator/profile_extractor.py` (new)
-* `backend/app/core/orchestrator/router.py` (modified)
+* `backend/app/core/orchestrator/workflow_nodes.py` (modified)
 * `backend/tests/test_profile_accumulator.py` (new tests)
 
 ---
@@ -129,7 +132,7 @@ The profile extraction system supports the following actions:
 ## 11. Implementation Plan
 1. **Define Pydantic Schemas:** Create `CustomsProfileAccumulator` and `ProfileExtractionResult` in `backend/app/core/orchestrator/profile_extractor.py`.
 2. **Implement ProfileExtractor:** Write LLM prompt and structure-extraction invocation logic using `GeminiVertexClient.generate_structured_content`.
-3. **Refactor CustomsCalculationHandler:** Replace regex context parsing with `ProfileExtractor` in `backend/app/core/orchestrator/router.py`.
+3. **Refactor calculator workflow node:** Integrate `ProfileExtractor` in `calculator_node` in `backend/app/core/orchestrator/workflow_nodes.py`.
 4. **Write Tests:** Create unit and integration tests under `backend/tests/test_profile_accumulator.py`.
 5. **Verify:** Run tests and verify 100% correctness.
 
@@ -138,13 +141,13 @@ The profile extraction system supports the following actions:
 ## 12. Implementation Trace
 ### Files Created/Modified
 * **Profile Extractor:** `backend/app/core/orchestrator/profile_extractor.py`
-* **Router Integration:** `backend/app/core/orchestrator/router.py`
+* **Workflow Node Integration:** `backend/app/core/orchestrator/workflow_nodes.py`
 * **Test Cases:** `backend/tests/test_profile_accumulator.py`
 
 ### Status
 * **FULLY IMPLEMENTED & TESTED**
-* **Validation:** `PYTHONPATH=backend .venv/Scripts/pytest backend/tests/test_profile_accumulator.py` -> **100% Pass** (4 unit and integration tests)
-* **Full Suite:** All 72 tests pass perfectly.
+* **Validation:** `PYTHONPATH=backend .venv/Scripts/pytest backend/tests/test_profile_accumulator.py` -> **8 passed**
+* **Implementation Note:** Integration lives in `calculator_node`; `router.py` remains a thin FastAPI/ADK runner boundary.
 
 ---
 

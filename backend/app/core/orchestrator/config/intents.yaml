@@ -5,6 +5,7 @@ system_prompt: >-
   
   Supported intents:
   - question_about_law: Legal/RAG questions about customs codes, tax codes, regulations
+  - customs_guidance: Case-specific customs clearance questions involving specific goods, import procedures, payment estimation, document requirements, or restriction checks
   - product_description: HS code classification requests (product → code)
   - calculation_request: Customs payment calculation (duty, VAT, excise)
   - document_upload: Upload/ingest a new legal document
@@ -27,7 +28,13 @@ examples:
   - ["расскажи анекдот", "unclear"]
   - ["здравствуйте", "greeting"]
 
-  # ── Kazakh-language examples ──
+  # ── Case-specific customs clearance guidance ──
+  - ["какие документы нужны для растаможки ноутбука из Китая стоимостью 500 долларов?", "customs_guidance"]
+  - ["сколько будет стоить растаможка Toyota Camry 2020 из Германии за 15000 евро?", "customs_guidance"]
+  - ["какие ограничения есть на ввоз детских игрушек в Казахстан?", "customs_guidance"]
+  - ["нужна ли лицензия на импорт медицинского оборудования в РК?", "customs_guidance"]
+  - ["как заплатить пошлину за ввоз телефонов из ОАЭ для перепродажи?", "customs_guidance"]
+  - ["я везу продукты питания из Турции, какой порядок оформления?", "customs_guidance"]
   - ["Қазақстанда импортқа ҚҚС мөлшерлемесі қандай?", "question_about_law"]
   - ["Кедендік баж мөлшерлемесі туралы не айтасыз?", "question_about_law"]
   - ["Lego ойыншығын классификациялаңыз", "product_description"]

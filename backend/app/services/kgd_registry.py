@@ -28,7 +28,7 @@ class KGDRegistryService:
                 (BrokerRegistry.company_name.ilike(f"%{query}%"))
                 | (BrokerRegistry.license_number.ilike(f"%{query}%"))
             )
-        return q.all()
+        return q.order_by(BrokerRegistry.rating.desc()).all()
 
     @staticmethod
     def check_trois_trademark(db: Session, query_name: str) -> Optional[TROISRegistry]:

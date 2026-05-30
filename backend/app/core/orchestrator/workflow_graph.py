@@ -11,6 +11,7 @@ from app.core.orchestrator.workflow_nodes import (
     conditional_route_node,
     interception_response_node,
     faq_response_node,
+    customs_guidance_node,
 )
 from google.adk.workflow import Workflow, Edge, START
 from google.adk.sessions import InMemorySessionService
@@ -60,9 +61,14 @@ _KEDEN_WORKFLOW_EDGES: list[Edge] = [
         to_node=interception_response_node,
         route="interception_response",
     ),
+    # Agentic RAG customs guidance route
+    Edge(
+        from_node=coordinator_node,
+        to_node=customs_guidance_node,
+        route="customs_guidance",
+    ),
     # FAQ fastpath route
     Edge(from_node=coordinator_node, to_node=faq_response_node, route="faq_response"),
-    # HS -> Conditional -> Calculator chain
     Edge(from_node=hs_classifier_node, to_node=conditional_route_node),
     Edge(
         from_node=conditional_route_node, to_node=calculator_node, route="chain_to_calc"

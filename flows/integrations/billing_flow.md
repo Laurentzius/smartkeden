@@ -236,7 +236,7 @@ flowchart LR
 * `backend/app/services/billing/webhooks.py` — webhook handlers
 * `backend/app/services/billing/providers/` — KaspiPayProvider, StripeProvider
 * `backend/app/core/config.py` — acquirer API keys, webhook secrets
-* `backend/app/database/postgres.py` — extends schema
+* `backend/app/core/database.py` — extends schema via existing database boundary
 
 ---
 
@@ -244,17 +244,17 @@ flowchart LR
 
 | Layer | Behavior | File | Status |
 | :--- | :--- | :--- | :--- |
-| Unit | Checkout with valid plan → 200 + payment URL | `backend/tests/test_billing.py` | **TODO** |
-| Unit | Checkout with non-existent plan → 404 | `backend/tests/test_billing.py` | **TODO** |
-| Unit | Kaspi webhook valid payload → 200 + plan activated | `backend/tests/test_billing.py` | **TODO** |
-| Unit | Kaspi webhook invalid HMAC → 403 | `backend/tests/test_billing.py` | **TODO** |
-| Unit | Kaspi webhook duplicate order_id → 200 (idempotent) | `backend/tests/test_billing.py` | **TODO** |
-| Unit | Stripe webhook valid event → 200 | `backend/tests/test_billing.py` | **TODO** |
-| Unit | Cancel active subscription → status=canceled | `backend/tests/test_billing.py` | **TODO** |
-| Unit | Cancel already expired → 400 | `backend/tests/test_billing.py` | **TODO** |
-| Unit | Trial expiry cron → user downgraded to basic | `backend/tests/test_billing.py` | **TODO** |
-| Unit | Admin set plan → user role updated | `backend/tests/test_billing.py` | **TODO** |
-| Integration | Full checkout → Kaspi callback → plan active → protected endpoint accessible | `backend/tests/test_billing.py` | **TODO** |
+| Unit | Checkout with valid plan → 200 + payment URL | `backend/tests/test_billing.py` | **DEFERRED** |
+| Unit | Checkout with non-existent plan → 404 | `backend/tests/test_billing.py` | **DEFERRED** |
+| Unit | Kaspi webhook valid payload → 200 + plan activated | `backend/tests/test_billing.py` | **DEFERRED** |
+| Unit | Kaspi webhook invalid HMAC → 403 | `backend/tests/test_billing.py` | **DEFERRED** |
+| Unit | Kaspi webhook duplicate order_id → 200 (idempotent) | `backend/tests/test_billing.py` | **DEFERRED** |
+| Unit | Stripe webhook valid event → 200 | `backend/tests/test_billing.py` | **DEFERRED** |
+| Unit | Cancel active subscription → status=canceled | `backend/tests/test_billing.py` | **DEFERRED** |
+| Unit | Cancel already expired → 400 | `backend/tests/test_billing.py` | **DEFERRED** |
+| Unit | Trial expiry cron → user downgraded to basic | `backend/tests/test_billing.py` | **DEFERRED** |
+| Unit | Admin set plan → user role updated | `backend/tests/test_billing.py` | **DEFERRED** |
+| Integration | Full checkout → Kaspi callback → plan active → protected endpoint accessible | `backend/tests/test_billing.py` | **DEFERRED** |
 
 ---
 
@@ -274,7 +274,7 @@ flowchart LR
 
 ## 12. Implementation Trace
 
-*To be filled during implementation.*
+*Deferred design-only flow. No billing service, router, provider webhook handler, or tests exist in the current codebase.*
 
 ### Files Created
 * `backend/app/services/billing/` (new package)
@@ -290,11 +290,11 @@ flowchart LR
 * `backend/app/main.py` — mount billing router
 * `backend/app/core/config.py` — add billing settings
 * `backend/app/services/auth/service.py` — handle `user_plan_changed`
-* `backend/app/database/postgres.py` — add billing tables
+* `backend/app/core/database.py` — add billing tables via existing database boundary
 * `backend/requirements.txt` — add `stripe`
 
 ### Status
-* **Not implemented** — awaiting flow-review approval
+* **DEFERRED / NOT IMPLEMENTED** — no `backend/app/services/billing/` package or `backend/tests/test_billing.py` exists.
 
 ---
 

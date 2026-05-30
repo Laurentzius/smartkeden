@@ -1,6 +1,6 @@
 # Flow Design: Google ADK 2.0 Multi-Agent Orchestration
 
-This document defines the transition from our manual, static `IntentClassifier` router to a **Google Agent Development Kit (ADK) 2.0** multi-agent graph-based workflow. It outlines the team of specialized subagents, the orchestration graph, tools, and session management.
+This document defines the transition from the manual `IntentClassifier` router to a **Google Agent Development Kit (ADK) 2.0** graph-based workflow. The implementation uses ADK `Workflow`, `Runner`, and node functions instead of ADK Agent subclasses.
 
 ---
 
@@ -8,9 +8,9 @@ This document defines the transition from our manual, static `IntentClassifier` 
 * **User Goal:** User interacts with a single, highly intelligent interface that can autonomously coordinate multiple complex customs-related subtasks (e.g. classification of a complex product, checking import restrictions on that item, and performing a legal duty calculation) in a single unified chat session.
 * **Success Criteria:**
   - Standardize multi-agent coordination using Google ADK 2.0 Python SDK (`google-adk`).
-  - Improve intent classification and tool routing precision to >95% using ADK's native agent capabilities.
-  - Correctly execute multi-turn, multi-agent tasks (e.g. `HSClassifierAgent` passes data directly to `CalculatorAgent` within an ADK Workflow).
-  - Clean separation of concerns: Agents are thin wrappers for orchestration; existing business logic in `app/core/` remains fully deterministic and independent.
+  - Improve intent classification and tool routing precision using ADK workflow routing.
+  - Correctly execute multi-turn, multi-step tasks through explicit workflow nodes (e.g. HS classifier node can chain into calculator node).
+  - Clean separation of concerns: workflow nodes are thin orchestration wrappers; existing business logic in `app/core/` remains fully deterministic and independent.
 * **Non-negotiables:** 
   - Agents MUST NOT bypass core deterministic calculation engines in `app/core/calculation/`. All calculations must run via the Python engine, not LLM guesses.
   - Multi-agent routing must be fully observable in Langfuse (using ADK native telemetry or custom tracing).
@@ -20,12 +20,14 @@ This document defines the transition from our manual, static `IntentClassifier` 
 ## 2. Scope
 * **In Scope:**
   - Migrating `backend/app/core/orchestrator/router.py` to use ADK 2.0.
-  - Definition of `KedenCoordinatorAgent` as the main coordinator.
-  - Definition of specialized subagents using ADK 2.0 Operating Modes:
-    - `HSClassifierAgent` (`Single-turn` / `Task` mode)
-    - `LegalRAGAgent` (`Chat` mode)
-    - `CustomsCalculatorAgent` (`Task` mode)
-  - Definition of an ADK 2.0 **Graph-based Workflow** (`KedenCustomsWorkflow`) to handle sequential and parallel agent execution (e.g. HS Classify -> check legal registry/RAG -> calculate duties).
+  - Definition of `KedenCustomsWorkflow` in `backend/app/core/orchestrator/workflow_graph.py`.
+  - Definition of specialized ADK node functions in `backend/app/core/orchestrator/workflow_nodes.py`:
+    - `coordinator_node`
+    - `hs_classifier_node`
+    - `legal_rag_node`
+    - `calculator_node`
+    - `document_upload_node`
+    - `greeting_node`, `unclear_node`, `interception_response_node`, `faq_response_node`
   - Session history mapping between Next.js/FastAPI request payloads and ADK's native Session state.
   - Support for **unified multimodal file uploads** (PDFs, images, Excel sheets) inside the single orchestrator chat, mapping uploaded files to ADK session/context state (`ctx.state["uploaded_file_bytes"]`, etc.) for multimodal subagent execution (e.g., image-based HS classification).
 * **Out of Scope / Deferred:**
@@ -35,36 +37,38 @@ This document defines the transition from our manual, static `IntentClassifier` 
 
 ## 3. Actors and Permissions
 * **User (Client):** Initiates session, provides product descriptions, uploaded files, or customs queries.
-* **KedenCoordinatorAgent (ADK Coordinator):** Evaluates user messages, coordinates subagent delegation, prompts for missing parameters.
-* **HSClassifierAgent (Subagent):** Uses product description and visual files to map goods to customs HS Codes (ТН ВЭД).
-* **LegalRAGAgent (Subagent):** Resolves legal queries from the RAG knowledge base.
-* **CustomsCalculatorAgent (Subagent):** Automatically aggregates parameters (HS Code, country of origin, value, currency) and invokes the local deterministic calculation engine.
+* **Coordinator Node (ADK):** Evaluates user messages and selects a workflow route.
+* **HS Classifier Node:** Uses product description and visual files to map goods to customs HS Codes (ТН ВЭД).
+* **Legal RAG Node:** Resolves legal queries from the RAG knowledge base.
+* **Calculator Node:** Accumulates customs parameters and invokes the local deterministic calculation engine.
 
 ---
 
 ## 4. Diagrams
 
-### Multi-Agent Team Architecture (ADK 2.0)
+### Workflow Node Architecture (ADK 2.0)
 ```mermaid
 graph TD
-    User([User Chat Message]) --> Coordinator[KedenCoordinatorAgent]
+    User([User Chat Message]) --> Router[FastAPI /api/orchestrate]
+    Router --> Runner[ADK Runner]
+    Runner --> Workflow[KedenCustomsWorkflow]
     
-    subgraph ADK 2.0 Team ["ADK 2.0 Collaborative Agent Team"]
-        Coordinator -->|Delegates Task| HS_Agent[HSClassifierAgent]
-        Coordinator -->|Delegates Chat| RAG_Agent[LegalRAGAgent]
-        Coordinator -->|Delegates Task| Calc_Agent[CustomsCalculatorAgent]
-    end
+    Workflow --> Coordinator[coordinator_node]
+    Coordinator -->|route: product_description| HS[hs_classifier_node]
+    Coordinator -->|route: question_about_law| RAG[legal_rag_node]
+    Coordinator -->|route: calculation_request| Calc[calculator_node]
+    Coordinator -->|route: document_upload| Doc[document_upload_node]
+    Coordinator -->|route: greeting| Greeting[greeting_node]
+    Coordinator -->|route: unclear| Clarify[unclear_node]
+    Coordinator -->|route: interception_response| Intercept[interception_response_node]
+    Coordinator -->|route: faq_response| FAQ[faq_response_node]
 
-    subgraph Core Engines ["Deterministic Core (app/core/)"]
-        HS_Agent -->|Calls Tool| ClassifierEngine[HSCodeClassifier]
-        RAG_Agent -->|Calls Tool| QdrantRAG[LegalRAGService]
-        Calc_Agent -->|Calls Tool| CalcEngine[CustomsCalculator]
-    end
+    HS --> Conditional[conditional_route_node]
+    Conditional -->|chain_to_calc| Calc
 
-    HS_Agent -->|Returns HS Code| Coordinator
-    RAG_Agent -->|Returns Citations & Text| Coordinator
-    Calc_Agent -->|Returns Duty Sheet| Coordinator
-    Coordinator -->|Formatted Response| User
+    HS --> ClassifierEngine[HSCodeClassifier]
+    RAG --> QdrantRAG[LegalRAGService]
+    Calc --> CalcEngine[CustomsCalculator]
 ```
 
 ### Graph-Based Workflow State Machine (`KedenCustomsWorkflow`)
@@ -75,7 +79,7 @@ stateDiagram-v2
     
     state CoordinatorNode {
         [*] --> ClassifyIntent
-        ClassifyIntent --> ChooseSubagent
+        ClassifyIntent --> ChooseRoute
     }
     
     CoordinatorNode --> HSClassifierNode: Route = product_description
@@ -100,8 +104,8 @@ stateDiagram-v2
 
 ## 5. State and Projections
 * **Workflow Session State:**
-  - **ADK Session Context**: Maintained via `adk.Session`. Stores intermediate results like `extracted_hs_code`, `product_category`, `customs_value`, and `calculation_results`.
-  - **History Projections**: Map client-provided `history` directly to ADK's `adk.ConversationHistory` schema to preserve conversation memory across calls.
+  - **ADK Session Context**: Maintained in ADK session state. Stores request-scoped values like `user_text`, `history`, uploaded file bytes, classification output, and calculation results.
+  - **History Projections**: Map client-provided `history` into workflow state so nodes can preserve conversation memory across calls.
 
 ---
 
@@ -109,16 +113,16 @@ stateDiagram-v2
 | Direction | Event Name / API Method | Source/Target | Payload | Trigger Conditions |
 | :--- | :--- | :--- | :--- | :--- |
 | Incoming | `POST /api/orchestrate` | Next.js -> FastAPI | **Multipart Form Data**: `text` (string), optional `session_id` (string), optional `history` (JSON-stringified history), optional `file` (UploadFile) | User sends a chat message or uploads a file |
-| Internal | `adk.Agent.delegate_task()` | Coordinator -> Subagent | `TaskRequest(task_description, context_data)` | Coordinator decides to utilize specialized agent |
-| Internal | `adk.Agent.call_tool()` | Subagent -> Core Tool | `ToolCall(func_name, arguments)` | Subagent executes its primary logic |
+| Internal | ADK `Workflow` edge routing | Coordinator node -> specialist node | Route string (`product_description`, `question_about_law`, `calculation_request`, etc.) | Coordinator classifies intent |
+| Internal | Node invokes deterministic core | Specialist node -> Core service | Typed function/model inputs | Node has enough validated state |
 | Outgoing | `/api/orchestrate` response | FastAPI -> Next.js | `OrchestrateResponse(text, intent, confidence, calculation?)` | Graph execution completes |
 
 ## 7. Edge Cases
-* **Subagent fails / returns invalid schema**: The Coordinator catches `AgentExecutionError` and executes a deterministic fallback, returning: *"Извините, не удалось завершить операцию. Вы можете выполнить классификацию вручную."*
-* **Incomplete parameters for CalculatorAgent**: If the user wants a calculation but lacks parameters (e.g. missing value or country of origin), `CalculatorAgent` is executed in `Multi-turn / Task` mode, prompting the user for the missing values step-by-step instead of failing.
+* **Node fails / returns invalid schema**: The workflow node catches exceptions and returns a deterministic fallback response, e.g. *"Извините, не удалось завершить операцию. Вы можете выполнить классификацию вручную."*
+* **Incomplete parameters for calculator node**: If the user wants a calculation but lacks parameters, `calculator_node` uses `ProfileExtractor` to prompt for missing values instead of guessing.
 * **Low-confidence routing**: If the coordinator's confidence is < 0.7, it falls back to a clarifying menu offering the user specific action buttons.
 * **Unsupported or corrupted file uploaded**: Returns a clear API validation error or system message: *"Неподдерживаемый формат файла или файл поврежден. Пожалуйста, загрузите изображение, PDF или Excel-таблицу."*
-* **File uploaded without text message**: The `KedenCoordinatorAgent` inspects the file type. If it is an image, it defaults to routing to `HSClassifierAgent` with an implicit classification intent. If it is an unclassifiable file or unclear, it asks the user: *"Какую операцию вы хотите выполнить с этим файлом?"*
+* **File uploaded without text message**: `document_upload_node` handles supported files; unclear uploads return *"Какую операцию вы хотите выполнить с этим файлом?"*
 
 ## 8. Side Effects
 * **Vertex AI / Gemini API Calls**: Parallel tool execution might trigger multiple concurrent model calls. We utilize local caching where possible (e.g. for identical embeddings or static classification lookups).
@@ -128,35 +132,34 @@ stateDiagram-v2
 
 ## 9. Schemas Touched
 * `backend/requirements.txt`: Add `google-adk>=2.0.0`
-* `backend/app/core/orchestrator/router.py`: Re-implement `dispatch_intent` and `orchestrate` endpoint using the ADK 2.0 `adk.Workflow` and `adk.Agent` APIs.
-* `backend/app/core/orchestrator/adk_agents.py` (New): Definition of agents, workflows, and tools.
-* `backend/tests/test_orchestrator.py`: Refactor tests to mock/validate the ADK graph execution and agent delegation.
+* `backend/app/core/orchestrator/router.py`: Preserve `/api/orchestrate` FastAPI compatibility and delegate execution to the ADK runner.
+* `backend/app/core/orchestrator/workflow_graph.py` (New): Definition of `KedenCustomsWorkflow`, edges, session service, and runner.
+* `backend/app/core/orchestrator/workflow_nodes.py`: Node functions wrapping existing services and deterministic engines.
+* `backend/tests/test_orchestrator.py`: Validate workflow graph routing and node behavior.
 
 ---
 
 ## 10. Targeted Tests
 | Layer | Test Scenario | Expected Behavior |
 | :--- | :--- | :--- |
-| Integration | `test_adk_coordination_rag` | Query about law triggers `LegalRAGAgent` and returns citations. |
-| Integration | `test_adk_coordination_hs` | Product description triggers `HSClassifierAgent` in Single-turn mode. |
-| Integration | `test_adk_chained_workflow` | Coordinated workflow correctly executes HS Classifier node and cascades to Calculator node. |
-| Unit | `test_adk_session_history_mapping` | Session history from the API is successfully translated to ADK session history. |
-| Unit | `test_adk_error_handling` | Subagent timeout/exception is gracefully handled by the Coordinator. |
+| Integration | Legal query routing | Query about law triggers `legal_rag_node` and returns citations. |
+| Integration | HS classification routing | Product description triggers `hs_classifier_node`. |
+| Integration | Chained workflow | HS classifier node can cascade to `calculator_node` through `conditional_route_node`. |
+| Unit | Session/history mapping | Request history is available in workflow state. |
+| Unit | Error handling | Node exceptions return safe fallback responses. |
 
 ---
 
 ## 11. Implementation Plan
 1. **Dependency Installation**: Install `google-adk` package in `.venv` and update `requirements.txt`.
-2. **Drafting ADK Agents (`adk_agents.py`)**:
-   - Initialize `google-genai` client within ADK configurations.
-   - Define tools wrapping existing services (`search_customs_law`, `calculate_duties`, `classify_hs_code`).
-   - Define subagents `HSClassifierAgent`, `LegalRAGAgent`, `CustomsCalculatorAgent`.
-   - Define coordinator `KedenCoordinatorAgent`.
-3. **Drafting the Workflow**:
-   - Construct the graph-based workflow `KedenCustomsWorkflow` using ADK's workflow builder.
+2. **Drafting Workflow Nodes (`workflow_nodes.py`)**:
+   - Define node functions wrapping existing services (`LegalRAGService`, `HSCodeClassifier`, `CustomsCalculator`).
+   - Keep deterministic tax/business logic inside `app/core/`.
+3. **Drafting the Workflow (`workflow_graph.py`)**:
+   - Construct `KedenCustomsWorkflow` using ADK `Workflow` and `Edge`.
    - Define conditional edges and routing nodes.
 4. **Updating the Orchestrator Router**:
-   - Refactor `backend/app/core/orchestrator/router.py` to route all incoming POST requests through the ADK 2.0 workflow execution.
+   - Route incoming POST requests through ADK `Runner`.
 5. **Testing and Sync**:
    - Update tests in `backend/tests/test_orchestrator.py` to cover the new ADK graph behaviors.
    - Run linter/formatters.
@@ -164,12 +167,11 @@ stateDiagram-v2
 
 ---
 
-## 12. Implementation Trace
-* **Files Created:** `backend/app/core/orchestrator/adk_agents.py`
-* **Files Modified:** `backend/app/core/orchestrator/router.py`, `backend/tests/test_orchestrator.py`, `backend/requirements.txt`
+* **Files Created:** `backend/app/core/orchestrator/workflow_graph.py`
+* **Files Modified:** `backend/app/core/orchestrator/workflow_nodes.py`, `backend/app/core/orchestrator/router.py`, `backend/tests/test_orchestrator.py`, `backend/requirements.txt`
 * **Status:** Complete & Verified
 * **Validation Command:** `PYTHONPATH=backend .venv/Scripts/pytest backend/tests/test_orchestrator.py`
-
+* **Implementation Note:** The final implementation uses ADK workflow nodes rather than ADK Agent subclasses; no `adk_agents.py` source file is part of the project.
 ---
 
 ## 13. Open Questions
@@ -179,8 +181,8 @@ stateDiagram-v2
 ---
 
 ## 14. Review Checklist
-- [x] Are all 3 ADK subagents clearly defined with their specific operating modes?
-- [x] Is the graph-based routing transition explicitly diagrammed with conditional edges?
+- [x] Are all workflow nodes clearly defined with their specific responsibilities?
+- [x] Is graph-based routing explicitly diagrammed with conditional edges?
 - [x] Are the existing core deterministic engines guaranteed to remain as the sole executors of business/tax logic?
 - [x] Is backward compatibility with Next.js API payloads preserved?
 - [x] Is the error fallback design robust enough to handle model API dropouts?

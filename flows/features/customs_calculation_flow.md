@@ -18,7 +18,7 @@ This document defines the behavioral flow, state transitions, API contract, and 
 ## 2. Scope
 * **In Scope:**
   - Automated currency exchange rate conversion using live NBK XML feeds.
-  - Calculation of customs value, customs fee, customs duties, excise tax, import VAT (12%), and recycling fees.
+  - Calculation of customs value, customs fee, customs duties, excise tax, import VAT (16%), and recycling fees.
   - Trademark query against KGD TROIS registry.
   - Excel Commercial Invoice generation (`.xlsx`).
   - Word Supply Agreement generation (`.docx`).
@@ -133,7 +133,7 @@ flowchart LR
 ## 10. Targeted Tests
 | Layer | Behavior | File | Status |
 | :--- | :--- | :--- | :--- |
-| Core / Unit | Strict formulas (Ad-valorem poшлина, excise, 12% VAT, fee) | `backend/tests/test_calculation.py` | **PASSED** |
+| Core / Unit | Strict formulas (Ad-valorem пошлина, excise, 16% VAT, fee) | `backend/tests/test_calculation.py` | **PASSED** |
 | Service / Net | Live National Bank RK RSS parser and caching | `backend/tests/test_exchange_rates.py` | **PASSED** |
 | DB / Integration | Auto-seeding of brokers database and querying | `backend/tests/test_database.py` | **PASSED** |
 | API / Route | FastAPI JSON payload validations and routes | `backend/tests/test_api.py` | **PASSED** |
@@ -167,12 +167,9 @@ flowchart LR
 * `POST /api/generate-word` — supply contract download
 
 ### Status
-* All 3 tests in `backend/tests/test_calculation.py` pass
-* All 1 test in `backend/tests/test_exchange_rates.py` passes
-* All 1 test in `backend/tests/test_database.py` passes
-* Document generation tested via API and unit tests in `backend/tests/test_generator.py`
-* Full suite: 48 tests pass
-* Validation: `PYTHONPATH=backend .venv/Scripts/pytest backend/tests/ --import-mode=importlib` → 48 passed
+* All targeted calculation, exchange rate, database, API, and document generation tests pass in their dedicated test files.
+* Import VAT is documented as 16%, matching `backend/app/core/business_rules.py`.
+* Validation: `PYTHONPATH=backend .venv/Scripts/pytest backend/tests/test_calculation.py backend/tests/test_exchange_rates.py backend/tests/test_database.py backend/tests/test_api.py backend/tests/test_generator.py`
 ---
 
 ## 13. Open Questions

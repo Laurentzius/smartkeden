@@ -459,15 +459,15 @@ rules_engine.apply_rules(candidates, attributes)
 
 | Layer | Behavior | File | Status |
 |-------|----------|------|--------|
-| Unit | Rule matching logic | `tests/test_rules_engine.py` | Pending |
-| Unit | Rule priority resolution | `tests/test_rules_engine.py` | Pending |
-| Unit | Attribute extraction | `tests/test_attribute_extractor.py` | Pending |
-| Integration | Admin API CRUD | `tests/test_admin_rules_api.py` | Pending |
-| Integration | HS Classifier + Rules | `tests/test_hs_classifier_with_rules.py` | Pending |
-| Integration | Rules audit logging | `tests/test_rules_audit.py` | Pending |
-| E2E | Full classification with rules | `tests/test_classification_e2e.py` | Pending |
-| E2E | Clarifying questions workflow | `tests/test_clarifying_questions.py` | Pending |
-| Performance | 1000 rules under 500ms | `tests/test_rules_performance.py` | Pending |
+| Unit | Rule matching logic | `backend/tests/test_rules_engine.py` | **PASSED** |
+| Unit | Rule priority resolution | `backend/tests/test_rules_engine.py` | **PASSED** |
+| Unit | Attribute extraction | `backend/tests/test_attribute_extractor.py` | **PASSED** |
+| Integration | Admin API CRUD | `backend/tests/test_admin_rules_api.py` | **PASSED** |
+| Integration | HS Classifier + Rules | `backend/tests/test_hs_classifier_with_rules.py` | **PASSED** |
+| Integration | Rules audit logging | `backend/tests/test_admin_rules_api.py` | **PASSED** |
+| E2E | Full classification with rules | `backend/tests/test_hs_classifier_with_rules.py` | **PASSED** |
+| E2E | Clarifying questions workflow | `backend/tests/test_orchestrator.py` | **PASSED** |
+| Performance | 1000 rules under 500ms | `backend/tests/test_rules_performance.py` | **PASSED** |
 
 ## 11. Implementation Plan
 

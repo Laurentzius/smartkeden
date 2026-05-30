@@ -13,6 +13,13 @@ flowchart LR
         OR_Ingest --> Ingest
     end
 
+    subgraph AgenticRAG["Agentic RAG Customs Clearance"]
+        AR_Intake[Extract shipment facts]
+        AR_Plan[Select guidance modes]
+        AR_Tools[Invoke deterministic tools / RAG]
+        AR_Critic[Compliance critic]
+        AR_Final[Structured guidance payload]
+    end
     subgraph RAG["Legal RAG Flow"]
         RAG_Query[Formulate legal question]
         RAG_Retrieve[Qdrant Article Chunk Query]
@@ -122,6 +129,11 @@ flowchart LR
     HS_Vector --> HS_Select
     OR_Classify -- "calculation_request" --> OR_Calc
     OR_Classify -- "document_upload" --> OR_Ingest
+    OR_Classify -- "customs_guidance" --> AR_Intake
+    AR_Intake -- "agentic_rag:plan_created" --> AR_Plan
+    AR_Plan --> AR_Tools
+    AR_Tools --> AR_Critic
+    AR_Critic --> AR_Final
 
     %% Cross-Flow Boundaries (existing)
     HS_Select -- "selected_hs_code" --> Calc_Math
@@ -155,6 +167,11 @@ flowchart LR
     RE_Rules -- "active_rules" --> RE_Apply
     RE_Apply -- "refined_candidates" --> HS_Select
     HS_Vision -- "vision_data" --> RE_Attributes
+    AR_Tools -- "agentic_rag:classification_requested" --> HS_Questionnaire
+    AR_Tools -- "agentic_rag:rag_query_requested" --> RAG_Query
+    AR_Tools -- "agentic_rag:calculation_requested" --> Calc_Math
+    CS_Rates -- "agentic_rag:config_rate_requested" --> AR_Tools
+    AR_Critic -- "agentic_rag:audit_recorded" --> KM_Audit
 
     %% Workspace Integration
     WS_Input --> WS_Extract
@@ -224,71 +241,78 @@ flowchart LR
 * **Payload:** `{ invoice_price, currency, hs_code, ... }`
 * **Consumer:** `CustomsCalculator.calculate()` returns CalculationResponse.
 
-### 7. Document Ingestion Flow → Qdrant
+### 7. Agentic RAG Customs Clearance → HS Classification + Legal RAG + Customs Calculation
+* **Trigger Event:** User message requires customs-clearance decision workflow rather than plain legal retrieval (e.g., import case, documents, restrictions, payments, classification uncertainty).
+* **Payload:** `{ user_query, extracted_facts, guidance_modes, missing_fields }`
+* **Consumers:** HS Classification receives `agentic_rag:classification_requested`; Legal RAG receives `agentic_rag:rag_query_requested`; Customs Calculation receives `agentic_rag:calculation_requested`; Configuration Service may receive `agentic_rag:config_rate_requested`.
+* **Critic Gate:** `agentic_rag:critic_review_requested` must run before final response. Unsupported HS, payment, restriction, or legal certainty claims are downgraded or blocked.
+* **Audit:** `agentic_rag:audit_recorded` stores extracted facts, tool trajectory, sources, calculations, final answer, confidence, and human-review flag.
+
+### 8. Document Ingestion Flow → Qdrant
 * **Trigger Event:** Document uploaded for indexing.
 * **Payload:** `{ collection: "legal_regulations_kz", points: [...] }`
 * **Consumer:** Qdrant upsert with local in-process dedup.
 
-### 8. Authentication Middleware → All Pipeline Flows
+### 9. Authentication Middleware → All Pipeline Flows
 * **Trigger Event:** Every authenticated HTTP request to any pipeline endpoint.
 * **Payload:** `Authorization: Bearer <jwt>` → resolved to `{ user_id, role, plan }`
 * **Consumer:** JWT middleware (`get_current_user`) validates token before handler executes. `require_plan` / `require_role` decorators gate specific routes.
 
-### 9. User Cabinet → Usage Logs (PostgreSQL)
+### 10. User Cabinet → Usage Logs (PostgreSQL)
 * **Trigger Event:** Pipeline completes a request (calculation, classification, RAG query, document generation).
 * **Payload:** `{ user_id, action_type: "calculation", metadata: {...} }`
 * **Consumer:** `usage_logs` table — row inserted fire-and-forget after successful pipeline response.
 
-### 10. Billing Flow → Auth Flow
+### 11. Billing Flow → Auth Flow
 * **Trigger Event:** Payment confirmed via webhook (Kaspi/Stripe), `user_plan_changed` event emitted.
 * **Payload:** `{ user_id, old_role: "basic", new_role: "premium", plan_expires_at: "..." }`
 * **Consumer:** Auth layer updates `users.role` and `plan_expires_at`. Next JWT refresh picks up new role.
 
-### 11. Admin Panel → Billing + Auth
+### 12. Admin Panel → Billing + Auth
 * **Trigger Event:** Admin manually overrides user plan via admin API.
 * **Payload:** `{ user_id, plan_id, duration_days }`
 * **Consumer:** Billing service updates subscription, auth service syncs role. Same `user_plan_changed` event path.
 
-### 12. Automated Calculation Workspace → HS Classifier + Calculator
+### 13. Automated Calculation Workspace → HS Classifier + Calculator
 * **Trigger Event:** User submits product text in workspace input (or after document parsing).
 * **Payload:** `{ product_text, overrides? }` → internally calls classifier then calculator.
 * **Consumer:** WorkspaceService orchestrates: classifier returns code + rates → calculator returns full payment breakdown. Results combined into single WorkspaceResponse.
 
-### 13. Document Parsing → Workspace Input
+### 14. Document Parsing → Workspace Input
 * **Trigger Event:** User uploads invoice file (PDF/XLSX/image), extraction completes and is confirmed.
 * **Payload:** `{ InvoiceData }` — structured fields from invoice.
 * **Consumer:** Workspace input is auto-populated with extracted data for classification + calculation.
 
-### 14. Risk Audit → Workspace Result
+### 15. Risk Audit → Workspace Result
 * **Trigger Event:** HS code confirmed during workspace calculation.
 * **Payload:** `{ hs_code }` → query Qdrant `risk_profiles` collection.
 * **Consumer:** Risk audit result (blocking/warning/info flags) appended to workspace response.
 
-### 15. Export Report → Calculation History
+### 16. Export Report → Calculation History
 * **Trigger Event:** User clicks "Экспорт PDF" on calculation result.
 * **Payload:** `{ calculation_id }`
 * **Consumer:** ReportService fetches full calculation data from history, builds HTML, renders PDF via WeasyPrint.
 
-### 16. Knowledge Management API → Qdrant (Data Dependency)
+### 17. Knowledge Management API → Qdrant (Data Dependency)
 * **Trigger Event:** Admin creates/updates/deletes legal document or HS code via admin API.
 * **Payload:** `{ collection: "legal_regulations_kz" | "hs_code_directory", operation: "upsert" | "delete", document: {...} }`
 * **Consumer:** Qdrant vector database updated with new embeddings. Existing RAG and HS classification flows automatically use updated data on next query.
 * **Note:** This is a data dependency, not an event boundary. No direct flow-to-flow communication occurs.
 
-### 17. Configuration Service → Customs Calculation Flow (Data Dependency)
+### 18. Configuration Service → Customs Calculation Flow (Data Dependency)
 * **Trigger Event:** Calculation Engine requests rate for specific date via `config_service.get_rate("import_vat", declaration_date)`.
 * **Payload:** `{ rate_type: "import_vat", effective_date: "2026-05-30" }`
 * **Consumer:** Configuration Service returns versioned rate value (e.g., `0.16` for 2026). Calculation Engine uses this rate instead of hardcoded defaults.
 * **Fallback:** If Config Service unavailable, Calculation Engine falls back to `business_rules.py` defaults.
 * **Note:** This is a synchronous data dependency, not an event boundary.
 
-### 18. Configuration Service → Legal RAG Flow (Data Dependency)
+### 19. Configuration Service → Legal RAG Flow (Data Dependency)
 * **Trigger Event:** RAG Service queries current rates for citation in legal responses.
 * **Payload:** `{ rate_type: "import_vat" }`
 * **Consumer:** RAG Service includes accurate rate in synthesized legal advice (e.g., "Согласно НК РК, ставка НДС на импорт составляет 16%").
 * **Note:** This is a synchronous data dependency, not an event boundary.
 
-### 19. Classification Rules Engine → HS Code Classification Flow (Data Dependency)
+### 20. Classification Rules Engine → HS Code Classification Flow (Data Dependency)
 * **Trigger Event:** HS Classifier extracts product attributes and applies classification rules.
 * **Payload:** `{ product_description, image_bytes, extracted_attributes }`
 * **Consumer:** Rules Engine returns refined HS code candidates based on dynamic rules (e.g., "материал: натуральный мех >50% → группа 4303 вместо 9503").
@@ -299,6 +323,7 @@ flowchart LR
 
 ## Implementation Trace & Flow Map
 * **Orchestrator (Chat):** `backend/app/core/orchestrator/` → Flow Document: `flows/features/agent_orchestrator_flow.md` (ADK 2.0 migration designed in `flows/features/google_adk_orchestration_flow.md`)
+* **Agentic RAG Customs Clearance:** `backend/app/core/orchestrator/` + `backend/app/core/rag/` + deterministic tool seams → Flow Document: `flows/features/agentic_rag_customs_clearance_flow.md`
 * **Legal RAG Flow:** `backend/app/core/rag/` → Flow Document: `flows/features/semantic_embedding_flow.md`
 * **Document Ingestion:** `backend/app/core/rag/indexer.py` → Flow Document: `flows/integrations/markdown_rag_ingestion_flow.md`
 * **HS Code Classifier:** `backend/app/core/hs_classifier/` and `backend/app/core/classification/questionnaire.py` → Flow Documents: `flows/features/hs_classification_flow.md`, `flows/features/classification_questionnaire_flow.md`
@@ -307,13 +332,13 @@ flowchart LR
 * **Document Generation:** `backend/app/core/documents/` → Flow Document: `flows/features/document_generation_flow.md`
 * **KGD Registry & Trademark:** `backend/app/services/kgd_registry.py` → Flow Document: `flows/features/kgd_registry_flow.md`
 * **Vertex AI / Gemini Client:** `backend/app/core/vertex_client.py` → Flow Document: `flows/features/langfuse_monitoring_flow.md`
-* **Authentication & Authorization:** `backend/app/services/auth/` → Flow Document: `flows/auth/auth_flow.md`
-* **Billing & Subscriptions:** `backend/app/services/billing/` → Flow Document: `flows/integrations/billing_flow.md`
-* **User Cabinet & Admin Panel:** `backend/app/services/cabinet/` → Flow Document: `flows/features/user_cabinet_flow.md`
-* **Automated Calculation Workspace:** `backend/app/services/workspace/` → Flow Document: `flows/features/automated_calculation_workspace_flow.md`
+* **Authentication & Authorization (DEFERRED):** `backend/app/services/auth/` (not implemented) → Flow Document: `flows/auth/auth_flow.md`
+* **Billing & Subscriptions (DEFERRED):** `backend/app/services/billing/` (not implemented) → Flow Document: `flows/integrations/billing_flow.md`
+* **User Cabinet & Admin Panel (DEFERRED):** `backend/app/services/cabinet/` (not implemented) → Flow Document: `flows/features/user_cabinet_flow.md`
+* **Automated Calculation Workspace (DEFERRED backend service):** `backend/app/services/workspace/` (not implemented; current UI uses orchestrator endpoints) → Flow Document: `flows/features/automated_calculation_workspace_flow.md`
 * **Document Parsing & OCR:** `backend/app/services/parser/` → Flow Document: `flows/integrations/document_parsing_flow.md`
-* **Risk Audit:** `backend/app/services/risk_audit/` → Flow Document: `flows/features/risk_audit_flow.md`
-* **Report Export (PDF):** `backend/app/services/report/` → Flow Document: `flows/features/report_export_flow.md`
+* **Risk Audit (DEFERRED):** `backend/app/services/risk_audit/` (not implemented) → Flow Document: `flows/features/risk_audit_flow.md`
+* **Report Export (PDF) (DEFERRED):** `backend/app/services/report/` (not implemented) → Flow Document: `flows/features/report_export_flow.md`
 * **Knowledge Management API:** `backend/app/api/admin.py` + `backend/app/core/admin/` → Flow Document: `flows/features/knowledge-management-api.md`
 * **Configuration Service:** `backend/app/core/config_service.py` + `backend/app/api/admin_config.py` → Flow Document: `flows/features/configuration-service-flow.md`
 * **Classification Rules Engine:** `backend/app/core/classification/rules_engine.py` + `backend/app/api/admin_rules.py` → Flow Document: `flows/features/classification-rules-engine-flow.md`

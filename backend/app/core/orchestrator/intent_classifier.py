@@ -93,15 +93,77 @@ class IntentClassifier:
                 reasoning="Greeting keywords detected",
             )
 
-        # Document upload keywords — check BEFORE legal since "закон" is a legal keyword too
-        if any(w in text_lower for w in ["загрузи", "документ", "текст закон"]):
+        # Document upload keywords — only actual upload/ingest commands
+        if any(w in text_lower for w in ["загрузи", "загрузить", "загрузк", "текст закон"]):
             return IntentClassification(
                 intent=IntentType.document_upload,
                 confidence=0.8,
                 reasoning="Document upload keywords detected",
             )
 
-        # Legal question keywords — check BEFORE HS and calculation since overlaps exist
+        # ── Case-specific customs clearance guidance ──────────────────────
+        # Detect when a user asks about specific goods in an import/clearance
+        # context (vs. abstract legal rate/article questions).
+        case_specific_goods = any(
+            w in text_lower
+            for w in [
+                # product names that signal a real shipment
+                "ноутбук", "телефон", "авто", "машин", "одежд", "обувь",
+                "игрушк", "мебел", "техник", "запчаст", "продукт",
+                "телевизор", "компьютер", "планшет", "велосипед",
+                "косметик", "хими", "стройматериал", "инструмент",
+                "оборудовани", "станок", "сыр", "ткань",
+            ]
+        )
+        case_specific_context = any(
+            w in text_lower
+            for w in [
+                "растаможк", "растаможить", "оформить", "ввоз",
+                "импорт", "доставк", "заказал", "купил", "привез",
+                "отправить", "посылк", "груз", "контейнер",
+                "деклараци", "декларирова",
+            ]
+        )
+        if case_specific_goods and case_specific_context:
+            return IntentClassification(
+                intent=IntentType.customs_guidance,
+                confidence=0.82,
+                reasoning="Case-specific customs clearance query detected (goods + import context)",
+            )
+
+        # Also detect case-specific queries with explicit values/currencies
+        has_value_currency = any(
+            w in text_lower for w in ["доллар", "евро", "юан", "рубл", "тенге", "$", "€", "₽", "¥"]
+        )
+        if has_value_currency and case_specific_context:
+            return IntentClassification(
+                intent=IntentType.customs_guidance,
+                confidence=0.78,
+                reasoning="Case-specific customs query with currency/value context",
+            )
+
+        # Restrictions/documents questions about specific goods categories
+        goods_categories = any(
+            w in text_lower
+            for w in [
+                "игрушк", "продукт", "медицин", "лекарств", "хими",
+                "драгоцен", "ювелир", "оруж", "алкогол", "табак",
+                "животн", "растен", "электроник",
+            ]
+        )
+        restriction_context = any(
+            w in text_lower
+            for w in ["ограничени", "запрет", "лицензи", "разрешени", "сертификат",
+                       "квот", "фитосанитар", "ветеринар"]
+        )
+        if goods_categories and restriction_context:
+            return IntentClassification(
+                intent=IntentType.customs_guidance,
+                confidence=0.80,
+                reasoning="Case-specific restriction/document query about goods category",
+            )
+
+        # Legal question keywords — check AFTER customs_guidance but BEFORE HS and calculation
         if any(w in text_lower for w in ["ставк", "закон", "кодекс", "статья", "норм", "процедур", "режим", "декларировани"]):
             return IntentClassification(
                 intent=IntentType.question_about_law,

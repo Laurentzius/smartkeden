@@ -193,16 +193,16 @@ Headers:
 
 | Layer | Behavior | File | Status |
 | :--- | :--- | :--- | :--- |
-| Unit | Generate PDF → returns valid PDF binary (starts with %PDF) | `backend/tests/test_report.py` | **TODO** |
-| Unit | PDF contains correct HS code | `backend/tests/test_report.py` | **TODO** |
-| Unit | PDF contains correct total amount | `backend/tests/test_report.py` | **TODO** |
-| Unit | PDF with risk audit → includes risk section | `backend/tests/test_report.py` | **TODO** |
-| Unit | PDF without risk audit → skips risk section | `backend/tests/test_report.py` | **TODO** |
-| Unit | Export non-existent calc → 404 | `backend/tests/test_report.py` | **TODO** |
-| Unit | Export another user's calc → 403 | `backend/tests/test_report.py` | **TODO** |
-| Unit | QR code generation included | `backend/tests/test_report.py` | **TODO** |
-| Integration | Full cycle: calc → export PDF → download → parse → verify content | `backend/tests/test_report.py` | **TODO** |
-| Frontend | Export button triggers download | `frontend/__tests__/workspace.test.tsx` | **TODO** |
+| Unit | Generate PDF → returns valid PDF binary (starts with %PDF) | `backend/tests/test_report.py` | **DEFERRED** |
+| Unit | PDF contains correct HS code | `backend/tests/test_report.py` | **DEFERRED** |
+| Unit | PDF contains correct total amount | `backend/tests/test_report.py` | **DEFERRED** |
+| Unit | PDF with risk audit → includes risk section | `backend/tests/test_report.py` | **DEFERRED** |
+| Unit | PDF without risk audit → skips risk section | `backend/tests/test_report.py` | **DEFERRED** |
+| Unit | Export non-existent calc → 404 | `backend/tests/test_report.py` | **DEFERRED** |
+| Unit | Export another user's calc → 403 | `backend/tests/test_report.py` | **DEFERRED** |
+| Unit | QR code generation included | `backend/tests/test_report.py` | **DEFERRED** |
+| Integration | Full cycle: calc → export PDF → download → parse → verify content | `backend/tests/test_report.py` | **DEFERRED** |
+| Frontend | Export button triggers download | `frontend/__tests__/workspace.test.tsx` | **DEFERRED** |
 
 ---
 
@@ -223,7 +223,7 @@ Headers:
 
 ## 12. Implementation Trace
 
-*To be filled during implementation.*
+*Deferred design-only flow. No report export service package, templates, frontend export button, or tests exist in the current codebase.*
 
 ### Files Created
 * `backend/app/services/report/` (new package)
@@ -241,7 +241,7 @@ Headers:
 * `frontend/app/workspace/page.tsx` — add ExportButton to result panel
 
 ### Status
-* **Not implemented** — flow document complete
+* **DEFERRED / NOT IMPLEMENTED** — no `backend/app/services/report/` package or `backend/tests/test_report.py` exists.
 
 ---
 

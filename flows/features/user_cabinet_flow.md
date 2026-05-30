@@ -194,7 +194,7 @@ Because the quota check runs after logging the current request, the first over-l
 * `backend/app/services/cabinet/router.py` — `/api/cabinet/*`, `/api/admin/users`
 * `backend/app/services/cabinet/service.py` — CabinetService
 * `backend/app/services/cabinet/admin_service.py` — admin-only user listing
-* `backend/app/database/postgres.py` — usage_logs table
+* `backend/app/core/database.py` — usage_logs table via existing database boundary
 * `frontend/app/cabinet/page.tsx` — dashboard
 * `frontend/app/cabinet/history/page.tsx`
 * `frontend/app/cabinet/billing/page.tsx`
@@ -208,18 +208,18 @@ Because the quota check runs after logging the current request, the first over-l
 
 | Layer | Behavior | File | Status |
 | :--- | :--- | :--- | :--- |
-| Unit | Dashboard summary returns plan + usage + period | `backend/tests/test_cabinet.py` | **TODO** |
-| Unit | Dashboard returns 401 without JWT | `backend/tests/test_cabinet.py` | **TODO** |
-| Unit | History returns paginated results | `backend/tests/test_cabinet.py` | **TODO** |
-| Unit | History filtered by action_type | `backend/tests/test_cabinet.py` | **TODO** |
-| Unit | Settings update persists preferred_lang | `backend/tests/test_cabinet.py` | **TODO** |
-| Unit | Quota exceeded → 403 on next request | `backend/tests/test_cabinet.py` | **TODO** |
-| Unit | Admin list users → 200 with paginated results | `backend/tests/test_cabinet.py` | **TODO** |
-| Unit | Admin list users without admin role → 403 | `backend/tests/test_cabinet.py` | **TODO** |
-| Unit | Admin override plan → user role changes | `backend/tests/test_cabinet.py` | **TODO** |
-| Unit | User tries to access another user's history → 403 | `backend/tests/test_cabinet.py` | **TODO** |
-| Frontend | Unauthenticated redirect to /login | `frontend/__tests__/cabinet.test.tsx` | **TODO** |
-| Frontend | Cabinet renders subscription status | `frontend/__tests__/cabinet.test.tsx` | **TODO** |
+| Unit | Dashboard summary returns plan + usage + period | `backend/tests/test_cabinet.py` | **DEFERRED** |
+| Unit | Dashboard returns 401 without JWT | `backend/tests/test_cabinet.py` | **DEFERRED** |
+| Unit | History returns paginated results | `backend/tests/test_cabinet.py` | **DEFERRED** |
+| Unit | History filtered by action_type | `backend/tests/test_cabinet.py` | **DEFERRED** |
+| Unit | Settings update persists preferred_lang | `backend/tests/test_cabinet.py` | **DEFERRED** |
+| Unit | Quota exceeded → 403 on next request | `backend/tests/test_cabinet.py` | **DEFERRED** |
+| Unit | Admin list users → 200 with paginated results | `backend/tests/test_cabinet.py` | **DEFERRED** |
+| Unit | Admin list users without admin role → 403 | `backend/tests/test_cabinet.py` | **DEFERRED** |
+| Unit | Admin override plan → user role changes | `backend/tests/test_cabinet.py` | **DEFERRED** |
+| Unit | User tries to access another user's history → 403 | `backend/tests/test_cabinet.py` | **DEFERRED** |
+| Frontend | Unauthenticated redirect to /login | `frontend/__tests__/cabinet.test.tsx` | **DEFERRED** |
+| Frontend | Cabinet renders subscription status | `frontend/__tests__/cabinet.test.tsx` | **DEFERRED** |
 
 ---
 
@@ -241,7 +241,7 @@ Because the quota check runs after logging the current request, the first over-l
 
 ## 12. Implementation Trace
 
-*To be filled during implementation.*
+*Deferred design-only flow. No cabinet/admin service package, cabinet frontend route, or tests exist in the current codebase.*
 
 ### Files Created
 * `backend/app/services/cabinet/` (new package)
@@ -256,14 +256,14 @@ Because the quota check runs after logging the current request, the first over-l
 
 ### Files Modified
 * `backend/app/main.py` — mount cabinet + admin routers
-* `backend/app/database/postgres.py` — add usage_logs table
+* `backend/app/core/database.py` — add usage_logs table via existing database boundary
 * `backend/app/core/config.py` — usage limits config
 * Existing pipeline endpoints — add usage logging calls
 * `frontend/app/layout.tsx` — add auth guard
 * `frontend/middleware.ts` — route protection
 
 ### Status
-* **Not implemented** — awaiting flow-review approval
+* **DEFERRED / NOT IMPLEMENTED** — no `backend/app/services/cabinet/` package or `backend/tests/test_cabinet.py` exists.
 
 ---
 

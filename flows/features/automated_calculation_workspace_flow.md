@@ -231,7 +231,7 @@ Response:
 * `backend/app/services/workspace/extractor.py` — Invoice text field extractor (LLM)
 * `backend/app/core/hs_classifier/classifier.py` — existing, called by workspace
 * `backend/app/core/calculation/engine.py` — existing, called by workspace
-* `backend/app/database/postgres.py` — calculation_history table
+* `backend/app/core/database.py` — calculation_history table via existing database boundary
 * `frontend/app/workspace/page.tsx` — new workspace page
 
 ---
@@ -240,17 +240,17 @@ Response:
 
 | Layer | Behavior | File | Status |
 | :--- | :--- | :--- | :--- |
-| Unit | Workspace with valid text → full response (HS + calc) | `backend/tests/test_workspace.py` | **TODO** |
-| Unit | Workspace with structured text → fields extracted | `backend/tests/test_workspace.py` | **TODO** |
-| Unit | Workspace with empty text → 422 | `backend/tests/test_workspace.py` | **TODO** |
-| Unit | Workspace with classifier fail → partial result + error | `backend/tests/test_workspace.py` | **TODO** |
-| Unit | Workspace with calculator fail → partial result + error | `backend/tests/test_workspace.py` | **TODO** |
-| Unit | User overrides HS code → recalculates with new rate | `backend/tests/test_workspace.py` | **TODO** |
-| Unit | Recalculate with edited price → new result, same HS | `backend/tests/test_workspace.py` | **TODO** |
-| Unit | History pagination returns correct entries | `backend/tests/test_workspace.py` | **TODO** |
-| Integration | Full flow: text → classify → calc → save history → recall | `backend/tests/test_workspace.py` | **TODO** |
-| Frontend | Workspace renders input + result panel | `frontend/__tests__/workspace.test.tsx` | **TODO** |
-| Frontend | HS candidate selector allows manual pick | `frontend/__tests__/workspace.test.tsx` | **TODO** |
+| Unit | Workspace with valid text → full response (HS + calc) | `backend/tests/test_workspace.py` | **DEFERRED** |
+| Unit | Workspace with structured text → fields extracted | `backend/tests/test_workspace.py` | **DEFERRED** |
+| Unit | Workspace with empty text → 422 | `backend/tests/test_workspace.py` | **DEFERRED** |
+| Unit | Workspace with classifier fail → partial result + error | `backend/tests/test_workspace.py` | **DEFERRED** |
+| Unit | Workspace with calculator fail → partial result + error | `backend/tests/test_workspace.py` | **DEFERRED** |
+| Unit | User overrides HS code → recalculates with new rate | `backend/tests/test_workspace.py` | **DEFERRED** |
+| Unit | Recalculate with edited price → new result, same HS | `backend/tests/test_workspace.py` | **DEFERRED** |
+| Unit | History pagination returns correct entries | `backend/tests/test_workspace.py` | **DEFERRED** |
+| Integration | Full flow: text → classify → calc → save history → recall | `backend/tests/test_workspace.py` | **DEFERRED** |
+| Frontend | Workspace renders input + result panel | `frontend/__tests__/workspace.test.tsx` | **DEFERRED** |
+| Frontend | HS candidate selector allows manual pick | `frontend/__tests__/workspace.test.tsx` | **DEFERRED** |
 
 ---
 
@@ -271,7 +271,7 @@ Response:
 
 ## 12. Implementation Trace
 
-*To be filled during implementation.*
+*Deferred/superseded design-only backend flow. The expected `backend/app/services/workspace/` package does not exist; current workspace-like frontend uses orchestrator/calculation endpoints directly.*
 
 ### Files Created
 * `backend/app/services/workspace/` (new package)
@@ -285,12 +285,12 @@ Response:
 
 ### Files Modified
 * `backend/app/main.py` — mount workspace router
-* `backend/app/database/postgres.py` — add calculation_history table
+* `backend/app/core/database.py` — add calculation_history table via existing database boundary
 * `backend/app/core/config.py` — workspace settings
 * `frontend/app/layout.tsx` — add workspace nav link
 
 ### Status
-* **Not implemented** — flow document complete
+* **DEFERRED / NOT IMPLEMENTED AS DESIGNED** — no `backend/app/services/workspace/` package or `backend/tests/test_workspace.py` exists.
 
 ---
 

@@ -200,7 +200,7 @@ flowchart LR
 * `backend/app/services/auth/service.py` — AuthService (register, login, refresh, logout)
 * `backend/app/services/auth/dependencies.py` — FastAPI Depends (`get_current_user`, `require_plan`, `require_role`)
 * `backend/app/services/auth/router.py` — FastAPI router for `/api/auth/*`
-* `backend/app/database/postgres.py` — PostgreSQL connection pool
+* `backend/app/core/database.py` — SQLAlchemy database engine/session boundary
 * `backend/app/core/config.py` — JWT secret, token TTLs, rate limit config
 
 ---
@@ -209,19 +209,19 @@ flowchart LR
 
 | Layer | Behavior | File | Status |
 | :--- | :--- | :--- | :--- |
-| Unit | Register with valid email/password → 201 + user returned | `backend/tests/test_auth.py` | **TODO** |
-| Unit | Register with existing email → 409 Conflict | `backend/tests/test_auth.py` | **TODO** |
-| Unit | Register with weak password → 422 Validation | `backend/tests/test_auth.py` | **TODO** |
-| Unit | Login with valid credentials → 200 + JWT pair | `backend/tests/test_auth.py` | **TODO** |
-| Unit | Login with wrong password → 401 | `backend/tests/test_auth.py` | **TODO** |
-| Unit | Refresh with valid token → 200 + new pair | `backend/tests/test_auth.py` | **TODO** |
-| Unit | Refresh with revoked token → 401 + all sessions invalidated | `backend/tests/test_auth.py` | **TODO** |
-| Unit | Access protected route without JWT → 401 | `backend/tests/test_auth.py` | **TODO** |
-| Unit | Access premium route with basic plan → 403 | `backend/tests/test_auth.py` | **TODO** |
-| Unit | Admin route non-admin user → 403 | `backend/tests/test_auth.py` | **TODO** |
-| Unit | Login rate limit exceeded → 429 | `backend/tests/test_auth.py` | **TODO** |
-| Integration | Register → login → call protected endpoint → succeeds | `backend/tests/test_auth.py` | **TODO** |
-| Integration | Trial expiry → premium endpoint → 403 | `backend/tests/test_auth.py` | **TODO** |
+| Unit | Register with valid email/password → 201 + user returned | `backend/tests/test_auth.py` | **DEFERRED** |
+| Unit | Register with existing email → 409 Conflict | `backend/tests/test_auth.py` | **DEFERRED** |
+| Unit | Register with weak password → 422 Validation | `backend/tests/test_auth.py` | **DEFERRED** |
+| Unit | Login with valid credentials → 200 + JWT pair | `backend/tests/test_auth.py` | **DEFERRED** |
+| Unit | Login with wrong password → 401 | `backend/tests/test_auth.py` | **DEFERRED** |
+| Unit | Refresh with valid token → 200 + new pair | `backend/tests/test_auth.py` | **DEFERRED** |
+| Unit | Refresh with revoked token → 401 + all sessions invalidated | `backend/tests/test_auth.py` | **DEFERRED** |
+| Unit | Access protected route without JWT → 401 | `backend/tests/test_auth.py` | **DEFERRED** |
+| Unit | Access premium route with basic plan → 403 | `backend/tests/test_auth.py` | **DEFERRED** |
+| Unit | Admin route non-admin user → 403 | `backend/tests/test_auth.py` | **DEFERRED** |
+| Unit | Login rate limit exceeded → 429 | `backend/tests/test_auth.py` | **DEFERRED** |
+| Integration | Register → login → call protected endpoint → succeeds | `backend/tests/test_auth.py` | **DEFERRED** |
+| Integration | Trial expiry → premium endpoint → 403 | `backend/tests/test_auth.py` | **DEFERRED** |
 
 ---
 
@@ -241,10 +241,10 @@ flowchart LR
 
 ## 12. Implementation Trace
 
-*To be filled during implementation.*
+*Deferred design-only flow. No auth service, router, JWT settings, or tests exist in the current codebase.*
 
 ### Files Created
-* `backend/app/database/postgres.py`
+* `backend/app/core/database.py` (extend existing database boundary as needed)
 * `backend/app/services/auth/service.py`
 * `backend/app/services/auth/schemas.py`
 * `backend/app/services/auth/dependencies.py`
@@ -257,7 +257,7 @@ flowchart LR
 * Existing pipeline endpoints — add `require_plan` decorator
 
 ### Status
-* **Not implemented** — awaiting flow-review approval
+* **DEFERRED / NOT IMPLEMENTED** — no `backend/app/services/auth/` package or `backend/tests/test_auth.py` exists.
 
 ---
 

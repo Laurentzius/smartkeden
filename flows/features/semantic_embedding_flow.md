@@ -1,28 +1,31 @@
 # Flow Design: Semantic Embedding & Indexing Pipeline
 
-This document defines the behavioral flow, state transitions, API contract, and validation rules for the layout-aware document indexing and vector search pipeline using **Gemini Embedding 2** and **Qdrant**.
+This document defines the behavioral flow, state transitions, API contract, and validation rules for local-first document indexing and vector search using **Granite multilingual embeddings** and **Qdrant**.
 
 ---
 
 ## 1. Intent
-* **System Goal:** Take raw legal texts (RK Customs/Tax Codes, EAEU decisions) or product descriptors, segment them into structurally sound blocks using **Blockify**, convert them into high-dimensional semantic vectors using **Gemini Embedding 2** (3072 dimensions), and save/query them in **Qdrant**.
+* **System Goal:** Take parsed RK/EAEU legal text blocks or product descriptors, convert them into semantic vectors using the local Sentence-Transformer model, and save/query them in Qdrant.
 * **Success Criteria:**
   - High-precision semantic search over RK and EAEU regulations.
-  - Multi-language queries (Kazakh, Russian, English) retrieve correct legal articles regardless of translation terms.
-  - Indexing tasks are idempotent (re-running does not duplicate articles).
-  - Explicit optimization of task types (`RETRIEVAL_DOCUMENT` vs `RETRIEVAL_QUERY`).
-* **Non-negotiables:** Dimension parameters must strictly equal `3072` for Gemini Embedding 2.
+  - Multi-language queries (Kazakh, Russian, English) retrieve relevant legal articles.
+  - Indexing tasks are idempotent and do not duplicate articles.
+  - Embedding dimensions remain consistent across indexing, search, and Qdrant collection setup.
+* **Non-negotiables:** The default embedding dimension is `384`, matching `EMBEDDING_DIMENSION` and the local Granite model. Gemini embeddings are optional fallback only, enabled explicitly via `USE_GEMINI_EMBEDDING=True`.
 
 ---
 
 ## 2. Scope
 * **In Scope:**
-  - Layout segment chunking (simulated/mocked Blockify parser outputs).
-  - Calling Google Vertex AI Gemini Embedding 2 with explicit `task_type`.
+  - Parsing legal source documents into internal text blocks via the RAG parser/indexer pipeline.
+  - Generating embeddings with local model `ibm-granite/granite-embedding-97m-multilingual-r2`.
+  - Optional Gemini/Vertex embedding fallback when explicitly enabled.
+  - Last-resort mock zero vector fallback when all embedding providers fail.
   - Storing payload metadata (article number, section, document origin, raw text) inside Qdrant points.
   - Querying Qdrant using vector similarity (Cosine metric).
 * **Out of Scope / Deferred:**
-  - Multi-page image document OCR indexing (deferred to v2).
+  - External document chunking services.
+  - Multi-page image document OCR indexing (covered by document parsing flow).
 
 ---
 
@@ -37,13 +40,13 @@ This document defines the behavioral flow, state transitions, API contract, and 
 ### Indexing Flow (User & System)
 ```mermaid
 flowchart TD
-  Doc[Raw PDF/HTML Legal text] --> Parser[Blockify Layout Parser]
-  Parser -->|Extract chunks| Chunks[List of text/table blocks]
-  
-  Chunks --> Loop{For each chunk}
-  Loop -->|Chunk text| GenVec[Call Vertex AI Gemini Embedding 2]
-  GenVec -->|task_type: RETRIEVAL_DOCUMENT| SaveQdrant[Upsert point to Qdrant Collection]
-  SaveQdrant --> Next[Next chunk]
+  Doc[Parsed legal source text] --> Parser[RAG DocumentParserRegistry / Indexer]
+  Parser -->|Extract blocks| Chunks[List of text/table blocks]
+  Chunks --> Dedup[Local semantic deduplication]
+  Dedup --> Loop{For each block}
+  Loop -->|Block text| GenVec[Local Granite embedding]
+  GenVec -->|384-dim vector| SaveQdrant[Upsert point to Qdrant Collection]
+  SaveQdrant --> Next[Next block]
   Next --> Loop
   Loop -->|Done| End([Indexing Complete])
 ```
@@ -51,19 +54,23 @@ flowchart TD
 ### Retrieval Query Flow (System)
 ```mermaid
 flowchart TD
-  Query[User Query text] --> EmbedQuery[Call Vertex AI Gemini Embedding 2]
-  EmbedQuery -->|task_type: RETRIEVAL_QUERY| Vector[3072-dim Vector]
+  Query[User query text] --> EmbedQuery[Embedding provider chain]
+  EmbedQuery -->|Local Granite primary| Vector[384-dim vector]
+  EmbedQuery -->|Gemini fallback if enabled| Vector
+  EmbedQuery -->|Mock fallback| Vector
   Vector --> QueryQdrant[Query Qdrant collection, top_k=5]
-  QueryQdrant --> Results[List of matching Chunks]
-  Results --> Synth[Gemini Flash Answer Synthesis]
+  QueryQdrant --> Results[List of matching chunks]
+  Results --> Synth[Answer synthesis]
 ```
 
 ### Data Flow Map
 ```mermaid
 flowchart LR
-  RawText[Legal Text Block] --> Client[GeminiVertexClient]
-  Client -->|task_type=RETRIEVAL_DOCUMENT| Vertex[Vertex AI API]
-  Vertex -->|3072 float values| VectorDB[(Qdrant DB)]
+  RawText[Legal text block] --> Client[GeminiVertexClient compatibility facade]
+  Client --> Local[LocalEmbeddingModel]
+  Local -->|384 float values| VectorDB[(Qdrant legal_regulations_kz)]
+  Client -->|optional fallback| Gemini[Gemini embedding]
+  Gemini -->|EMBEDDING_DIMENSION values| VectorDB
 ```
 
 ---
@@ -71,73 +78,86 @@ flowchart LR
 ## 5. State and Projections
 * **Qdrant Collection State:**
   - Collection Name: `legal_regulations_kz`
-  - Vector Size: `3072`
+  - Vector Size: `384`
   - Distance Metric: `Cosine`
-* **Indexer State:** Stateful loop tracker monitoring processed line numbers / paragraph IDs to prevent partial ingestion.
+* **Embedding Provider State:**
+  - Primary: `LocalEmbeddingModel` using `EMBEDDING_MODEL_NAME`.
+  - Fallback 1: Gemini/Vertex embedding only when `USE_GEMINI_EMBEDDING=True`.
+  - Fallback 2: deterministic zero vector with length `EMBEDDING_DIMENSION`.
+* **Indexer State:** Stateful loop tracker monitoring processed blocks to prevent duplicate ingestion.
 
 ---
 
 ## 6. Events/Actions
 | Direction | Name | Source/Target Flow | Payload | Allowed When | Reject/Failure Reason |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| Incoming | `index_document` | System Indexer | `{ document_id, raw_html }` | Admin authorized | Invalid schema, empty document |
-| Outgoing | `generate_vector` | System | `{ text, model: "gemini-embedding-2-preview" }` | Indexing chunk | Vertex API exception / quota limit |
+| Incoming | `index_document` | System Indexer | `{ document_id, raw_text }` | Admin authorized | Invalid schema, empty document |
+| Internal | `generate_vector` | Embedding provider chain | `{ text, task_type }` | Indexing/search text available | Provider unavailable; falls back to next provider |
 | Incoming | `search_query` | Importer | `{ query_text, top_k: 5 }` | Always | Empty query |
 
 ---
 
 ## 7. Edge Cases
-* **Matryoshka Scaling:** If saving RAM/storage is a future constraint, Gemini Embedding 2 can scale down to 1536 or 768 dimensions using `output_dimensionality` parameters. *We default to the full 3072 dimensions for max-fidelity EAEU legal cross-referencing.*
-* **Truncation on Token Overflows:** Gemini Embedding 2 supports up to 8192 input tokens. Blockify segment chunks are capped at 1000 tokens (approx. 4000 characters) to remain far below limits and prevent truncation.
+* **Local model unavailable:** Skip directly to Gemini fallback when enabled; otherwise return a 384-dim zero vector.
+* **Gemini fallback disabled:** Do not call cloud embedding APIs.
+* **Embedding provider exception:** Log warning and continue to the next provider; never crash the request solely because embeddings are unavailable.
+* **Dimension mismatch:** Collection setup and tests must use `settings.EMBEDDING_DIMENSION` (`384` by default).
 
 ---
 
 ## 8. Side Effects
-* **Cloud API Quota Consumption:** Large bulk document indexing triggers thousands of simultaneous API calls to Google Vertex AI. Batch/throttle limits must be enforced on indexers.
+* **Local Model Loading:** First local embedding call may load the Sentence-Transformer model into memory.
+* **Optional Cloud API Consumption:** Gemini embedding calls happen only when explicitly enabled and local embedding did not return a vector.
 
 ---
 
 ## 9. Schemas Touched
-* `backend/app/core/vertex_client.py` (Embedding parameters and SDK configurations)
-* `backend/app/core/rag/service.py` (Query embedding and retrieval operations)
+* `backend/app/core/config.py` (embedding provider flags, model name, dimensions)
+* `backend/app/core/vertex_client.py` (embedding provider chain and compatibility facade)
+* `backend/app/core/rag/service.py` (query embedding and retrieval operations)
 
 ---
 
 ## 10. Targeted Tests
 | Layer | Behavior | File | Status |
 | :--- | :--- | :--- | :--- |
-| Core / API | Text embedding dimension validation for Gemini 2 (3072) | `backend/tests/test_vertex_client.py` | **PASSED** |
+| Core / API | Text embedding returns configured 384 dimensions | `backend/tests/test_vertex_client.py` | **PASSED** |
 | Service / DB | Connecting and querying local Qdrant memory instances | `backend/tests/test_api.py` | **PASSED** |
 
 ---
 
 ## 11. Implementation Plan
-1. **Define API contract:** Expose `get_text_embedding` supporting modern GCP structures. (Done)
-2. **Setup Vector configuration:** Define collection metrics and dimensionality parameters. (Done)
-3. **Draft Unit Test Cases:** Validate dimensions for custom and default embedding models. (Done)
-4. **Implement Indexer Loop:** Ingest parsed blocks and map them to vectors. (Done)
+1. **Define API contract:** Preserve `GeminiVertexClient.get_text_embedding` compatibility facade. (Done)
+2. **Setup Vector configuration:** Define collection metrics and dimensionality from `settings.EMBEDDING_DIMENSION`. (Done)
+3. **Implement provider chain:** local Granite primary, Gemini fallback when enabled, mock zero vector last. (Done)
+4. **Draft Unit Test Cases:** Validate configured dimensions and fallback behavior. (Done)
+5. **Implement Indexer Loop:** Ingest parsed blocks and map them to vectors. (Done)
 
 ---
 
 ## 12. Implementation Trace
 
 ### Files
-* **Embedding Client:** `backend/app/core/vertex_client.py`
+* **Embedding Configuration:** `backend/app/core/config.py`
+* **Embedding Client Facade:** `backend/app/core/vertex_client.py`
 * **Test Verification:** `backend/tests/test_vertex_client.py`
 
 ### Status
-* Embedding dimension validation (3072) passes
-* Mock mode returns zeros when no API key; real API blocked (needs GCP billing)
-* Full suite: 34 tests pass
-* Validation: `PYTHONPATH=backend .venv/Scripts/pytest backend/tests/ -q` → 34 passed in 3.15s
+* Embedding dimension validation (`384`) passes.
+* Local Granite embeddings are primary.
+* Gemini embeddings are opt-in fallback via `USE_GEMINI_EMBEDDING=True`.
+* Mock mode returns zero vectors with configured dimension when all providers are unavailable.
+* Validation: `PYTHONPATH=backend .venv/Scripts/pytest backend/tests/test_vertex_client.py`.
+
 ---
 
 ## 13. Open Questions
-* *Do we need image embeddings using Gemini Embedding 2 for product photo lookups?* -> In v1, the HS Classifier translates product images into text descriptions first, and performs text vector search. Direct image embeddings are deferred to v2.
+* *Should we re-enable Gemini embeddings by default?* → No. Local Granite remains default for cost, privacy, and offline reliability. Gemini stays an explicit opt-in fallback.
 
 ---
 
 ## 14. Review Checklist
-- [x] Does the flow design follow the quality bar of explicit inputs, exceptions, and side effects?
-- [x] Are Google's official parameters (3072 dimensions, task types) strictly mapped?
-- [x] Is the documentation linked back to the implementation trace?
+- [x] Does the diagram accurately represent local-first embeddings?
+- [x] Is vector dimensionality consistent with config and tests?
+- [x] Are cloud embedding calls opt-in only?
+- [x] Is Qdrant collection sizing documented?

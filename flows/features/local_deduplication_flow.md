@@ -1,6 +1,6 @@
 # Flow Design: Local Semantic Deduplication for IdeaBlocks
 
-This document defines the behavioral flow, state transitions, algorithm contract, and validation rules for replacing the Blockify Distill Docker service with an in-process, deterministic deduplication engine powered by Granite embeddings and rule-based merging.
+This document defines the behavioral flow, state transitions, algorithm contract, and validation rules for the in-process, deterministic deduplication engine powered by Granite embeddings and rule-based merging.
 
 ---
 
@@ -13,9 +13,9 @@ This document defines the behavioral flow, state transitions, algorithm contract
   - The entire pipeline for 200 blocks completes in <5 seconds (single-threaded).
   - Multiple invocations on the same input produce identical output (deterministic).
 * **Non-negotiables:**
-  - No external services (no Docker, no proxy, no Blockify, no OpenAI).
+  - No external services (no Docker, no proxy, no external deduplication service, no OpenAI).
   - No LLM calls — all decisions are deterministic functions of the embeddings + block metadata.
-  - Same interface as `deduplicate_blocks_via_blockify`: accepts `List[Dict]`, returns `Optional[List[Dict]]`, caller falls back to originals on `None`.
+  - `deduplicate_blocks_local` accepts `List[Dict]`, returns `Optional[List[Dict]]`, and callers fall back to originals on `None`.
 
 ---
 
@@ -50,12 +50,9 @@ This document defines the behavioral flow, state transitions, algorithm contract
 
 ```mermaid
 flowchart LR
-  subgraph BEFORE["Current (broken)"]
-    P1[parse_legal_text_to_blocks] --> B1[deduplicate_blocks_via_blockify]
-    B1 -->|POST /api/autoDistill| BD[Blockify Distill Docker<br/>localhost:8315]
-    BD -->|embeddings via requests| PROXY[Granite Proxy<br/>localhost:8001]
-    BD -->|LLM merge via requests| PROXY
-    PROXY -.->|500 Errno 22| CRASH["❌ merge always fails"]
+  subgraph BEFORE["Previous rejected external design"]
+    P1[parse_legal_text_to_blocks] --> EXT[External deduplication service]
+    EXT -.->|not part of project| CRASH["Rejected dependency"]
     CRASH --> FALLBACK["returns None<br/>(no dedup actually happens)"]
   end
 
@@ -211,14 +208,8 @@ flowchart LR
 | File | Change | Type |
 | :--- | :--- | :--- |
 | `backend/app/core/rag/indexer.py` | Add `deduplicate_blocks_local()` classmethod | **Add** |
-| `backend/app/core/rag/indexer.py` | Replace `deduplicate_blocks_via_blockify` call in `parse_and_index_document` with `deduplicate_blocks_local` | **Modify** |
-| `backend/tests/test_blockify.py` | Add `test_deduplicate_blocks_local_basic` (3 blocks, 2 similar → 2 remain) | **Add** |
-| `backend/tests/test_blockify.py` | Add `test_deduplicate_blocks_local_same_article_concat` (2 blocks same art# → merged) | **Add** |
-| `backend/tests/test_blockify.py` | Add `test_deduplicate_blocks_local_diff_article_concat` (2 blocks diff art# → merged with prefix) | **Add** |
-| `backend/tests/test_blockify.py` | Add `test_deduplicate_blocks_local_all_different` (3 distinct → unchanged) | **Add** |
-| `backend/tests/test_blockify.py` | Add `test_deduplicate_blocks_local_empty_or_single` (0/1 block → as-is) | **Add** |
-| `backend/app/core/rag/indexer.py` | Keep `deduplicate_blocks_via_blockify` for backward compat, deprecate in docstring | **Keep** |
-| `flows/features/blockify_ingestion_flow.md` | Update: mark Blockify Distill integration as deprecated, link to this doc | **Update** |
+| `backend/app/core/rag/indexer.py` | Use `deduplicate_blocks_local` in `parse_and_index_document` and markdown ingestion | **Modify** |
+| `backend/tests/test_local_deduplication.py` | Add targeted unit tests for local deduplication edge cases | **Add** |
 
 ---
 
@@ -251,9 +242,9 @@ flowchart LR
      - Re-embed merged blocks, rebuild master list
      - Increment threshold (+0.01 after iter 2)
    - Phase 3: Return deduplicated blocks + stats log (`startingBlockCount`, `finalBlockCount`, `blockReductionPercent`)
-3. **Wire into `parse_and_index_document`**: replace `deduplicate_blocks_via_blockify` call with `deduplicate_blocks_local`
-4. **Add tests** to `test_blockify.py`
-5. **Run full suite**: `pytest backend/tests/ -v`
+3. **Wire into ingestion paths**: call `deduplicate_blocks_local` from `parse_and_index_document` and markdown ingestion paths.
+4. **Add tests** to `backend/tests/test_local_deduplication.py`.
+5. **Run targeted suite**: `PYTHONPATH=backend .venv/Scripts/pytest backend/tests/test_local_deduplication.py`.
 
 ---
 
@@ -262,19 +253,19 @@ flowchart LR
 ### Files Modified
 | File | Change |
 | :--- | :--- |
-| `backend/app/core/rag/indexer.py` | +`deduplicate_blocks_local()`, modify `parse_and_index_document` |
-| `backend/tests/test_blockify.py` | +6 new test functions |
+| `backend/app/core/rag/indexer.py` | +`deduplicate_blocks_local()`, use it in ingestion paths |
+| `backend/tests/test_local_deduplication.py` | +5 targeted local deduplication test functions |
 
 ### Status
 * **FULLY IMPLEMENTED & TESTED**
-* **Validation:** `PYTHONPATH=backend .venv/Scripts/pytest backend/tests/test_blockify.py` → **100% Pass** (7 unit tests covering all algorithm components)
-* **Full Integration:** Integrated into `parse_and_index_document` with safe fallback pathways. All 48 tests pass successfully.
+* **Validation:** `PYTHONPATH=backend .venv/Scripts/pytest backend/tests/test_local_deduplication.py` → included in targeted backend sync set; `148 passed, 2 warnings`.
+* **Full Integration:** Integrated into `parse_and_index_document` and markdown ingestion with safe fallback to original blocks when local embeddings are unavailable.
 
 ---
 
 ## 12. Open Questions
 
-- *Should we keep `deduplicate_blocks_via_blockify` as a fallback if the local model is unavailable?* → Yes, keep it. The dispatcher in `parse_and_index_document` tries local first, falls back to Blockify, then falls back to originals.
+- *Should an external deduplication service remain as a fallback?* → No. External deduplication services are not part of this project. The dispatcher tries local deterministic deduplication and falls back to original blocks when local embeddings are unavailable or fail.
 
 ---
 

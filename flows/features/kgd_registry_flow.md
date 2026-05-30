@@ -7,7 +7,7 @@ This document defines the behavioral flow, state transitions, API contract, and 
 ## 1. Intent
 * **User Goal:** Importers and declarants query licensed customs brokers to represent them during customs clearance and check brand names against the Customs Register of Intellectual Property Objects (ТРОИС - ТРОИС РК) to prevent trademark copyright infringements, delays, or confiscation of goods.
 * **Success Criteria:**
-  - Search returns verified, rated brokers sorted by relevance, license state, and operating city.
+  - Search returns verified, rated brokers filtered by city/query and sorted by rating descending.
   - Trademark query detects potential TROIS copyright hits using case-insensitive wildcard comparisons.
   - Correct warning tags/messages are returned to prompt importers to seek consent from the trademark holder.
 
@@ -16,7 +16,7 @@ This document defines the behavioral flow, state transitions, API contract, and 
 ## 2. Scope
 * **In Scope:**
   - Broker Registry querying by city, license number, or brand name.
-  - rating-based sorting and address/contact retrieval for brokers.
+  - Rating-based descending sorting and address/contact retrieval for brokers.
   - TROIS registry checking (exact and substring matching) against registered brands.
   - SQLite auto-seeding of verified sample brokers for major RK hubs (Almaty, Astana, Aktau).
 * **Out of Scope / Deferred:**
@@ -41,8 +41,8 @@ flowchart TD
   Choice -->|TROIS Trademark| TrademarkQuery[Input Brand Name]
   
   BrokerQuery --> SearchDB[Query local BrokerRegistry]
-  SearchDB --> ReturnBrokers[Display ratings, addresses, and contacts]
-  
+  SearchDB --> SortByRating[Sort by rating descending]
+  SortByRating --> ReturnBrokers[Display ratings, addresses, and contacts]
   TrademarkQuery --> CheckTROIS[Case-insensitive wildcard search on TROISRegistry]
   CheckTROIS --> Decision{Trademark found?}
   Decision -->|Yes| Warn[Generate TROIS warning/alert]
@@ -112,7 +112,7 @@ stateDiagram-v2
 ## 10. Targeted Tests
 | Layer | Behavior | File | Status |
 | :--- | :--- | :--- | :--- |
-| Core / Service | Licensed brokers seeding and wildcard search | `backend/tests/test_database.py` | **PASSED** |
+| Core / Service | Licensed brokers seeding, wildcard search, and rating-desc sort | `backend/tests/test_database.py` | **PASSED** |
 | Core / Service | TROIS registered brand exact and substring detection | `backend/tests/test_database.py` | **PASSED** |
 
 ---
@@ -133,8 +133,8 @@ stateDiagram-v2
 * **Test Verification:** `backend/tests/test_database.py`
 
 ### Status
-* Licensed brokers and TROIS registry search functions are fully covered.
-* Validation: `PYTHONPATH=backend .venv/Scripts/pytest backend/tests/test_database.py` → **100% Pass**
+* Licensed brokers and TROIS registry search functions are covered, including broker rating-desc ordering.
+* Validation: `PYTHONPATH=backend .venv/Scripts/pytest backend/tests/test_database.py`
 
 ---
 

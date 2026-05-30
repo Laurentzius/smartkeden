@@ -188,22 +188,22 @@ Each point represents one risk rule.
 
 | Layer | Behavior | File | Status |
 | :--- | :--- | :--- | :--- |
-| Unit | Exact HS code match → returns correct rule | `backend/tests/test_risk_audit.py` | **TODO** |
-| Unit | Group mask (8517*) match → returns rule | `backend/tests/test_risk_audit.py` | **TODO** |
-| Unit | No match → empty response | `backend/tests/test_risk_audit.py` | **TODO** |
-| Unit | Multiple matches → deduplicated, sorted by severity | `backend/tests/test_risk_audit.py` | **TODO** |
-| Unit | Expired rule excluded | `backend/tests/test_risk_audit.py` | **TODO** |
-| Unit | Future rule excluded | `backend/tests/test_risk_audit.py` | **TODO** |
-| Unit | Admin upload valid CSV → rules indexed in Qdrant | `backend/tests/test_risk_audit.py` | **TODO** |
-| Unit | Admin upload invalid HS mask → 422 with line error | `backend/tests/test_risk_audit.py` | **TODO** |
-| Integration | Workspace calc with risk audit → result + risk block | `backend/tests/test_risk_audit.py` | **TODO** |
-| Frontend | Warning block renders below calculation | `frontend/__tests__/workspace.test.tsx` | **TODO** |
+| Unit | Exact HS code match → returns correct rule | `backend/tests/test_risk_audit.py` | **DEFERRED** |
+| Unit | Group mask (8517*) match → returns rule | `backend/tests/test_risk_audit.py` | **DEFERRED** |
+| Unit | No match → empty response | `backend/tests/test_risk_audit.py` | **DEFERRED** |
+| Unit | Multiple matches → deduplicated, sorted by severity | `backend/tests/test_risk_audit.py` | **DEFERRED** |
+| Unit | Expired rule excluded | `backend/tests/test_risk_audit.py` | **DEFERRED** |
+| Unit | Future rule excluded | `backend/tests/test_risk_audit.py` | **DEFERRED** |
+| Unit | Admin upload valid CSV → rules indexed in Qdrant | `backend/tests/test_risk_audit.py` | **DEFERRED** |
+| Unit | Admin upload invalid HS mask → 422 with line error | `backend/tests/test_risk_audit.py` | **DEFERRED** |
+| Integration | Workspace calc with risk audit → result + risk block | `backend/tests/test_risk_audit.py` | **DEFERRED** |
+| Frontend | Warning block renders below calculation | `frontend/__tests__/workspace.test.tsx` | **DEFERRED** |
 
 ---
 
 ## 11. Implementation Plan
 
-1. Create Qdrant collection `risk_profiles` (same 3072-dim config, but vector can be zero — we query by payload filter, not vector similarity).
+1. Create Qdrant collection `risk_profiles` (384-dim config if vector storage is required, but v1 can query by payload filter instead of vector similarity).
 2. Build `RiskAuditService` — query by HS code with mask matching, dedup, sort.
 3. Build admin upload endpoint for bulk rule ingestion.
 4. Wire risk audit into workspace calculation pipeline (parallel call with calculator).
@@ -215,7 +215,7 @@ Each point represents one risk rule.
 
 ## 12. Implementation Trace
 
-*To be filled during implementation.*
+*Deferred design-only flow. No risk audit service package, frontend risk block, or tests exist in the current codebase.*
 
 ### Files Created
 * `backend/app/services/risk_audit/` (new package)
@@ -232,7 +232,7 @@ Each point represents one risk rule.
 * `frontend/app/workspace/page.tsx` — add RiskAuditBlock
 
 ### Status
-* **Not implemented** — flow document complete
+* **DEFERRED / NOT IMPLEMENTED** — no `backend/app/services/risk_audit/` package or `backend/tests/test_risk_audit.py` exists.
 
 ---
 

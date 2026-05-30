@@ -536,6 +536,58 @@
         "created_by": "admin",
         "created_at": "2026-05-30T04:42:05.971116+00:00",
         "status": "deprecated"
+      },
+      {
+        "value": 0.17,
+        "effective_date": "2026-05-31",
+        "expiry_date": "2027-05-29",
+        "version": 63,
+        "created_by": "admin",
+        "created_at": "2026-05-30T11:03:35.897361+00:00"
+      },
+      {
+        "value": 0.18,
+        "effective_date": "2026-05-31",
+        "expiry_date": "2026-05-31",
+        "version": 64,
+        "created_by": "admin",
+        "created_at": "2026-05-30T11:03:35.932362+00:00",
+        "status": "cancelled"
+      },
+      {
+        "value": 0.19,
+        "effective_date": "2027-05-30",
+        "expiry_date": null,
+        "version": 65,
+        "created_by": "admin",
+        "created_at": "2026-05-30T11:03:35.993361+00:00",
+        "status": "deprecated"
+      },
+      {
+        "value": 0.17,
+        "effective_date": "2026-05-31",
+        "expiry_date": "2027-05-29",
+        "version": 66,
+        "created_by": "admin",
+        "created_at": "2026-05-30T11:20:27.685106+00:00"
+      },
+      {
+        "value": 0.18,
+        "effective_date": "2026-05-31",
+        "expiry_date": "2026-05-31",
+        "version": 67,
+        "created_by": "admin",
+        "created_at": "2026-05-30T11:20:27.714605+00:00",
+        "status": "cancelled"
+      },
+      {
+        "value": 0.19,
+        "effective_date": "2027-05-30",
+        "expiry_date": null,
+        "version": 68,
+        "created_by": "admin",
+        "created_at": "2026-05-30T11:20:27.771609+00:00",
+        "status": "deprecated"
       }
     ],
     "mci": [

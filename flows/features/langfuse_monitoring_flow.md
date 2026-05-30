@@ -69,7 +69,7 @@ sequenceDiagram
         Note over RAG: Span: @observe(name="LegalRAGService.query_legal_base")
         RAG->>Vertex: get_text_embedding(text)
         Note over Vertex: Span: @observe(name="get_text_embedding")
-        Vertex-->>RAG: 3072-dim Vector
+        Vertex-->>RAG: 384-dim Vector
         RAG->>Qdrant: Search similarity
         Qdrant-->>RAG: Top K matching legal chunks
         RAG->>Vertex: generate_chat_response(prompt, context)
@@ -180,8 +180,8 @@ The integration registers the following tracing actions:
 ---
 
 ## 10. Targeted Tests
-* **Test Environment Isolation:** Verified in `backend/pytest.ini` that `LANGFUSE_ENABLED=False` is set to ensure local and CI tests do not generate/transmit analytics.
-* **Robustness with Disabled SDK:** Verified that all 48 backend tests execute and pass without exceptions when Langfuse keys are empty/unset.
+* **Test Environment Isolation:** Verified in `backend/app/core/config.py` that `settings.LANGFUSE_ENABLED = False` is forced when `pytest` is loaded, so local and CI tests do not generate/transmit analytics.
+* **Robustness with Disabled SDK:** Verified that backend tests execute without exceptions when Langfuse keys are empty/unset.
 
 ---
 
@@ -208,8 +208,8 @@ The integration registers the following tracing actions:
 
 ### Status
 * Langfuse tracing is fully implemented and operational.
-* PYTEST test isolation confirmed via `LANGFUSE_ENABLED=False` in `pytest.ini`.
-* Validation command: `PYTHONPATH=backend .venv/Scripts/pytest backend/tests/` → All 48 passed.
+* PYTEST test isolation is enforced in `backend/app/core/config.py` by disabling Langfuse when `pytest` is present in `sys.modules`.
+* Validation command: `PYTHONPATH=backend .venv/Scripts/pytest backend/tests/`
 
 ---
 

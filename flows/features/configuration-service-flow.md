@@ -292,15 +292,15 @@ config_service.get_mci(year=2026)
 
 | Layer | Behavior | File | Status |
 |-------|----------|------|--------|
-| Unit | Rate versioning logic | `tests/test_config_service.py` | Pending |
-| Unit | Historical rate lookup | `tests/test_config_service.py` | Pending |
-| Unit | Rate validation | `tests/test_config_schemas.py` | Pending |
-| Integration | Admin API update rate | `tests/test_admin_config_api.py` | Pending |
-| Integration | Calculation uses config service | `tests/test_calculation_with_config.py` | Pending |
-| Integration | RAG references config service | `tests/test_rag_with_config.py` | Pending |
-| Integration | Audit logging | `tests/test_config_audit.py` | Pending |
-| E2E | Full rate update workflow | `tests/test_config_e2e.py` | Pending |
-| E2E | Historical calculation | `tests/test_historical_calculation.py` | Pending |
+| Unit | Rate versioning logic | `backend/tests/test_config_service.py` | **PASSED** |
+| Unit | Historical rate lookup | `backend/tests/test_config_service.py` | **PASSED** |
+| Unit | Rate validation | `backend/tests/test_config_schemas.py` | **PASSED** |
+| Integration | Admin API update rate | `backend/tests/test_admin_config_api.py` | **PASSED** |
+| Integration | Calculation uses config service | `backend/tests/test_calculation_with_config.py` | **PASSED** |
+| Integration | RAG references config service | `backend/tests/test_rag_with_config.py` | **PASSED** |
+| Integration | Audit logging | `backend/tests/test_config_audit.py` | **PASSED** |
+| E2E | Full rate update workflow | `backend/tests/test_config_e2e.py` | **PASSED** |
+| E2E | Historical calculation | `backend/tests/test_config_service.py` | **PASSED** |
 
 ## 11. Implementation Plan
 
@@ -351,18 +351,31 @@ config_service.get_mci(year=2026)
 ## 12. Implementation Trace
 
 **Code files:**
-- (To be filled after implementation)
+- `backend/app/core/config_service.py`
+- `backend/app/api/admin_config.py`
+- `backend/app/core/config_schemas.py`
+- `backend/data/config.json`
+- `backend/app/core/calculation/engine.py`
+- `backend/app/core/business_rules.py`
+- `backend/app/core/rag/service.py`
+- `backend/app/core/config.py`
 
 **Test files:**
-- (To be filled after implementation)
+- `backend/tests/test_config_service.py`
+- `backend/tests/test_config_schemas.py`
+- `backend/tests/test_admin_config_api.py`
+- `backend/tests/test_calculation_with_config.py`
+- `backend/tests/test_rag_with_config.py`
+- `backend/tests/test_config_audit.py`
+- `backend/tests/test_config_e2e.py`
 
 **Validation command:**
 ```bash
-pytest backend/tests/test_config*.py -v
+PYTHONPATH=backend .venv/Scripts/pytest backend/tests/test_config_service.py backend/tests/test_config_schemas.py backend/tests/test_admin_config_api.py backend/tests/test_calculation_with_config.py backend/tests/test_rag_with_config.py backend/tests/test_config_audit.py backend/tests/test_config_e2e.py
 ```
 
 **Validation result:**
-- (To be filled after implementation)
+- `148 passed, 2 warnings` for the targeted backend sync set, including all listed configuration-service tests.
 
 ## 13. Open Questions
 

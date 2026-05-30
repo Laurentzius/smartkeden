@@ -129,7 +129,8 @@ The Parser Registry supports the following interface methods:
 * **Test Suite:** `backend/tests/test_document_parsers.py`
 
 ### Status
-Flow design complete. Awaiting review.
+* **FULLY IMPLEMENTED & TESTED**
+* **Validation:** `PYTHONPATH=backend .venv/Scripts/pytest backend/tests/test_document_parsers.py` → included in targeted backend sync set; `148 passed, 2 warnings`.
 
 ---
 

@@ -125,6 +125,52 @@ def test_database_search_by_license_number():
         db.close()
 
 
+def test_database_search_brokers_orders_by_rating_descending():
+    """Broker search should return highest-rated matches first."""
+    db = SessionLocal()
+    try:
+        db.query(BrokerRegistry).delete()
+        db.commit()
+
+        db.add_all(
+            [
+                BrokerRegistry(
+                    license_number="LOW/2026",
+                    company_name="Алматы Customs Low",
+                    bin_number="260100000001",
+                    city="Алматы",
+                    rating=3.2,
+                ),
+                BrokerRegistry(
+                    license_number="HIGH/2026",
+                    company_name="Алматы Customs High",
+                    bin_number="260100000002",
+                    city="Алматы",
+                    rating=4.9,
+                ),
+                BrokerRegistry(
+                    license_number="MID/2026",
+                    company_name="Алматы Customs Mid",
+                    bin_number="260100000003",
+                    city="Алматы",
+                    rating=4.1,
+                ),
+            ]
+        )
+        db.commit()
+
+        res = KGDRegistryService.search_brokers(db, city="Алматы", query="Customs")
+
+        assert [broker.license_number for broker in res] == [
+            "HIGH/2026",
+            "MID/2026",
+            "LOW/2026",
+        ]
+
+    finally:
+        db.close()
+
+
 def test_database_empty_broker_registry():
     """Empty broker registry should return empty results gracefully."""
     db = SessionLocal()
