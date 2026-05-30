@@ -1,10 +1,11 @@
 """Integration tests for the Admin Rules API.
 
 Tests CRUD endpoints, auth, validation, audit log, and edge cases.
-Uses FastAPI TestClient with the shared SQLite database.
+Uses FastAPI TestClient with the configured relational database.
 """
 
 import pytest
+
 from datetime import date, timedelta
 from fastapi.testclient import TestClient
 
@@ -12,6 +13,8 @@ from app.main import app
 from app.core.database import engine, Base, SessionLocal
 from app.core.models import ClassificationRuleModel, RulesAuditLogModel
 from app.core.config import settings
+
+pytestmark = pytest.mark.sequential
 
 client = TestClient(app)
 ADMIN_HEADERS = {"X-Admin-Key": settings.ADMIN_API_KEY}

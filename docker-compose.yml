@@ -1,5 +1,26 @@
 
 services:
+  # 0. PostgreSQL Relational Database
+  postgres:
+    image: postgres:16
+    container_name: smartkeden-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: smartkeden
+      POSTGRES_USER: smartkeden
+      POSTGRES_PASSWORD: smartkeden
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - smartkeden-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U smartkeden -d smartkeden"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
   # 1. Qdrant Vector Database
   qdrant:
     image: qdrant/qdrant:v1.18.1
@@ -33,8 +54,12 @@ services:
     environment:
       - QDRANT_HOST=qdrant
       - QDRANT_PORT=6333
+      - DATABASE_URL=postgresql+psycopg://smartkeden:smartkeden@postgres:5432/smartkeden
     depends_on:
-      - qdrant
+      postgres:
+        condition: service_healthy
+      qdrant:
+        condition: service_started
     networks:
       - smartkeden-network
     deploy:
@@ -68,6 +93,7 @@ services:
 
 volumes:
   qdrant_data:
+  postgres_data:
 
 networks:
   smartkeden-network:

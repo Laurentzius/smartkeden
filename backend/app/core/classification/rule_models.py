@@ -5,7 +5,7 @@ Defines schemas for rules, conditions, actions, attributes, and API request/resp
 
 from datetime import date, datetime
 from typing import Any, Optional, Union
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, field_validator
 
 # ── Valid operators and action types ──────────────────────────────────────────
 
@@ -123,6 +123,7 @@ class RuleUpdateRequest(BaseModel):
 
 # ── Attribute Schema ─────────────────────────────────────────────────────────
 
+
 class AttributeSchema(BaseModel):
     """Structured product attributes extracted from text + vision."""
     material_outer: Optional[str] = Field(None, description="Outer material, e.g. 'хлопок', 'пластик'")
@@ -141,6 +142,12 @@ class AttributeSchema(BaseModel):
     fur_coverage_percent: Optional[float] = Field(None, description="Natural fur coverage percentage (0-100)")
     textile_percent: Optional[float] = Field(None, description="Textile content percentage (0-100)")
     metal_percent: Optional[float] = Field(None, description="Metal content percentage (0-100)")
+    is_kit: Optional[str] = Field(None, description="Товар отдельно или в составе комплекта: separate/kit")
+    product_purpose: Optional[str] = Field(None, description="Основное назначение товара")
+    material_composition: Optional[str] = Field(None, description="Материал/состав (свободный текст)")
+    technical_specs: Optional[str] = Field(None, description="Технические характеристики (напряжение, мощность, производительность и т.д.)")
+    customs_regime: Optional[str] = Field(None, description="Таможенный режим: import/export/transit")
+    jurisdiction: Optional[str] = Field(None, description="Юрисдикция: EAEU/EU/US/other")
 
     def to_flat_dict(self) -> dict:
         """Return non-None attributes as a flat dict."""

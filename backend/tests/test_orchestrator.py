@@ -102,6 +102,10 @@ async def test_orchestrator_endpoint_health(monkeypatch):
     data = response.json()
     assert data["intent"] == "greeting"
     assert len(data["message"]) > 0
+    assert "Сәлеметсіз бе" in data["message"]
+    assert "Здравствуйте" in data["message"]
+    assert "Тауарды жіктеу" in data["message"]
+    assert "Классификация товаров" in data["message"]
 
 
 @pytest.mark.asyncio
@@ -347,7 +351,7 @@ async def test_adk_coordination_hs(monkeypatch):
 
     client = TestClient(app)
     resp = client.post(
-        "/api/orchestrate", data={"text": "Найди код ТН ВЭД для телефона"}
+        "/api/orchestrate", data={"text": "Найди код ТН ВЭД для телефона — отдельный товар, для связи, пластик и стекло, 220В, Китай, импорт, ЕАЭС"}
     )
     assert resp.status_code == 200
     data = resp.json()
@@ -432,7 +436,7 @@ async def test_adk_chained_workflow(monkeypatch):
     client = TestClient(app)
     resp = client.post(
         "/api/orchestrate",
-        data={"text": "Определи код и посчитай пошлину для смартфона за $12500"},
+        data={"text": "Определи код и посчитай пошлину для смартфона за $12500 — отдельный товар, для связи, пластик и стекло, 220В, Китай, импорт, ЕАЭС"},
     )
     assert resp.status_code == 200
     data = resp.json()
@@ -714,3 +718,406 @@ def test_profile_extractor_fallback_multiple_history_turns():
     assert result.accumulated_profile.duty_rate_percent == 15.0
     assert len(result.missing_fields) == 0
     assert "Все обязательные параметры собраны" in result.next_question
+
+
+# ═══════════════════════════════════════════════════════════════════════════
+#  Questionnaire Gate Tests
+# ═══════════════════════════════════════════════════════════════════════════
+
+
+@pytest.mark.asyncio
+async def test_questionnaire_blocks_hs_classifier_on_missing_fields(monkeypatch):
+    """Underspecified product text returns questionnaire; HS classifier is NOT called."""
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.core.local_embeddings import LocalEmbeddingModel
+
+    monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
+
+    async def _mock_classify_hs(text: str):
+        return IntentClassification(
+            intent=IntentType.product_description, confidence=0.9, reasoning="Mock"
+        )
+    monkeypatch.setattr(IntentClassifier, "classify", _mock_classify_hs)
+
+    from app.core.hs_classifier.classifier import (
+        HSClassificationResponse,
+        HSCodeCandidate,
+    )
+
+    _call_count = 0
+
+    async def _mock_classify(description, image_bytes=None, image_mime_type="image/jpeg"):
+        nonlocal _call_count
+        _call_count += 1
+        return HSClassificationResponse(
+            product_description=description,
+            candidates=[
+                HSCodeCandidate(
+                    hs_code="8543709000",
+                    product_name_ru="Устройство",
+                    duty_rate_percent=10.0,
+                    is_subject_to_recycling_fee=True,
+                    confidence_score=0.9,
+                    reasoning="Mock",
+                )
+            ],
+            qdrant_backed=False,
+        )
+
+    _mock_hs_clf = type("", (), {})()
+    _mock_hs_clf.classify = _mock_classify
+    monkeypatch.setattr(_wn, "hs_classifier", _mock_hs_clf)
+
+    client = TestClient(app)
+    resp = client.post(
+        "/api/orchestrate",
+        data={"text": "классифицируй телефон"},
+    )
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["intent"] == "product_description"
+    # Must contain questionnaire message, not classification result
+    assert "уточните" in data["message"].lower() or "Уточните" in data["message"]
+    # HS classifier must NOT be called
+    assert _call_count == 0
+    # pipeline_results should include questionnaire metadata
+    qr = data.get("pipeline_results", {}).get("questionnaire", {})
+    assert qr.get("pending") is True
+    assert len(qr.get("missing_fields", [])) > 0
+
+
+@pytest.mark.asyncio
+async def test_questionnaire_skips_when_fields_rich(monkeypatch):
+    """Rich product text with all required fields skips questionnaire, calls HS classifier."""
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.core.local_embeddings import LocalEmbeddingModel
+
+    monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
+
+    async def _mock_classify_hs(text: str):
+        return IntentClassification(
+            intent=IntentType.product_description, confidence=0.9, reasoning="Mock"
+        )
+    monkeypatch.setattr(IntentClassifier, "classify", _mock_classify_hs)
+
+    from app.core.hs_classifier.classifier import (
+        HSClassificationResponse,
+        HSCodeCandidate,
+    )
+
+    _call_count = 0
+
+    async def _mock_classify(description, image_bytes=None, image_mime_type="image/jpeg"):
+        nonlocal _call_count
+        _call_count += 1
+        return HSClassificationResponse(
+            product_description=description,
+            candidates=[
+                HSCodeCandidate(
+                    hs_code="8543709000",
+                    product_name_ru="Телефон",
+                    duty_rate_percent=10.0,
+                    is_subject_to_recycling_fee=True,
+                    confidence_score=0.92,
+                    reasoning="Mock",
+                )
+            ],
+            qdrant_backed=False,
+        )
+
+    _mock_hs_clf = type("", (), {})()
+    _mock_hs_clf.classify = _mock_classify
+    monkeypatch.setattr(_wn, "hs_classifier", _mock_hs_clf)
+
+    client = TestClient(app)
+    rich_text = (
+        "отдельный товар, для связи, пластик и стекло, "
+        "220В 1.5кВт, Китай, импорт, ЕАЭС"
+    )
+    resp = client.post(
+        "/api/orchestrate",
+        data={"text": rich_text},
+    )
+    assert resp.status_code == 200
+    data = resp.json()
+    assert data["intent"] == "product_description"
+    # HS classifier must be called
+    assert _call_count == 1
+    # Response should contain classification, not questionnaire
+    assert "8543709000" in data["message"]
+
+
+@pytest.mark.asyncio
+async def test_questionnaire_partial_answer_asks_remaining(monkeypatch):
+    """Partial answer returns questionnaire with only remaining fields.
+
+    Turn 2 sends realistic history and does NOT monkeypatch IntentClassifier
+    to product_description — the history-based detection must route correctly.
+    """
+    import json
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.core.local_embeddings import LocalEmbeddingModel
+
+    monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
+
+    # Turn 1: need product_description for the initial classification
+    async def _mock_classify_turn1(text: str):
+        return IntentClassification(
+            intent=IntentType.product_description, confidence=0.9, reasoning="Mock"
+        )
+    monkeypatch.setattr(IntentClassifier, "classify", _mock_classify_turn1)
+
+    from app.core.hs_classifier.classifier import (
+        HSClassificationResponse,
+        HSCodeCandidate,
+    )
+
+    _call_count = 0
+
+    async def _mock_classify(description, image_bytes=None, image_mime_type="image/jpeg"):
+        nonlocal _call_count
+        _call_count += 1
+        return HSClassificationResponse(
+            product_description=description,
+            candidates=[
+                HSCodeCandidate(
+                    hs_code="8543709000",
+                    product_name_ru="Устройство",
+                    duty_rate_percent=10.0,
+                    is_subject_to_recycling_fee=True,
+                    confidence_score=0.9,
+                    reasoning="Mock",
+                )
+            ],
+            qdrant_backed=False,
+        )
+
+    _mock_hs_clf = type("", (), {})()
+    _mock_hs_clf.classify = _mock_classify
+    monkeypatch.setattr(_wn, "hs_classifier", _mock_hs_clf)
+
+    client = TestClient(app)
+
+    # Turn 1: underspecified → questionnaire
+    resp1 = client.post(
+        "/api/orchestrate",
+        data={"text": "классифицируй телефон"},
+    )
+    assert resp1.status_code == 200
+    data1 = resp1.json()
+    assert data1["intent"] == "product_description"
+    assert _call_count == 0
+    missing1 = data1.get("pipeline_results", {}).get("questionnaire", {}).get("missing_fields", [])
+    assert len(missing1) > 0
+
+    # Turn 2: patch IntentClassifier to return unclear (non-product)
+    async def _mock_classify_turn2(text: str):
+        return IntentClassification(
+            intent=IntentType.unclear, confidence=0.5, reasoning="Mock"
+        )
+    monkeypatch.setattr(IntentClassifier, "classify", _mock_classify_turn2)
+
+    # Build history from turn 1
+    history_payload = json.dumps([
+        {"role": "user", "content": "классифицируй телефон"},
+        {"role": "assistant", "content": data1["message"]},
+    ])
+
+    # Turn 2: partial answer (only some fields)
+    resp2 = client.post(
+        "/api/orchestrate",
+        data={
+            "text": "отдельный товар, для связи, пластик",
+            "history": history_payload,
+        },
+    )
+    assert resp2.status_code == 200
+    data2 = resp2.json()
+    assert data2["intent"] == "product_description"
+    # HS classifier still not called (missing technical_specs, country_of_origin, customs_regime, jurisdiction)
+    assert _call_count == 0
+    # Must have fewer missing fields than turn 1
+    missing2 = data2.get("pipeline_results", {}).get("questionnaire", {}).get("missing_fields", [])
+    assert len(missing2) < len(missing1)
+    assert len(missing2) > 0
+    # Should ask only remaining questions
+    assert "уточните" in data2["message"].lower() or "Уточните" in data2["message"]
+
+
+@pytest.mark.asyncio
+async def test_questionnaire_complete_answer_calls_hs_classifier(monkeypatch):
+    """Complete answer after questionnaire merges attributes and calls HS classifier.
+
+    Turn 2 sends realistic history from turn 1 and does NOT monkeypatch
+    IntentClassifier to product_description — the history-based questionnaire
+    detection must route the answer to hs_classifier_node regardless.
+    """
+    import json
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.core.local_embeddings import LocalEmbeddingModel
+
+    monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
+
+    # Turn 1: need product_description for the initial classification
+    async def _mock_classify_turn1(text: str):
+        return IntentClassification(
+            intent=IntentType.product_description, confidence=0.9, reasoning="Mock"
+        )
+    monkeypatch.setattr(IntentClassifier, "classify", _mock_classify_turn1)
+
+    from app.core.hs_classifier.classifier import (
+        HSClassificationResponse,
+        HSCodeCandidate,
+    )
+
+    _call_count = 0
+    _captured_description = None
+
+    async def _mock_classify(description, image_bytes=None, image_mime_type="image/jpeg"):
+        nonlocal _call_count, _captured_description
+        _call_count += 1
+        _captured_description = description
+        return HSClassificationResponse(
+            product_description=description,
+            candidates=[
+                HSCodeCandidate(
+                    hs_code="8543709000",
+                    product_name_ru="Телефон",
+                    duty_rate_percent=10.0,
+                    is_subject_to_recycling_fee=True,
+                    confidence_score=0.92,
+                    reasoning="Mock",
+                )
+            ],
+            qdrant_backed=False,
+        )
+
+    _mock_hs_clf = type("", (), {})()
+    _mock_hs_clf.classify = _mock_classify
+    monkeypatch.setattr(_wn, "hs_classifier", _mock_hs_clf)
+
+    client = TestClient(app)
+
+    # Turn 1: underspecified → questionnaire
+    resp1 = client.post(
+        "/api/orchestrate",
+        data={"text": "классифицируй телефон"},
+    )
+    assert resp1.status_code == 200
+    resp1_data = resp1.json()
+    assert resp1_data["intent"] == "product_description"
+    assert _call_count == 0
+    qr1 = resp1_data.get("pipeline_results", {}).get("questionnaire", {})
+    assert qr1.get("pending") is True
+    assert len(qr1.get("missing_fields", [])) > 0
+
+    # Turn 2: patch IntentClassifier to return unclear (non-product),
+    # proving the history-based override routes correctly.
+    async def _mock_classify_turn2(text: str):
+        return IntentClassification(
+            intent=IntentType.unclear, confidence=0.5, reasoning="Mock"
+        )
+    monkeypatch.setattr(IntentClassifier, "classify", _mock_classify_turn2)
+
+    # Build history from turn 1: user message + assistant questionnaire
+    history_payload = json.dumps([
+        {"role": "user", "content": "классифицируй телефон"},
+        {"role": "assistant", "content": resp1_data["message"]},
+    ])
+
+    resp2 = client.post(
+        "/api/orchestrate",
+        data={
+            "text": (
+                "отдельный товар, для мобильной связи, пластик и стекло, "
+                "220В, 1.5кВт, Китай, импорт, ЕАЭС"
+            ),
+            "history": history_payload,
+        },
+    )
+    assert resp2.status_code == 200
+    data2 = resp2.json()
+    assert data2["intent"] == "product_description"
+    # HS classifier must be called now
+    assert _call_count == 1
+    assert "8543709000" in data2["message"]
+    # Enriched description must contain the original product text
+    assert _captured_description is not None
+    assert "телефон" in _captured_description.lower()
+
+
+@pytest.mark.asyncio
+async def test_questionnaire_exits_on_non_product_intent(monkeypatch):
+    """Non-product intent while questionnaire pending exits questionnaire flow."""
+    from fastapi.testclient import TestClient
+    from app.main import app
+    from app.core.local_embeddings import LocalEmbeddingModel
+
+    monkeypatch.setattr(LocalEmbeddingModel, "_available", False)
+
+    # First call: product_description
+    async def _mock_classify_hs(text: str):
+        return IntentClassification(
+            intent=IntentType.product_description, confidence=0.9, reasoning="Mock"
+        )
+    monkeypatch.setattr(IntentClassifier, "classify", _mock_classify_hs)
+
+    from app.core.hs_classifier.classifier import (
+        HSClassificationResponse,
+        HSCodeCandidate,
+    )
+
+    async def _mock_classify(description, image_bytes=None, image_mime_type="image/jpeg"):
+        return HSClassificationResponse(
+            product_description=description,
+            candidates=[
+                HSCodeCandidate(
+                    hs_code="8543709000",
+                    product_name_ru="Устройство",
+                    duty_rate_percent=10.0,
+                    is_subject_to_recycling_fee=True,
+                    confidence_score=0.9,
+                    reasoning="Mock",
+                )
+            ],
+            qdrant_backed=False,
+        )
+
+    _mock_hs_clf = type("", (), {})()
+    _mock_hs_clf.classify = _mock_classify
+    monkeypatch.setattr(_wn, "hs_classifier", _mock_hs_clf)
+
+    client = TestClient(app)
+
+    # Turn 1: underspecified → questionnaire
+    resp1 = client.post(
+        "/api/orchestrate",
+        data={"text": "классифицируй телефон"},
+    )
+    assert resp1.status_code == 200
+    data1 = resp1.json()
+    assert data1["intent"] == "product_description"
+    qr = data1.get("pipeline_results", {}).get("questionnaire", {})
+    assert qr.get("pending") is True
+
+    # Turn 2: switch to greeting (non-product intent)
+    async def _mock_classify_greet(text: str):
+        return IntentClassification(
+            intent=IntentType.greeting, confidence=0.9, reasoning="Mock"
+        )
+    monkeypatch.setattr(IntentClassifier, "classify", _mock_classify_greet)
+
+    resp2 = client.post(
+        "/api/orchestrate",
+        data={"text": "привет"},
+    )
+    assert resp2.status_code == 200
+    data2 = resp2.json()
+    assert data2["intent"] == "greeting"
+    # pipeline_results should NOT have pending questionnaire
+    qr2 = data2.get("pipeline_results") or {}
+    assert qr2.get("questionnaire") is None

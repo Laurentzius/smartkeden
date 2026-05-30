@@ -1,5 +1,4 @@
 import logging
-from typing import Any
 
 from app.core.orchestrator.models import IntentType, OrchestrateResponse, ChatMessage
 from app.core.orchestrator.intent_classifier import IntentClassifier
@@ -15,6 +14,57 @@ from google.adk.workflow import node
 
 
 logger = logging.getLogger(__name__)
+
+# ── Questionnaire marker used to detect pending questionnaire in history ──
+_QUESTIONNAIRE_MARKER = "Для точной классификации уточните следующие данные:"
+
+
+def _detect_pending_questionnaire(history: list) -> tuple:
+    """Check if history indicates a pending classification questionnaire.
+
+    Returns (is_pending: bool, original_product_text: str | None).
+    """
+    if not history:
+        return False, None
+
+    # A questionnaire is pending only when the latest assistant message is
+    # the questionnaire. If a later assistant answer exists, the prior
+    # questionnaire has already been resolved and must not hijack new intents.
+    latest_assistant_idx = None
+    for i in range(len(history) - 1, -1, -1):
+        msg = history[i]
+        role = msg.get("role", "") if isinstance(msg, dict) else getattr(msg, "role", "")
+        if role == "assistant":
+            latest_assistant_idx = i
+            break
+
+    if latest_assistant_idx is None:
+        return False, None
+
+    latest = history[latest_assistant_idx]
+    content = (
+        latest.get("content", "")
+        if isinstance(latest, dict)
+        else getattr(latest, "content", "")
+    )
+    if _QUESTIONNAIRE_MARKER not in content:
+        return False, None
+
+    # Found a pending questionnaire. Recover the most recent user message
+    # before it as the original product description.
+    for j in range(latest_assistant_idx - 1, -1, -1):
+        prev = history[j]
+        prev_role = (
+            prev.get("role", "") if isinstance(prev, dict) else getattr(prev, "role", "")
+        )
+        prev_content = (
+            prev.get("content", "")
+            if isinstance(prev, dict)
+            else getattr(prev, "content", "")
+        )
+        if prev_role == "user":
+            return True, prev_content
+    return True, None
 
 
 @node(rerun_on_resume=True)
@@ -75,6 +125,24 @@ async def coordinator_node(ctx, node_input):
             ctx.route = "interception_response"
             return result.model_dump()
         # fall through to normal classification on error
+    # ── Pending questionnaire continuation via history ──────────────
+    # When the session is recreated per HTTP request, ADK state is lost.
+    # Detect a pending questionnaire from chat history so continuation
+    # messages (answers) still reach hs_classifier_node.
+    is_pending_q, original_product_text = _detect_pending_questionnaire(
+        ctx.state.get("history", [])
+    )
+    if is_pending_q:
+        ctx.state["intent"] = "product_description"
+        ctx.state["confidence"] = 0.9
+        ctx.state["pending_classification"] = True
+        if original_product_text:
+            ctx.state["original_product_text"] = original_product_text
+        ctx.route = "product_description"
+        return {
+            "intent": "product_description",
+            "message": "",
+        }
 
     # ── Normal intent classification ───────────────────────────────
     classification = await IntentClassifier.classify(text)
@@ -83,6 +151,13 @@ async def coordinator_node(ctx, node_input):
     ctx.state["reasoning"] = classification.reasoning
 
     ctx.route = classification.intent.value
+
+    # Clear pending questionnaire when user switches away from classification
+    if classification.intent != IntentType.product_description:
+        ctx.state["pending_classification"] = None
+        ctx.state["questionnaire_attributes"] = None
+        ctx.state["missing_questionnaire_fields"] = None
+
     return classification.model_dump()
 
 
@@ -92,12 +167,17 @@ async def greeting_node(ctx, node_input):
     return {
         "intent": "greeting",
         "message": (
-            "\U0001f44b Здравствуйте! Я — Кеден Көмекшісі (CustomAI Kazakhstan).\n\n"
-            "Я могу помочь вам:\n"
-            "\u2022 **Консультация по законодательству** — вопросы о ТК РК, Налоговом кодексе\n"
-            "\u2022 **Классификация товаров** — подбор кода ТН ВЭД\n"
-            "\u2022 **Расчёт таможенных платежей** — пошлины, НДС, акцизы, утильсбор\n\n"
-            "Напишите ваш вопрос!"
+            "👋 Сәлеметсіз бе! / Здравствуйте!\n\n"
+            "Мен — Кеден Көмекшісі (CustomAI Kazakhstan).\n\n"
+            "Көмектесе аламын:\n"
+            "• **Заңнама бойынша кеңес** — ЕАЭО ТК, ҚР Салық кодексі\n"
+            "• **Тауарды жіктеу** — ТН ВЭД кодын таңдау\n"
+            "• **Кедендік төлемдерді есептеу** — баж, ҚҚС, акциз, утильалым\n\n"
+            "Я могу помочь:\n"
+            "• **Консультация по законодательству** — ТК ЕАЭС, Налоговый кодекс РК\n"
+            "• **Классификация товаров** — подбор кода ТН ВЭД\n"
+            "• **Расчёт таможенных платежей** — пошлины, НДС, акцизы, утильсбор\n\n"
+            "Сұрағыңызды жазыңыз / Напишите ваш вопрос."
         ),
     }
 
@@ -155,34 +235,111 @@ async def legal_rag_node(ctx, node_input):
 
 @node(rerun_on_resume=True)
 async def hs_classifier_node(ctx, node_input):
-    """Handle product_description intent using HSCodeClassifier + Classification Rules."""
+    """Handle product_description intent using HSCodeClassifier + Classification Rules.
+
+    Gate: requires mandatory pre-classification questionnaire fields before
+    calling hs_classifier.classify().  Underspecified product descriptions
+    receive a numbered questionnaire; answers are merged across turns.
+    """
     text = ctx.state.get("user_text", "")
     uploaded_bytes = ctx.state.get("uploaded_file_bytes")
     uploaded_mime = ctx.state.get("uploaded_file_mime", "image/jpeg")
 
     # ── Attribute extraction ────────────────────────────────────────────
     from app.core.classification.attribute_extractor import AttributeExtractor
+    from app.core.classification.questionnaire import (
+        is_questionnaire_complete,
+        missing_questionnaire_fields,
+        build_questionnaire_message,
+        parse_questionnaire_answer,
+    )
     from app.core.orchestrator.adk_tools import apply_classification_rules
 
     attribute_extractor = AttributeExtractor()
 
-    # Check if we're resuming after clarifying questions
-    if "missing_attributes" in ctx.state and "user_answers" in ctx.state:
-        # Merge user answers with existing attributes
+    # ── Resume: existing RulesEngine clarifying-questions path ──────────
+    if "missing_attributes" in ctx.state and ctx.state.get("missing_attributes") and "user_answers" in ctx.state and ctx.state.get("user_answers"):
         extracted_attributes = ctx.state.get("extracted_attributes", {})
         extracted_attributes.update(ctx.state["user_answers"])
-        ctx.state.pop("missing_attributes", None)
-        ctx.state.pop("user_answers", None)
+        ctx.state["missing_attributes"] = None
+        ctx.state["user_answers"] = None
+    elif ctx.state.get("pending_classification"):
+        # ── Resume: questionnaire continuation ──────────────────────────
+        existing_attrs = ctx.state.get("questionnaire_attributes", {})
+
+        # Cross-session recovery: when the session is recreated per HTTP
+        # request, questionnaire_attributes is lost. Re-extract base attrs
+        # from the original product text stored in ctx.state, then merge
+        # the current answer text on top.
+        if not existing_attrs:
+            original_text = ctx.state.get("original_product_text", "")
+            if original_text:
+                existing_attrs = await attribute_extractor.extract_attributes(
+                    description=original_text,
+                )
+
+        merged = parse_questionnaire_answer(text, existing_attrs)
+        ctx.state["questionnaire_attributes"] = merged
+        if is_questionnaire_complete(merged):
+            # All required fields collected → proceed to classification
+            ctx.state["pending_classification"] = False
+            ctx.state["questionnaire_result"] = None
+            extracted_attributes = merged
+        else:
+            # Still incomplete → ask remaining questions only
+            missing = missing_questionnaire_fields(merged)
+            ctx.state["missing_questionnaire_fields"] = missing
+            result = {
+                "intent": "product_description",
+                "message": build_questionnaire_message(missing),
+                "pipeline_results": {
+                    "questionnaire": {
+                        "missing_fields": missing,
+                        "pending": True,
+                    }
+                },
+            }
+            ctx.state["questionnaire_result"] = result
+            return result
     else:
-        # First run: extract attributes from description and image
+        # ── First run: extract attributes from description and image ─────
         extracted_attributes = await attribute_extractor.extract_attributes(
             description=text,
             image_bytes=uploaded_bytes,
         )
 
+        # ── Questionnaire gate ──────────────────────────────────────────
+        if not is_questionnaire_complete(extracted_attributes):
+            missing = missing_questionnaire_fields(extracted_attributes)
+            ctx.state["questionnaire_attributes"] = extracted_attributes
+            ctx.state["missing_questionnaire_fields"] = missing
+            ctx.state["pending_classification"] = True
+            # Save original product text for later enriched description
+            if not ctx.state.get("original_product_text"):
+                ctx.state["original_product_text"] = text
+            result = {
+                "intent": "product_description",
+                "message": build_questionnaire_message(missing),
+                "pipeline_results": {
+                    "questionnaire": {
+                        "missing_fields": missing,
+                        "pending": True,
+                    }
+                },
+            }
+            ctx.state["questionnaire_result"] = result
+            return result
+
+    # ── Build enriched description ──────────────────────────────────────
+    # Prefer original_product_text (e.g. "телефон") over the current
+    # answer text so the HS classifier sees the actual product, not just
+    # the questionnaire attributes.
+    product_text = ctx.state.get("original_product_text", text)
+    enriched_description = _build_enriched_description(product_text, extracted_attributes)
+
     # ── HS Classification ───────────────────────────────────────────────
     hs_result = await hs_classifier.classify(
-        description=text,
+        description=enriched_description,
         image_bytes=uploaded_bytes,
         image_mime_type=uploaded_mime,
     )
@@ -230,6 +387,39 @@ async def hs_classifier_node(ctx, node_input):
     ctx.state["hs_classification_result"] = result
 
     return result
+
+
+def _build_enriched_description(
+    original_text: str,
+    attributes: dict,
+) -> str:
+    """Build an enriched classification query from original text + structured attrs.
+
+    Appends key questionnaire fields as a structured suffix so the HS classifier
+    receives both the original user description and the resolved attributes.
+    """
+    parts = [original_text.strip()] if original_text.strip() else []
+
+    field_labels = {
+        "is_kit": "Комплектность",
+        "product_purpose": "Назначение",
+        "material_composition": "Материал/состав",
+        "technical_specs": "Тех. характеристики",
+        "country_of_origin": "Страна происхождения",
+        "customs_regime": "Таможенный режим",
+        "jurisdiction": "Юрисдикция",
+    }
+
+    attr_parts: list[str] = []
+    for field, label in field_labels.items():
+        value = attributes.get(field)
+        if value is not None and str(value).strip():
+            attr_parts.append(f"{label}: {value}")
+
+    if attr_parts:
+        parts.append("Атрибуты товара: " + "; ".join(attr_parts))
+
+    return " ".join(parts) if parts else original_text
 
 
 @node(rerun_on_resume=True)
@@ -385,6 +575,11 @@ async def conditional_route_node(ctx, node_input):
     if hs_done and wants_calc:
         ctx.route = "chain_to_calc"
         return {"chain": True, "message": "Chaining to calculator..."}
+
+    # If questionnaire is pending, return the questionnaire result
+    qr = ctx.state.get("questionnaire_result")
+    if qr:
+        return qr
 
     # No chaining — the HS result (already stored) is the final output
     hs_result = ctx.state.get("hs_classification_result", {})

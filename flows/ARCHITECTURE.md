@@ -21,7 +21,8 @@ flowchart LR
 
     subgraph HS["HS Code Classification Flow"]
         HS_Start[Identify Product]
-        HS_Vision[Gemini Vision Parse]
+        HS_Questionnaire[Classification Questionnaire]
+        HS_Vision[Attribute / Vision Parse]
         HS_Vector[Qdrant Search hs_code_directory]
         HS_Select[Candidate Selection]
     end
@@ -115,6 +116,10 @@ flowchart LR
     %% Orchestrator routes
     OR_Classify -- "question_about_law" --> OR_RAG
     OR_Classify -- "product_description" --> OR_HS
+    OR_HS --> HS_Questionnaire
+    HS_Questionnaire -- "classification:questionnaire_complete" --> HS_Vision
+    HS_Vision --> HS_Vector
+    HS_Vector --> HS_Select
     OR_Classify -- "calculation_request" --> OR_Calc
     OR_Classify -- "document_upload" --> OR_Ingest
 
@@ -296,7 +301,7 @@ flowchart LR
 * **Orchestrator (Chat):** `backend/app/core/orchestrator/` → Flow Document: `flows/features/agent_orchestrator_flow.md` (ADK 2.0 migration designed in `flows/features/google_adk_orchestration_flow.md`)
 * **Legal RAG Flow:** `backend/app/core/rag/` → Flow Document: `flows/features/semantic_embedding_flow.md`
 * **Document Ingestion:** `backend/app/core/rag/indexer.py` → Flow Document: `flows/integrations/markdown_rag_ingestion_flow.md`
-* **HS Code Classifier:** `backend/app/core/hs_classifier/` → Flow Document: `flows/features/hs_classification_flow.md`
+* **HS Code Classifier:** `backend/app/core/hs_classifier/` and `backend/app/core/classification/questionnaire.py` → Flow Documents: `flows/features/hs_classification_flow.md`, `flows/features/classification_questionnaire_flow.md`
 * **Customs Calculation:** `backend/app/core/calculation/` → Flow Document: `flows/features/customs_calculation_flow.md`
 * **Dynamic Profile Extraction:** `backend/app/core/orchestrator/profile_extractor.py` → Flow Document: `flows/features/customs_profile_flow.md`
 * **Document Generation:** `backend/app/core/documents/` → Flow Document: `flows/features/document_generation_flow.md`

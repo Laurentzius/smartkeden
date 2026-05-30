@@ -196,6 +196,86 @@ class AttributeExtractor:
                 attrs["country_of_origin"] = country
                 break
 
+        # ── Questionnaire fields ─────────────────────────────────────────
+
+        # is_kit detection
+        _kit_pos = {"отдельно", "отдельный", "separate", "один", "single",
+                     "самостоятельн", "независим"}
+        _kit_neg = {"комплект", "набор", "kit", "set", "в составе", "в комплекте"}
+        has_pos = any(kw in text_lower for kw in _kit_pos)
+        has_neg = any(kw in text_lower for kw in _kit_neg)
+        if has_pos and not has_neg:
+            attrs["is_kit"] = "separate"
+        elif has_neg and not has_pos:
+            attrs["is_kit"] = "kit"
+
+        # product_purpose detection
+        purpose_after_kw = [
+            "для", "предназначен", "назначение", "используется", "применяется",
+            "цель", "purpose",
+        ]
+        for marker in purpose_after_kw:
+            idx = text_lower.find(marker)
+            if idx != -1:
+                candidate = description[idx + len(marker):].strip(" ,.-:;")
+                candidate = candidate.split(".")[0].strip()
+                if 3 <= len(candidate) <= 200:
+                    attrs["product_purpose"] = candidate
+                    break
+
+        # material_composition aggregation
+        _mat_comp_kw: dict[str, str] = {
+            "пластик": "пластик", "plastic": "пластик",
+            "полипропилен": "полипропилен", "polypropylene": "полипропилен",
+            "дерево": "дерево", "wood": "дерево",
+            "металл": "металл", "metal": "металл", "сталь": "сталь", "steel": "сталь",
+            "алюмин": "алюминий",
+            "текстил": "текстиль", "textile": "текстиль",
+            "хлопок": "хлопок", "cotton": "хлопок",
+            "резин": "резина", "rubber": "резина", "силикон": "силикон",
+            "стекл": "стекло", "glass": "стекло",
+            "кож": "кожа", "leather": "кожа",
+            "керам": "керамика", "ceramic": "керамика",
+        }
+        _comp_found: list[str] = []
+        for kw, name in _mat_comp_kw.items():
+            if kw in text_lower and name not in _comp_found:
+                _comp_found.append(name)
+        if _comp_found:
+            attrs["material_composition"] = ", ".join(_comp_found)
+
+        # technical_specs detection
+        _spec_hits: list[str] = []
+        for spec_pat in [
+            r'(\d+[\.,]?\d*\s*[вВvV]\b)',
+            r'(\d+[\.,]?\d*\s*(?:вт|Вт|w|W|ватт|квт|кВт|kw|kW|кВт·ч))',
+            r'(\d+[\.,]?\d*\s*[аАaA]\b)',
+            r'(\d+[\.,]?\д*\s*(?:гц|Гц|hz|Hz|герц))',
+            r'(\d+[\.,]?\d*\s*(?:л/ч|л/мин|m³/h|м³/ч))',
+        ]:
+            for m in re.finditer(spec_pat, text_lower):
+                val = m.group(0).strip()
+                if val not in _spec_hits:
+                    _spec_hits.append(val)
+        if _spec_hits:
+            attrs["technical_specs"] = "; ".join(_spec_hits)
+
+        # customs_regime detection
+        if any(w in text_lower for w in ("импорт", "import", "ввоз", "ввозим")):
+            attrs["customs_regime"] = "import"
+        elif any(w in text_lower for w in ("экспорт", "export", "вывоз", "вывозим")):
+            attrs["customs_regime"] = "export"
+        elif any(w in text_lower for w in ("транзит", "transit")):
+            attrs["customs_regime"] = "transit"
+
+        # jurisdiction detection
+        if any(w in text_lower for w in ("еаэс", "eaeu", "евразэс", "таможенный союз", "тс")):
+            attrs["jurisdiction"] = "EAEU"
+        elif any(w in text_lower for w in ("ес", "eu", "евросоюз", "европейский союз")):
+            attrs["jurisdiction"] = "EU"
+        elif any(w in text_lower for w in ("сша", "us", "usa", "америк")):
+            attrs["jurisdiction"] = "US"
+
         return attrs
 
     @staticmethod
@@ -285,7 +365,13 @@ _VISION_EXTRACTION_PROMPT = """Ты — эксперт таможенной кл
   "target_audience": "дети / взрослые / универсальное",
   "fur_coverage_percent": "процент натурального меха (0-100)",
   "textile_percent": "процент текстиля (0-100)",
-  "metal_percent": "процент металла (0-100)"
+  "metal_percent": "процент металла (0-100)",
+  "is_kit": "separate если товар один, kit если в составе комплекта/набора",
+  "product_purpose": "назначение товара если понятно по изображению",
+  "material_composition": "состав материалов (свободный текст)",
+  "technical_specs": "технические характеристики если видны",
+  "customs_regime": "import/export/transit если указано на упаковке",
+  "jurisdiction": "EAEU/EU/US/other если указано"
 }
 
 Если атрибут невозможно определить по изображению — не включай его в JSON.

@@ -1,6 +1,10 @@
-from app.core.database import SessionLocal, Base, engine
+import pytest
+
+from app.core.database import SessionLocal
 from app.core.models import BrokerRegistry
 from app.services.kgd_registry import KGDRegistryService
+
+pytestmark = pytest.mark.sequential
 
 
 def test_database_and_broker_seeding():
