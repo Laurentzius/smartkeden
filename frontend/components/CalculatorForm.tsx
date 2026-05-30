@@ -41,14 +41,15 @@ export function CalculatorForm({
   onSubmit,
 }: CalculatorFormProps) {
   return (
-    <section className="lg:col-span-5 bg-white border border-slate-200 rounded-2xl shadow-sm p-6 flex flex-col h-fit">
-      <div className="flex items-center space-x-2 border-b border-slate-100 pb-4 mb-6">
-        <Calculator className="h-5 w-5 text-teal-600" />
-        <h2 className="font-bold text-lg text-slate-800">Калькулятор платежей</h2>
+    <section className="bg-white border border-slate-200/80 rounded-2xl shadow-sm p-6 flex flex-col h-fit transition-all duration-200 hover:shadow-md hover:border-slate-200">
+      <div className="flex items-center space-x-2.5 border-b border-slate-100 pb-4 mb-6">
+        <div className="bg-teal-50 p-2 rounded-lg text-teal-600">
+          <Calculator className="h-5 w-5" />
+        </div>
+        <h2 className="font-bold text-base text-slate-800">Калькулятор таможенных платежей</h2>
       </div>
 
       <form onSubmit={onSubmit} className="space-y-4">
-        {/* Invoice Price */}
         <div>
           <label className="block text-sm font-semibold text-slate-700 mb-1">
             Фактурная стоимость товара
@@ -61,13 +62,13 @@ export function CalculatorForm({
               step="any"
               value={invoicePrice}
               onChange={(e) => onInvoicePriceChange(parseFloat(e.target.value) || 0)}
-              className="block w-full rounded-l-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none text-sm"
+              className="block w-full rounded-l-lg border border-slate-300 px-3.5 py-2.5 text-slate-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 focus:outline-none text-sm transition-all"
               placeholder="Например, 1500"
             />
             <select
               value={currency}
               onChange={(e) => onCurrencyChange(e.target.value)}
-              className="rounded-r-md border border-l-0 border-slate-300 bg-slate-50 px-3 py-2 text-slate-700 text-sm focus:border-teal-500 focus:outline-none"
+              className="rounded-r-lg border border-l-0 border-slate-300 bg-slate-50 px-3.5 py-2.5 text-slate-700 text-sm focus:border-teal-500 focus:outline-none cursor-pointer hover:bg-slate-100 transition-colors"
             >
               <option value="USD">USD</option>
               <option value="EUR">EUR</option>
@@ -91,7 +92,7 @@ export function CalculatorForm({
               step="any"
               value={customRate}
               onChange={(e) => onCustomRateChange(parseFloat(e.target.value) || 1)}
-              className="block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none text-sm"
+              className="block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-slate-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 focus:outline-none text-sm transition-all"
             />
           </div>
         )}
@@ -107,7 +108,7 @@ export function CalculatorForm({
             min="0"
             value={transportCost}
             onChange={(e) => onTransportCostChange(parseFloat(e.target.value) || 0)}
-            className="block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none text-sm"
+            className="block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-slate-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 focus:outline-none text-sm transition-all"
           />
         </div>
 
@@ -125,7 +126,7 @@ export function CalculatorForm({
               step="0.01"
               value={dutyRate}
               onChange={(e) => onDutyRateChange(parseFloat(e.target.value) || 0)}
-              className="block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none text-sm"
+              className="block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-slate-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 focus:outline-none text-sm transition-all"
             />
           </div>
           <div>
@@ -140,11 +141,10 @@ export function CalculatorForm({
               step="0.01"
               value={exciseRate}
               onChange={(e) => onExciseRateChange(parseFloat(e.target.value) || 0)}
-              className="block w-full rounded-md border border-slate-300 px-3 py-2 text-slate-900 focus:border-teal-500 focus:outline-none text-sm"
+              className="block w-full rounded-lg border border-slate-300 px-3.5 py-2.5 text-slate-900 focus:border-teal-500 focus:ring-2 focus:ring-teal-500/10 focus:outline-none text-sm transition-all"
             />
           </div>
         </div>
-
         {/* Recycling Fee checkbox */}
         <div className="flex items-center space-x-2 pt-2">
           <input
@@ -152,7 +152,7 @@ export function CalculatorForm({
             id="isRecycling"
             checked={isRecycling}
             onChange={(e) => onRecyclingChange(e.target.checked)}
-            className="rounded border-slate-300 text-teal-600 focus:ring-teal-500 h-4 w-4"
+            className="rounded border-slate-300 text-teal-600 focus:ring-teal-500 h-4.5 w-4.5 cursor-pointer accent-teal-600"
           />
           <label
             htmlFor="isRecycling"
@@ -166,7 +166,7 @@ export function CalculatorForm({
         <button
           type="submit"
           disabled={loading}
-          className="w-full bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-4 rounded-lg shadow-sm transition duration-150 text-sm disabled:bg-slate-300 disabled:cursor-not-allowed cursor-pointer"
+          className="w-full bg-brand-teal hover:bg-brand-teal-hover text-white font-semibold py-3 px-4 rounded-xl shadow-xs hover:shadow transition-colors duration-150 text-sm disabled:bg-slate-200 disabled:text-slate-400 disabled:cursor-not-allowed cursor-pointer"
         >
           {loading ? "Рассчитываем..." : "Рассчитать таможенные платежи"}
         </button>

@@ -15,10 +15,10 @@ export function ChatMessage({ msg, onApplyCandidate }: ChatMessageProps) {
 
   return (
     <div
-      className={`flex flex-col max-w-[85%] rounded-2xl p-4 shadow-sm border ${
+      className={`flex flex-col max-w-[85%] rounded-2xl p-4 shadow-xs border ${
         isUser
-          ? "bg-teal-600 border-teal-500 text-white self-end ml-auto rounded-tr-none"
-          : "bg-white border-slate-100 text-slate-950 self-start rounded-tl-none"
+          ? "bg-gradient-to-br from-teal-600 to-teal-700 border-teal-500 text-white self-end ml-auto rounded-tr-none shadow-sm"
+          : "bg-white border-slate-200/65 text-slate-950 self-start rounded-tl-none shadow-sm"
       }`}
     >
       <span

@@ -134,52 +134,59 @@ export default function CustomsDashboard() {
       />
 
       <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 grid grid-cols-1 lg:grid-cols-12 gap-8">
-        <CalculatorForm
-          invoicePrice={calc.invoicePrice}
-          onInvoicePriceChange={calc.setInvoicePrice}
-          currency={calc.currency}
-          onCurrencyChange={calc.setCurrency}
-          customRate={calc.customRate}
-          onCustomRateChange={calc.setCustomRate}
-          transportCost={calc.transportCost}
-          onTransportCostChange={calc.setTransportCost}
-          dutyRate={calc.dutyRate}
-          onDutyRateChange={calc.setDutyRate}
-          exciseRate={calc.exciseRate}
-          onExciseRateChange={calc.setExciseRate}
-          isRecycling={calc.isRecycling}
-          onRecyclingChange={calc.setIsRecycling}
-          loading={calc.loading}
-          onSubmit={calc.calculate}
-        />
-
-        {/* Results sit below the form */}
-        <div className="lg:col-span-5 -mt-4">
-          <CalculationResult
-            result={calc.result}
-            error={calc.error}
+        {/* Left Column: Calculator & Calculation Results */}
+        <div className="lg:col-span-5 flex flex-col gap-6">
+          <CalculatorForm
+            invoicePrice={calc.invoicePrice}
+            onInvoicePriceChange={calc.setInvoicePrice}
+            currency={calc.currency}
+            onCurrencyChange={calc.setCurrency}
+            customRate={calc.customRate}
+            onCustomRateChange={calc.setCustomRate}
+            transportCost={calc.transportCost}
+            onTransportCostChange={calc.setTransportCost}
             dutyRate={calc.dutyRate}
+            onDutyRateChange={calc.setDutyRate}
             exciseRate={calc.exciseRate}
-            docLoading={docLoading}
-            onExportInvoice={handleExportInvoice}
-            onExportContract={handleExportContract}
+            onExciseRateChange={calc.setExciseRate}
+            isRecycling={calc.isRecycling}
+            onRecyclingChange={calc.setIsRecycling}
+            loading={calc.loading}
+            onSubmit={calc.calculate}
           />
+
+          {(calc.result || calc.error) && (
+            <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm p-6 transition-all duration-200 hover:shadow-md hover:border-slate-200">
+              <CalculationResult
+                result={calc.result}
+                error={calc.error}
+                dutyRate={calc.dutyRate}
+                exciseRate={calc.exciseRate}
+                docLoading={docLoading}
+                onExportInvoice={handleExportInvoice}
+                onExportContract={handleExportContract}
+              />
+            </div>
+          )}
         </div>
 
-        <ChatWorkspace
-          sessionId={sessionId}
-          history={chat.history}
-          loading={chat.loading}
-          query={chat.query}
-          onQueryChange={chat.setQuery}
-          onSubmit={handleChatSubmit}
-          filePreview={chat.filePreview}
-          file={chat.file}
-          fileInputRef={chat.fileInputRef}
-          onFileChange={chat.handleFileChange}
-          onClearFile={chat.clearFile}
-          onApplyCandidate={handleApplyCandidate}
-        />
+        {/* Right Column: Intelligent Chat Assistant */}
+        <div className="lg:col-span-7">
+          <ChatWorkspace
+            sessionId={sessionId}
+            history={chat.history}
+            loading={chat.loading}
+            query={chat.query}
+            onQueryChange={chat.setQuery}
+            onSubmit={handleChatSubmit}
+            filePreview={chat.filePreview}
+            file={chat.file}
+            fileInputRef={chat.fileInputRef}
+            onFileChange={chat.handleFileChange}
+            onClearFile={chat.clearFile}
+            onApplyCandidate={handleApplyCandidate}
+          />
+        </div>
       </main>
 
       <Footer />
